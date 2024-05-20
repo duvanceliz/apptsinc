@@ -1,0 +1,106 @@
+{% extends 'layout.html' %} {% block body %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-2"><a class="btn btn-primary" href="{% url 'create_product' %}">Nuevo Producto</a></div>
+    <div class="col-2"><a class="btn btn-success" href="{% url 'create_project' %}">Importar Archivo</a></div>
+    <div class="col-8"></div>
+  </div>
+    <div class="row">
+      
+      
+      <div class="col-12">
+  
+        <table class="table table-hover">
+          <thead>
+            
+        
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Codigo</th>
+              <th scope="col">Producto</th>
+              <th scope="col">Referencia</th>
+              <th scope="col">Modelo</th>
+              <th scope="col">Marca</th>
+              <th scope="col">Ubicacion</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Precio de venta</th>
+              <th scope="col">IVA</th>
+            </tr>
+          
+          </thead>
+          <tbody>
+            <tr>
+              {% for product in page_obj %}
+              <th scope="row">{{product.id}}</th>
+              <td>
+                {{product.code}}
+              </td>
+              <td>{{product.product_name}}</td>
+              <td>{{product.factory_ref}}</td>
+              <td>
+                {{product.model}}
+              </td>
+              <td>
+                {{product.brand}}
+              </td>
+              <td>
+                {{product.location}}
+              </td>
+              <td>
+                {{product.quantity}}
+              </td>
+              <td>
+                {{product.sale_price}}
+              </td>
+  
+              <td>
+                {% if product.iva == False%}
+  
+                Iva no incluido
+      
+                {%else%}
+                Iva incluido
+      
+                {% endif %}
+              </td>
+              
+              <td>
+           
+                <button class="btn btn-success btn-sm"> 
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                <a class="btn btn-danger btn-sm" href="" onclick="return verificar()"> 
+                  <i class="bi bi-trash"></i>
+                </a>
+              </td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+      
+        <div class="pagination">
+          <span class="step-links">
+              {% if page_obj.has_previous %}
+                  <a href="?page=1">&laquo; Primero</a>
+                  <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+              {% endif %}
+      
+              <span class="current">
+                  Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+              </span>
+      
+              {% if page_obj.has_next %}
+                  <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                  <a href="?page={{ page_obj.paginator.num_pages }}">Último &raquo;</a>
+              {% endif %}
+          </span>
+      </div>
+      </div>
+      
+    </div>
+  </div>
+  {% load static %}
+  <script src="{% static 'js/confirm.js' %}"></script>
+
+{% endblock %}

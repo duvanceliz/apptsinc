@@ -1,0 +1,26 @@
+
+{% extends 'layout.html' %} {% block body %} {% load static %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-2 bg-primary">Panel 1</div>
+        <div class="col-8">
+          
+            <div id="no-drop" class="drag-drop"> #no-drop </div>
+
+            <div id="yes-drop" class="drag-drop"> #yes-drop </div>
+            
+            <div id="outer-dropzone" class="dropzone">
+              #outer-dropzone
+              <div id="inner-dropzone" class="dropzone">#inner-dropzone</div>
+             </div>
+     
+        </div>
+        <div class="col-2 bg-warning">Panel 2</div>
+    </div>
+</div>
+
+<script src="{% static 'js/dashboard.js' %}"></script>
+
+{% endblock %}
