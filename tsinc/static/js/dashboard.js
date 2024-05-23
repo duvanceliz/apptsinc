@@ -2,6 +2,7 @@ var count = 0;
 const drag = document.getElementById("drag");
 const drag2 = document.getElementById("drag2");
 const dropzone = document.getElementById("outer-dropzone");
+var elementSelected = null
 
 function addobj() {
   const clone = drag.cloneNode(true);
@@ -12,10 +13,15 @@ function addobj() {
 function addobj2() {
 
   
-  const clone = drag2.cloneNode(true);
-  clone.classList.add("drag-drop");
-  dropzone.appendChild(clone);
+  moveItem(elementSelected,dropzone)
 
+}
+
+function moveItem(elementSelected, destination){
+  const clone = elementSelected.cloneNode(true);
+  clone.classList.remove("selected");
+  clone.classList.add("drag-drop");
+  destination.appendChild(clone);
 }
 
 
@@ -34,61 +40,12 @@ interact(".dropzone").dropzone({
   ondragenter: function (event) {
     // cuando el evento esta dentro de la zona o el obejeto esta dentro de la zona sin soltar
     var draggableElement = event.relatedTarget; // este se le aplica al objeto
-    var dropzoneElement = event.target; // este le aplica a la zona
-
-    // function areDivsAdjacent(div1, div2) {
-    //   const rect1 = div1.getBoundingClientRect();
-    //   const rect2 = div2.getBoundingClientRect();
-    
-    //   const horizontalAdjacent = rect1.right === rect2.left || rect1.left === rect2.right;
-    
-    //   const verticalAdjacent = rect1.bottom === rect2.top || rect1.top === rect2.bottom;
-    
-    //   return horizontalAdjacent || verticalAdjacent;
-    // }
-  
-    // if (areDivsAdjacent(drag,drag2)) {
-    //   console.log("Los div están pegados.");
-    // } else {
-    //   console.log("Los div no están pegados.");
-    // }
-    
+    var dropzoneElement = event.target; // este le aplica a la zona    
 
   },
   ondropdeactivate: function (event) {
     var draggableElement = event.relatedTarget; // este se le aplica al objeto
     var dropzoneElement = event.target; // este le aplica a la zona
-      
-    //cuando se desactiva el evento o no se mueve el objeto dentro de la zona
-    // remove active dropzone feedback
-    // event.target.classList.remove('drop-active')
-    // event.target.classList.remove('drop-target')
-    // console.log("objeto dejo de moverse");
-
-    
-    
-
-
-
-    //  console.log(draggableElement.getBoundingClientRect())
-  
-    // function areDivsAdjacent(div1, div2) {
-    //   const rect1 = div1.getBoundingClientRect();
-    //   const rect2 = div2.getBoundingClientRect();
-    
-    //   const horizontalAdjacent = rect1.right === rect2.left || rect1.left === rect2.right;
-    
-    //   const verticalAdjacent = rect1.bottom === rect2.top || rect1.top === rect2.bottom;
-    
-    //   return horizontalAdjacent || verticalAdjacent;
-    // }
-  
-    // if (areDivsAdjacent(drag,drag2)) {
-    //   console.log("Los div están pegados.");
-    // } else {
-    //   console.log("Los div no están pegados.");
-    // }
-
     
   },
 });
@@ -110,11 +67,24 @@ interact(".drag-drop")
     // event.currentTarget.classList.remove("large");
   });
 
-  interact(".drag")
+  interact("#item")
   .on("tap", function (event) {
     // event.currentTarget.classList.toggle("switch-bg");
-    event.target.classList.add('select')
-    console.log(event.target);
+    items = document.querySelectorAll('#availableItems div')
+
+    items.forEach(item => {
+
+     
+    item.classList.remove('selected')
+     
+      
+    });
+    
+    elementSelected = event.target
+    elementSelected.classList.add('selected')
+
+
+
    
     event.preventDefault();
   })
