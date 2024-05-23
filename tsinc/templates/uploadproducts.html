@@ -1,0 +1,18 @@
+{% extends 'layout.html' %} {% block body %}
+
+<div class="container">
+  <div class="row m-4">
+    <div class="col"></div>
+    <div class="col">
+      <h2>Subir archivo Excel</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Subir</button>
+      </form>
+    </div>
+    <div class="col"></div>
+  </div>
+</div>
+
+{% endblock %}

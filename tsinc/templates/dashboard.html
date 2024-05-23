@@ -1,24 +1,36 @@
-
 {% extends 'layout.html' %} {% block body %} {% load static %}
 
-
 <div class="container">
-    <div class="row">
-        <div class="col-2 bg-primary">Panel 1</div>
-        <div class="col-8">
-          
-            <div id="no-drop" class="drag-drop"> #no-drop </div>
+  <div class="row">
+    <div class="col-2">
+      
 
-            <div id="yes-drop" class="drag-drop"> #yes-drop </div>
-            
-            <div id="outer-dropzone" class="dropzone">
-              #outer-dropzone
-              <div id="inner-dropzone" class="dropzone">#inner-dropzone</div>
-             </div>
-     
-        </div>
-        <div class="col-2 bg-warning">Panel 2</div>
+      <ul class="list-group">
+        <li class="list-group-item active" aria-current="true">Elementos
+          <button class="btn btn-light btn-sm" onclick="addobj2()">add</button>
+        </li>
+        <li class="list-group-item">
+          
+          <div id="drag" class="drag">2</div>
+        </li>
+        <li class="list-group-item">
+          <div id="drag2" class="drag2">2</div>
+          
+
+        </li>
+        <li class="list-group-item">A fourth item</li>
+        <li class="list-group-item">And a fifth one</li>
+      </ul>
     </div>
+    <div class="col-8">
+      
+
+      <div id="outer-dropzone" class="dropzone">
+        
+      </div>
+    </div>
+    <div class="col-2">Panel 2</div>
+  </div>
 </div>
 
 <script src="{% static 'js/dashboard.js' %}"></script>

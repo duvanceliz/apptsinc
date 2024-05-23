@@ -21,3 +21,6 @@ class CreateProduct(forms.Form):
     model = forms.CharField(label="Modelo",max_length=200)
     price = forms.FloatField(label="Precio de venta")
     iva = forms.BooleanField(label="Tiene el IVA incluido?")
+
+class UploadProducts(forms.Form):
+    file = forms.FileField()
