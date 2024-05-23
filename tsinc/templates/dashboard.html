@@ -1,42 +1,45 @@
 {% extends 'layout.html' %} {% block body %} {% load static %}
 
 <div class="container">
+  <div class="row mb-4">
+    <div class="col-4">
+      <button class="btn btn-primary">
+        <i class="bi bi-file-earmark-plus"></i>
+      </button>
+    </div>
+    <div class="col-4"><h5>Dashboard 1</h5></div>
+    <div class="col-4"></div>
+  </div>
   <div class="row">
     <div class="col-2">
-      
 
-      <ul class="list-group">
-        <li class="list-group-item active" aria-current="true">Elementos
-          <button class="btn btn-light btn-sm" onclick="addobj2()">add</button>
+      {% include 'components/panelLeft.html' %}
+      
+      <!-- <ul class="list-group">
+        <li class="list-group-item active" aria-current="true">
+          Elementos
+         
         </li>
         <li class="list-group-item">
           <div class="box" id="availableItems">
-            <h3>Lista de elementos</h3>
             <div id="item" class="element" data-value="item1">1</div>
             <div id="item" class="element" data-value="item2">2</div>
             <div id="item" class="element" data-value="item3">3</div>
             <div id="item" class="element" data-value="item4">4</div>
             <div id="item" class="drag">5</div>
-        </div>
-         
+          </div>
         </li>
-        <li class="list-group-item">
-          <div id="drag2" class="drag2">2</div>
-          
-
-        </li>
+        <li class="list-group-item">elements</li>
         <li class="list-group-item">A fourth item</li>
         <li class="list-group-item">And a fifth one</li>
-      </ul>
+      </ul> -->
     </div>
     <div class="col-8">
-      
-
-      <div id="outer-dropzone" class="dropzone">
-        
-      </div>
+      <div id="outer-dropzone" class="dropzone"></div>
     </div>
-    <div class="col-2">Panel 2</div>
+    <div class="col-2">
+      {% include 'components/panelRight.html' %}
+    </div>
   </div>
 </div>
 
