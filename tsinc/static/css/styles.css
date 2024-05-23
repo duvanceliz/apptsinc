@@ -3,7 +3,7 @@
 }
 
 .dropzone {
-  background-color: #e8f4fc;
+  background-color: #21242b;
   border: 2px dashed rgb(148, 146, 146);
   border-radius: 4px;
   margin: 0;
@@ -61,5 +61,11 @@
 .box div.selected {
   border: 2px solid black;
 }
+
+body{
+  background: #1b1d23;
+  color: white;
+}
+
 
 
