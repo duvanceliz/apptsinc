@@ -1,0 +1,71 @@
+
+{% extends 'layout.html' %} {% block body %}
+
+<div class="container">
+
+    <div class="row mb-2">
+      <div class="col-3">
+        <div class="card bg-dark p-2">
+          {% include 'components/offerHeader.html' %}
+
+          <span class="fw-light">Configuracion del {{tab.tab_name}}</span>
+      </div>
+    </div>
+      <div class="col-6"></div>
+      <div class="col-3"></div>
+    </div>
+  
+    <div class="row">
+      
+      
+      <div class="col-3">
+        <div class="card bg-dark p-4">
+          <h5>Agregar un Equipo</h5>
+          {% include 'components/form.html' %}
+        </div>
+        
+        </div>
+      
+      <div class="col-6">
+  
+        <table class="table table-hover table-dark">
+          <thead>
+            
+        
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Equipo</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col"></th>
+            </tr>
+          
+          </thead>
+          <tbody>
+            <tr>
+              {% for unit in units %}
+  
+                <th scope="row">{{unit.id}}</th>
+              <td>{{unit.unit}}</td>
+              <td>{{unit.quantity}}</td>
+              <td>
+                <a class="btn btn-primary btn-sm" href="{% url 'config' unit.id %}"> <i class="bi bi-box-arrow-right"></i></a>
+                <button class="btn btn-success btn-sm"><i class="bi bi-pencil-square"></i></button>
+                <a class="btn btn-danger btn-sm" href="#" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
+              </td>
+            </tr>
+  
+          
+              
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-3">
+
+
+      </div>
+      
+    </div>
+  </div>
+
+{% endblock %}

@@ -26,6 +26,7 @@
       
       <div class="container">
         <div class="row">
+       
           <div class="col">
            
           </div>
@@ -40,6 +41,9 @@
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'product' %}">Inventario</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'offer' %}">Genera una Oferta</a>
+              </li>
             </ul>
           </div>
           <div class="col">
@@ -48,7 +52,15 @@
         </div>
       </div>
       
+      <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4">
+        </div>
+        <div class="col-4"></div>
+      </div>
+      
         <div class="row">
+       
           {% block body %} {% endblock %}
         </div>
         

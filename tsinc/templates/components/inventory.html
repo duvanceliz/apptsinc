@@ -1,0 +1,65 @@
+
+<h5>Agregar un parametro</h5>
+<form class="d-flex" method="get" >
+    {% csrf_token %}
+    {{form.as_p}}
+
+    <button type="submit" class="btn btn-primary m-2">Buscar</button>
+</form>
+
+<table class="table table-hover table-dark">
+    <thead>
+      
+  
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Producto</th>
+        <th scope="col">Modelo</th>
+        <th scope="col">Marca</th>
+        <th scope="col"></th>
+      </tr>
+    
+    </thead>
+    <tbody>
+      <tr>
+        {% for product in page_obj %}
+        <th scope="row">{{product.id}}</th>
+        <td>{{product.product_name}}</td>
+        <td>
+          {{product.model}}
+        </td>
+        <td>
+          {{product.brand}}
+        </td>
+        <td>
+          <!-- <a class="btn btn-success btn-sm" href="?query={{product.id}}" >Add</a> -->
+         
+
+        <form method="post">
+          {% csrf_token %}
+          <input type="text" id="name" name="productid" maxlength="100" value="{{product.id}}"  hidden >
+          <button class="btn btn-success" type="submit">Add</button>
+      </form>
+        </td>
+      </tr>
+      {%endfor%}
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; Primero</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+        {% endif %}
+
+        <span class="current">
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Último &raquo;</a>
+        {% endif %}
+    </span>
+</div>

@@ -1,0 +1,77 @@
+
+{% extends 'layout.html' %} {% block body %}
+
+<div class="container">
+    <div class="row">
+          
+        <div class="col-3">
+
+        <div class="card bg-dark p-4">
+          <h5>Generar una oferta</h5>
+          {% include 'components/form.html' %}
+        </div>
+        
+        </div>
+      
+      <div class="col-6">
+  
+        <table class="table table-hover table-dark">
+          <thead>
+            
+        
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Oferta</th>
+              <th scope="col">Controlador</th>
+              <th scope="col">Fecha</th>
+              <th scope="col"></th>
+            </tr>
+          
+          </thead>
+          <tbody>
+            <tr>
+              {% for offer in page_obj %}
+  
+                <th scope="row">{{offer.id}}</th>
+              <td>{{offer.title}}</td>
+              <td>{{offer.controller}}</td>
+              <td>{{offer.date}}</td>
+              <td>
+                <a class="btn btn-primary btn-sm" href="{% url 'tabs' offer.id %}"> <i class="bi bi-box-arrow-right"></i></a>
+                <button class="btn btn-success btn-sm"><i class="bi bi-pencil-square"></i></button>
+                <a class="btn btn-danger btn-sm" href="#" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
+              </td>
+            </tr>
+  
+          
+              
+            {%endfor%}
+          </tbody>
+        </table>
+      
+        <div class="pagination">
+          <span class="step-links">
+              {% if page_obj.has_previous %}
+                  <a href="?page=1">&laquo; Primero</a>
+                  <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+              {% endif %}
+      
+              <span class="current">
+                  Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+              </span>
+      
+              {% if page_obj.has_next %}
+                  <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                  <a href="?page={{ page_obj.paginator.num_pages }}">Último &raquo;</a>
+              {% endif %}
+          </span>
+      </div>
+      </div>
+      <div class="col-3">
+
+      </div>
+      
+    </div>
+  </div>
+
+{% endblock %}

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import Project, Product
-from .forms import CreateProject, CreateProduct, UploadProducts
+from .models import Project, Product, Offers, TabUnits, Tabs, Slots
+from .forms import CreateProject, CreateProduct, UploadProducts, CreateOffer, CreateTab, CreateUnit, Units, SearchForm
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 import pandas as pd
@@ -82,3 +82,72 @@ def upload_products(request):
     else:
         form = UploadProducts()
     return render(request, 'uploadproducts.html', {'form': form})
+
+
+def offer(request):
+    if request.method == 'GET':
+        offer = Offers.objects.all()
+        paginator = Paginator(offer, 5)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        return render(request, 'offer.html',{'page_obj': page_obj, 'form':CreateOffer()})
+    else:
+        print(request.POST)
+        Offers.objects.create(title = request.POST['title'], controller = request.POST['controller'])
+        return redirect('/offer')
+
+
+def tabs(request, id):
+    if request.method == 'GET':
+        offer = Offers.objects.get(id=id)
+        tabs = offer.tabs.all()
+        # tabs = offer.tabs.all()
+        return render(request,'tabs.html',{'tabs': tabs, 'form': CreateTab() , 'offer': offer})
+    else:
+        print(request.POST)
+        offer = Offers.objects.get(id=id)
+        Tabs.objects.create(tab_name = request.POST['tab_name'],offer = offer)
+        return redirect("/offer/tabs/{}/".format(id))
+
+
+
+def units(request, id):
+    if request.method == 'GET':
+        tab = Tabs.objects.get(id=id)
+        offer = tab.offer
+        units = tab.units.all()
+        # tabs = offer.tabs.all()
+        return render(request,'units.html',{'units': units, 'form':CreateUnit(), 'offer': offer, 'tab': tab})
+    else:
+        print(request.POST)
+        tab = Tabs.objects.get(id=id)
+        unit_name = Units.objects.get(id=request.POST['unit'])
+        TabUnits.objects.create(unit = unit_name , quantity = request.POST['quantity'], tab = tab)
+        return redirect("/offer/tabs/units/{}/".format(id))
+
+
+def config(request, id):
+    if request.method == 'GET':
+        unit = TabUnits.objects.get(id=id)
+        slots = unit.slots.all()
+        products = Product.objects.all()
+        paginator = Paginator(products, 5)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        search = request.GET.get('search')
+        results = []
+
+        if search:
+            results = Product.objects.filter(product_name__icontains=search)
+            paginator = Paginator(results, 10)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)  
+        return render(request, 'configuration.html',{'unit': unit, 'slots':slots, 'page_obj': page_obj, 'form':SearchForm()})
+    else:
+        unit = TabUnits.objects.get(id=id)
+        prod = Product.objects.get(id=request.POST.get('productid'))
+        Slots.objects.create(slot=prod.product_name, unit= unit)
+        return redirect("/offer/tabs/units/configuration/{}/".format(id))
+    # tabs = offer.tabs.all()
+    

@@ -1,4 +1,6 @@
 from django import forms
+from django.forms import formset_factory
+from .models import Units
 
 
 class CreateProject(forms.Form):
@@ -24,3 +26,22 @@ class CreateProduct(forms.Form):
 
 class UploadProducts(forms.Form):
     file = forms.FileField()
+
+class CreateOffer(forms.Form):
+    title = forms.CharField(label="Nombre del proyecto", max_length=200)
+    OPCIONES_CHOICES = [
+        ('JHONSOM CONTROLS', 'JHONSOM CONTROLS'),
+        ('LG CONTROLLER', 'LG CONTROLLER')
+    ]
+    controller = forms.ChoiceField(choices=OPCIONES_CHOICES)
+
+
+class CreateTab(forms.Form):
+    tab_name = forms.CharField(label="Nombre del tablero", max_length=200)
+
+class CreateUnit(forms.Form):
+    unit = forms.ModelChoiceField(queryset=Units.objects.all())
+    quantity = forms.IntegerField(label="Cuantos")
+
+class SearchForm(forms.Form):
+    search = forms.CharField(label='Buscar', max_length=100)
