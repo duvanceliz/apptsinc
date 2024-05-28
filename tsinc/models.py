@@ -67,7 +67,7 @@ class Slots(models.Model):
 
 class Dasboard(models.Model):
     name = models.CharField(max_length=200, default=None)
-    proyect = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='projects')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='dashboards')
     def __str__(self):
         return self.name
 

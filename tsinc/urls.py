@@ -16,6 +16,9 @@ urlpatterns = [
     path('deleteunit/<int:id>/', views.delete_unit, name='delete_unit'),
     path('deletetab/<int:id>/', views.delete_tab, name='delete_tab'),
     path('deleteoffer/<int:id>/', views.delete_offer, name='delete_offer'),
+    path('deletepage/<int:id>/', views.delete_page, name='delete_page'),
     path('downloadoffer/<int:id>/', views.download_offer, name='download_offer'),
     path('saveitems/', views.save_items, name='save_items'),
+    path('createpage/<int:id>/', views.create_page, name='create_page'),
+    
 ]

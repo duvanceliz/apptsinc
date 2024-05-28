@@ -46,5 +46,8 @@ class CreateUnit(forms.Form):
     unit = forms.ModelChoiceField(queryset=Units.objects.all())
     quantity = forms.IntegerField(label="Cuantos")
 
+class CreatePage(forms.Form):
+    name = forms.CharField(label="Nombre de la pagina", max_length=100)
+
 class SearchForm(forms.Form):
     search = forms.CharField(label='Buscar', max_length=100)

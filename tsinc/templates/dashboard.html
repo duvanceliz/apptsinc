@@ -11,6 +11,9 @@
     <span class="fs-6 fw-light">
         Dibujante: {{project.dibujante}}
     </span>
+    <span class="fs-6 fw-light">
+      Nombre de pagina: {{dashboard.name}}
+  </span>
   </div>
    </div>
    <div class="col-4"></div>
@@ -20,6 +23,7 @@
       <!-- <button class="btn btn-primary">
         <i class="bi bi-file-earmark-plus"></i>
       </button> -->
+      <input id="dashboard_id" type="text" value="{{dashboard.id}}" hidden >
       <form action="" id="form">
         {% csrf_token %}
         <button id="save" class="btn btn-success" type="submit">
@@ -47,7 +51,9 @@
       <div id="outer-dropzone" class="dropzone">
 
         {% for item in items %}
-        <img pk="{{item.img.id}}" id_code="{{item.id_code}}" class="drag-drop" src="{% static item.img %}" alt="items" style="width: 50px; transform: translate({{item.x}}px,{{item.y}}px);" data-x="{{item.x}}" data-y="{{item.y}}">
+        {% if dashboard.id == item.dashboard.id%}
+        <img pk="{{item.img.id}}" id_code="{{item.id_code}}" class="drag-drop" src="{% static item.img %}" alt="items" style="width: {{item.img.width}}px; transform: translate({{item.x}}px,{{item.y}}px);" data-x="{{item.x}}" data-y="{{item.y}}">
+        {% endif %}
         {% endfor %}
       </div>
 

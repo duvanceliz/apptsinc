@@ -2,12 +2,12 @@
 const btnsave = document.querySelector('#save')
 const csrfToken = document.querySelector("#form > input")
 const form = document.getElementById('form')
+const dash_id = document.getElementById('dashboard_id').value
 
 form.addEventListener('submit',e =>{
     e.preventDefault()
-
-    const list = []
     
+    const list = []
     const todos = document.querySelectorAll('div.dropzone > img')
     
     todos.forEach(todo => {
@@ -20,8 +20,9 @@ form.addEventListener('submit',e =>{
         list.push(obj)
     })
     
-
+    console.log(dash_id)
     axios.post("/saveitems/", {
+        dashboard_id: dash_id,
         values: list
     }, {
         headers: {
@@ -37,6 +38,7 @@ form.addEventListener('submit',e =>{
         console.log(error.response.data.mensaje)
     });
 })
+
 
 
 

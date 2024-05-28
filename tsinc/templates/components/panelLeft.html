@@ -28,7 +28,7 @@
 
           <div class="box" id="availableItems">
             {% for item in panelitems %}
-            <img id="item" pk="{{item.id}}" src="{% static item.img %}" alt="items" style="width: 50px;">
+            <img id="item" pk="{{item.id}}" src="{% static item.img %}" alt="items" style="width: {{item.width}}px;">
             {% endfor %}
           </div>
         </div>

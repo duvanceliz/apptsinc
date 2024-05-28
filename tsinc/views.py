@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from .models import Project, Product, Offers, TabUnits, Tabs, Slots, Dasboard, PanelItems, Items
-from .forms import CreateProject, CreateProduct, UploadProducts, CreateOffer, CreateTab, CreateUnit, Units, SearchForm
+from .forms import CreateProject, CreateProduct, UploadProducts, CreateOffer, CreateTab, CreateUnit, Units, SearchForm, CreatePage
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 import pandas as pd
@@ -45,10 +45,11 @@ def product(request):
 
 @login_required
 def dashboard(request, id):
-    project = Project.objects.get(id=id)
+    dashboard = Dasboard.objects.get(id=id)
+    project = dashboard.project
     panelitems = PanelItems.objects.all()
     items = Items.objects.all()
-    return render(request, 'dashboard.html',{'project':project, 'panelitems':panelitems, 'items': items})
+    return render(request, 'dashboard.html',{'project':project, 'panelitems':panelitems, 'items': items, 'dashboard':dashboard})
 
 
 
@@ -246,8 +247,32 @@ def save_items(request):
                 item_exist.x = value['x']
                 item_exist.y = value['y']
                 item_exist.save()
-            else:                         
-                new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'], img=img_obj)
+            else:
+                dashboard = get_object_or_404(Dasboard, id=int(data['dashboard_id']))                         
+                new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'], img=img_obj, dashboard= dashboard )
                 new_item.save()
        
         return JsonResponse({'mensaje': 'Datos guardados con éxito!'})
+    
+
+def create_page(request,id):
+    if request.method == 'GET':
+        project = get_object_or_404(Project,id=id)
+        pages_project = project.dashboards.all()
+        # page = Dasboard.objects.all()
+        paginator = Paginator(pages_project, 5)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        return render(request, 'createpage.html',{'page_obj': page_obj, 'form':CreatePage()})
+    else:
+        project = Project.objects.get(id=id)
+        print(request.POST['name'])
+        Dasboard.objects.create(name = request.POST['name'],project=project)
+        return redirect(f'/createpage/{id}/')
+
+
+def delete_page(request, id):
+    object = get_object_or_404(Dasboard, id=id)
+    project = object.project
+    object.delete()
+    return redirect(f'/createpage/{project.id}/')
