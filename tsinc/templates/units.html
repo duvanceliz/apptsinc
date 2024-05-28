@@ -5,6 +5,7 @@
 
     <div class="row mb-2">
       <div class="col-3">
+        <a  class="btn btn-link" href="{% url 'tabs' offer.id %}">Volver</a>
         <div class="card bg-dark p-2">
           {% include 'components/offerHeader.html' %}
 
@@ -49,8 +50,7 @@
               <td>{{unit.quantity}}</td>
               <td>
                 <a class="btn btn-primary btn-sm" href="{% url 'config' unit.id %}"> <i class="bi bi-box-arrow-right"></i></a>
-                <button class="btn btn-success btn-sm"><i class="bi bi-pencil-square"></i></button>
-                <a class="btn btn-danger btn-sm" href="#" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
+                <a class="btn btn-danger btn-sm" href="{% url 'delete_unit' unit.id %}" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
               </td>
             </tr>
   

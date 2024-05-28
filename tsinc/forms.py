@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import formset_factory
-from .models import Units
+from .models import Units, Brand, Location
 
 
 class CreateProject(forms.Form):
@@ -22,6 +22,9 @@ class CreateProduct(forms.Form):
     ref = forms.CharField(label="Referencia de fabrica",max_length=200)
     model = forms.CharField(label="Modelo",max_length=200)
     price = forms.FloatField(label="Precio de venta")
+    brand =  forms.ModelChoiceField(label="Marca",queryset=Brand.objects.all())
+    location = forms.ModelChoiceField(label="Ubicacion",queryset=Location.objects.all())
+    quantity = forms.IntegerField(label="Cantidad")
     iva = forms.BooleanField(label="Tiene el IVA incluido?")
 
 class UploadProducts(forms.Form):
@@ -30,7 +33,7 @@ class UploadProducts(forms.Form):
 class CreateOffer(forms.Form):
     title = forms.CharField(label="Nombre del proyecto", max_length=200)
     OPCIONES_CHOICES = [
-        ('JHONSOM CONTROLS', 'JHONSOM CONTROLS'),
+        ('JONHSON CONTROLS', 'JONHSON CONTROLS'),
         ('LG CONTROLLER', 'LG CONTROLLER')
     ]
     controller = forms.ChoiceField(choices=OPCIONES_CHOICES)

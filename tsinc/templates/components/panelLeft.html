@@ -1,7 +1,7 @@
+{% load static %}
 <div class="card bg-dark">
   <div class="card-header bg-secondary">
-    Elementos
-    <button class="btn btn-success btn-sm" onclick="addobj()">add</button>
+    Elemento
   </div>
 
   <div class="accordion accordion-flush" id="accordionFlushExample">
@@ -15,7 +15,7 @@
           aria-expanded="false"
           aria-controls="flush-collapseOne"
         >
-          Ventiladores
+          Elementos
         </button>
       </h2>
       <div
@@ -27,16 +27,14 @@
         <div class="accordion-body">
 
           <div class="box" id="availableItems">
-            <div id="item" class="element" data-value="item1">1</div>
-            <div id="item" class="element" data-value="item2">2</div>
-            <div id="item" class="element" data-value="item3">3</div>
-            <div id="item" class="element" data-value="item4">4</div>
-            <div id="item" class="drag">5</div>
+            {% for item in panelitems %}
+            <img id="item" pk="{{item.id}}" src="{% static item.img %}" alt="items" style="width: 50px;">
+            {% endfor %}
           </div>
         </div>
       </div>
     </div>
-    <div class="accordion-item bg-dark text-white">
+    <!-- <div class="accordion-item bg-dark text-white">
       <h2 class="accordion-header" id="flush-headingTwo">
         <button
           class="accordion-button collapsed bg-dark text-white"
@@ -56,16 +54,11 @@
         data-bs-parent="#accordionFlushExample"
       >
         <div class="accordion-body">
-          <ul>
-            <li>Sensor de temperatura</li>
-            <li>Sensor de Presion</li>
-            <li>Sensor CO</li>
-          </ul>
-
+         
         </div>
       </div>
-    </div>
-    <div class="accordion-item bg-dark text-white">
+    </div> -->
+    <!-- <div class="accordion-item bg-dark text-white">
       <h2 class="accordion-header" id="flush-headingThree">
         <button
           class="accordion-button collapsed bg-dark text-white"
@@ -86,7 +79,7 @@
       >
         <div class="accordion-body">Items</div>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>
 

@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
-from .models import Project, Product, Offers, TabUnits, Tabs, Slots
+from .models import Project, Product, Offers, TabUnits, Tabs, Slots, Dasboard, PanelItems, Items
 from .forms import CreateProject, CreateProduct, UploadProducts, CreateOffer, CreateTab, CreateUnit, Units, SearchForm
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 import pandas as pd
+import openpyxl
+from django.http import JsonResponse
+import json
 # Create your views here.
 
 @login_required
@@ -40,8 +44,11 @@ def product(request):
 
 
 @login_required
-def dashboard(request):
-    return render(request, 'dashboard.html')
+def dashboard(request, id):
+    project = Project.objects.get(id=id)
+    panelitems = PanelItems.objects.all()
+    items = Items.objects.all()
+    return render(request, 'dashboard.html',{'project':project, 'panelitems':panelitems, 'items': items})
 
 
 
@@ -128,6 +135,10 @@ def units(request, id):
 
 def config(request, id):
     if request.method == 'GET':
+
+        search = request.GET.get('search')
+        page_number = request.GET.get('page')          
+        results = []
         unit = TabUnits.objects.get(id=id)
         slots = unit.slots.all()
         products = Product.objects.all()
@@ -135,19 +146,108 @@ def config(request, id):
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
-        search = request.GET.get('search')
-        results = []
-
         if search:
             results = Product.objects.filter(product_name__icontains=search)
             paginator = Paginator(results, 10)
-            page_number = request.GET.get('page')
-            page_obj = paginator.get_page(page_number)  
+            page_obj = paginator.get_page(page_number)
+            
+  
+
         return render(request, 'configuration.html',{'unit': unit, 'slots':slots, 'page_obj': page_obj, 'form':SearchForm()})
     else:
         unit = TabUnits.objects.get(id=id)
         prod = Product.objects.get(id=request.POST.get('productid'))
-        Slots.objects.create(slot=prod.product_name, unit= unit)
+        Slots.objects.create(slot=prod, unit=unit)
         return redirect("/offer/tabs/units/configuration/{}/".format(id))
-    # tabs = offer.tabs.all()
+    # tabs = offer.tabs.all() 
+
+def delete_slot(request, id):
+    object = get_object_or_404(Slots, id=id)
+    unit = object.unit
+    object.delete()
+    return redirect("/offer/tabs/units/configuration/{}/".format(unit.pk))
+
+def delete_unit(request, id):
+    object = get_object_or_404(TabUnits, id=id)
+    tab = object.tab
+    object.delete()
+    return redirect("/offer/tabs/units/{}/".format(tab.pk))
+
+def delete_tab(request, id):
+    object = get_object_or_404(Tabs, id=id)
+    offer = object.offer
+    object.delete()
+    return redirect("/offer/tabs/{}/".format(offer.pk))
+
+def delete_offer(request, id):
+    object = get_object_or_404(Offers, id=id)
+    object.delete()
+    return redirect("/offer/")
+
+def download_offer(request,id):
+
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.title = 'Datos'
+
+    offer = Offers.objects.get(id=id)
+    tabs = offer.tabs.all()
+    units = TabUnits.objects.filter(tab__in=tabs).select_related('tab')
+    slots = Slots.objects.filter(unit__in=units).select_related('unit')
+    total = 0
     
+    
+    sheet.cell(row=1, column=1, value='PROYECTO')
+    sheet.cell(row=1, column=2, value=offer.title)
+    sheet.cell(row=1, column=3, value=offer.controller)
+    encabezado = ['PARAMETROS','MODELO','PRECIO','TOTAL']
+    # for i,tab in enumerate(tabs,2):
+    #     sheet.cell(row=2, column=i, value=tab.tab_name)
+
+
+    for i,value in enumerate(encabezado,1):
+        sheet.cell(row=3, column=i, value=value)
+
+    for i,slot in enumerate(slots,4):
+        total += slot.slot.sale_price
+        sheet.cell(row=i, column=1, value=slot.slot.product_name)
+        sheet.cell(row=i, column=2, value=slot.slot.model)
+        sheet.cell(row=i, column=3, value=slot.slot.sale_price)
+        
+    sheet.cell(row=4, column=4, value=total)
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=datos.xlsx'
+
+    workbook.save(response)
+    
+    return response
+    # return redirect('/offer/')
+    
+
+def save_items(request):
+
+    if request.method == 'GET':
+        return redirect('/')
+    else:
+        raw_data = request.body
+        # print(raw_data)
+        body_unicode = raw_data.decode('utf-8')
+        data = json.loads(body_unicode)
+        for value in data['values']:
+            img_obj = PanelItems.objects.get(id=value['pk'])
+            try:
+                item_exist = Items.objects.get(id_code = value['id_code'])
+            except ObjectDoesNotExist:
+                item_exist = None
+
+            if item_exist:
+                print('existe en la base de datos')
+                item_exist.x = value['x']
+                item_exist.y = value['y']
+                item_exist.save()
+            else:                         
+                new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'], img=img_obj)
+                new_item.save()
+       
+        return JsonResponse({'mensaje': 'Datos guardados con éxito!'})

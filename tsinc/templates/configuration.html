@@ -3,7 +3,9 @@
 
 <div class="container">
     <div class="row">
+       
         <div class="col-3">
+          <a  class="btn btn-link" href="{% url 'units' unit.tab.id %}">Volver</a>
             <div class="card bg-dark p-2">
                 <span>Configuracion del:</span>
                 <span class="fw-light"> {{unit.unit}}</span>
@@ -11,7 +13,9 @@
             
         </div>
         <div class="col-6"></div>
-        <div class="col-3"></div>
+        <div class="col-3">
+          
+        </div>
     </div>
     <div class="row">
         <div class="col-6">
@@ -32,6 +36,8 @@
                   <tr>
                     <th scope="col">#</th>
                     <th scope="col">Configuracion</th>
+                    <th scope="col">Modelo</th>
+                    <th scope="col">Marca</th>
                     <th scope="col"></th>
                   </tr>
                 
@@ -42,9 +48,10 @@
         
                       <th scope="row">{{slot.id}}</th>
                     <td>{{slot.slot}}</td>
+                    <td>{{slot.slot.model}}</td>
+                    <td>{{slot.slot.brand}}</td>
                     <td>
-                      <button class="btn btn-success btn-sm"><i class="bi bi-pencil-square"></i></button>
-                      <a class="btn btn-danger btn-sm" href="#" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
+                      <a class="btn btn-danger btn-sm" href="{% url 'delete_slot' slot.id %}" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
                     </td>
                   </tr>
                   {%endfor%}

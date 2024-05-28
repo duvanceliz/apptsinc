@@ -2,30 +2,67 @@
 
 <div class="container">
   <div class="row mb-4">
+   <div class="col-4"></div>
+   <div class="col-4">
+    <div class="card bg-dark p-2">
+      <span class="fs-6 fw_light">
+        Proyecto: {{project.name}}
+    </span>
+    <span class="fs-6 fw-light">
+        Dibujante: {{project.dibujante}}
+    </span>
+  </div>
+   </div>
+   <div class="col-4"></div>
+  </div>
+  <div class="row mb-4">
     <div class="col-4">
-      <button class="btn btn-primary">
+      <!-- <button class="btn btn-primary">
         <i class="bi bi-file-earmark-plus"></i>
-      </button>
+      </button> -->
+      <form action="" id="form">
+        {% csrf_token %}
+        <button id="save" class="btn btn-success" type="submit">
+          <i class="bi bi-floppy"></i>
+        </button>
+      </form>
+      
     </div>
-    <div class="col-4"><h5>Dashboard 1</h5></div>
+ 
+    </div>
     <div class="col-4"></div>
   </div>
   <div class="row">
-    <div class="col-2">
+    <div class="col-md-2">
 
+
+      
       {% include 'components/panelLeft.html' %}
       
      
     </div>
-    <div class="col-8">
-      <div id="outer-dropzone" class="dropzone"></div>
+    <div class="col-md-8">
+      
+      
+      <div id="outer-dropzone" class="dropzone">
+
+        {% for item in items %}
+        <img pk="{{item.img.id}}" id_code="{{item.id_code}}" class="drag-drop" src="{% static item.img %}" alt="items" style="width: 50px; transform: translate({{item.x}}px,{{item.y}}px);" data-x="{{item.x}}" data-y="{{item.y}}">
+        {% endfor %}
+      </div>
+
+
     </div>
-    <div class="col-2">
+    <div class="col-md-2">
       {% include 'components/panelRight.html' %}
     </div>
   </div>
 </div>
-
+<script src="{% static 'js/save.js' %}"></script>
 <script src="{% static 'js/dashboard.js' %}"></script>
+
+
+
+
 
 {% endblock %}

@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
@@ -25,26 +26,31 @@
      <div class="container">
       
       <div class="container">
-        <div class="row">
+        <div class="row mb-4">
+          <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark ">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">T&S INC</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse justify-content-center" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                  <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Inicio</a>
+                  <a class="nav-link" href="http://localhost:8000/admin">Panel Admin</a>
+                  <a class="nav-link" href="{% url 'product' %}">Inventario</a>
+                  <a class="nav-link" href="{% url 'offer' %}">Generar una Oferta</a>
+                  <!-- <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Ofertas</a> -->
+                </div>
+              </div>
+            </div>
+          </nav>
        
           <div class="col">
            
           </div>
           <div class="col-8">
-            <ul class="nav justify-content-center">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Inicio</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="http://localhost:8000/admin">Panel Admin</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'product' %}">Inventario</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'offer' %}">Genera una Oferta</a>
-              </li>
-            </ul>
+         
+           
           </div>
           <div class="col">
            
@@ -55,6 +61,17 @@
       <div class="row">
         <div class="col-4"></div>
         <div class="col-4">
+          <!-- <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
+          <ol class="breadcrumb p-2">
+            {% for name, url in breadcrumbs %}
+                {% if forloop.last %}
+                    <li class="breadcrumb-item active" aria-current="page">{{ name }}</li>
+                {% else %}
+                    <li class="breadcrumb-item"><a href="{{ url }}">{{ name }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ol> -->
+      </nav>
         </div>
         <div class="col-4"></div>
       </div>

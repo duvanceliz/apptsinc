@@ -62,11 +62,28 @@ class TabUnits(models.Model):
         return self.unit
 
 class Slots(models.Model):
-    slot = models.CharField(max_length=255, null=True, blank=True)
+    slot = models.ForeignKey(Product,on_delete=models.CASCADE, related_name='product')
     unit = models.ForeignKey(TabUnits,on_delete=models.CASCADE, related_name='slots')
+
+class Dasboard(models.Model):
+    name = models.CharField(max_length=200, default=None)
+    proyect = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='projects')
     def __str__(self):
-        return self.slot
+        return self.name
 
+class PanelItems(models.Model):
+    img = models.CharField(max_length=100, default=None)
+    width = models.IntegerField()
+    def __str__(self):
+        return self.img
 
+class Items(models.Model):
+    id_code = models.CharField(max_length=50, default=None)
+    x = models.FloatField()
+    y = models.FloatField()
+    img = models.ForeignKey(PanelItems, on_delete=models.CASCADE, related_name='panelitem')
+    dashboard = models.ForeignKey(Dasboard, on_delete=models.CASCADE, related_name='dashboard')
+    def __str__(self):
+        return self.id_code
 
 
