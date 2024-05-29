@@ -11,16 +11,18 @@ form.addEventListener('submit',e =>{
     const todos = document.querySelectorAll('div.dropzone > img')
     
     todos.forEach(todo => {
-        console.log('pk:' + todo.getAttribute('pk') + ' id_code: ' + todo.getAttribute('id_code')+ '  x: '+ todo.getAttribute('data-x')+ ' y: ' + todo.getAttribute('data-y'))
+        console.log('pk:' + todo.getAttribute('pk') + ' id_code: ' + todo.getAttribute('id_code')+ '  x: '+ todo.getAttribute('data-x')+ ' y: ' + todo.getAttribute('data-y')+ ' zindex: ' + todo.style.zIndex)
         const obj = {}
         obj.pk = todo.getAttribute('pk')
         obj.id_code = todo.getAttribute('id_code')
         obj.x = todo.getAttribute('data-x')
         obj.y =todo.getAttribute('data-y')
+        obj.zindex =todo.style.zIndex
+        obj.width =todo.style.width
+        obj.height =todo.style.height
         list.push(obj)
     })
     
-    console.log(dash_id)
     axios.post("/saveitems/", {
         dashboard_id: dash_id,
         values: list

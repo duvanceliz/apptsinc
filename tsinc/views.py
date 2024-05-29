@@ -232,7 +232,7 @@ def save_items(request):
         return redirect('/')
     else:
         raw_data = request.body
-        # print(raw_data)
+        print(f"desde save_item: {raw_data}"  )
         body_unicode = raw_data.decode('utf-8')
         data = json.loads(body_unicode)
         for value in data['values']:
@@ -243,13 +243,15 @@ def save_items(request):
                 item_exist = None
 
             if item_exist:
-                print('existe en la base de datos')
                 item_exist.x = value['x']
                 item_exist.y = value['y']
+                item_exist.zindex = int(value['zindex'])
+                item_exist.width = float(value['width'].replace("px",""))
+                item_exist.height = float(value['height'].replace("px",""))
                 item_exist.save()
             else:
                 dashboard = get_object_or_404(Dasboard, id=int(data['dashboard_id']))                         
-                new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'], img=img_obj, dashboard= dashboard )
+                new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'],width =float(value['width'].replace("px","")),height=float(value['height'].replace("px","")), img=img_obj, dashboard= dashboard )
                 new_item.save()
        
         return JsonResponse({'mensaje': 'Datos guardados con éxito!'})
@@ -276,3 +278,13 @@ def delete_page(request, id):
     project = object.project
     object.delete()
     return redirect(f'/createpage/{project.id}/')
+
+def delete_item(request):
+    if request.method == 'POST':
+        raw_data = request.body
+        # print(f"desde delete_item: {raw_data}")
+        body_unicode = raw_data.decode('utf-8')
+        data = json.loads(body_unicode)
+        item = get_object_or_404(Items,id_code=data['id_code'])
+        item.delete()
+        return JsonResponse({'mensaje': 'eliminado con éxito!'})

@@ -20,5 +20,6 @@ urlpatterns = [
     path('downloadoffer/<int:id>/', views.download_offer, name='download_offer'),
     path('saveitems/', views.save_items, name='save_items'),
     path('createpage/<int:id>/', views.create_page, name='create_page'),
+    path('deleteitem/', views.delete_item, name='delete_item'),
     
 ]

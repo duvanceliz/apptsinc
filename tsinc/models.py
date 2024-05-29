@@ -81,6 +81,9 @@ class Items(models.Model):
     id_code = models.CharField(max_length=50, default=None)
     x = models.FloatField()
     y = models.FloatField()
+    zindex = models.IntegerField(default=0)
+    width = models.FloatField(default=0)
+    height = models.FloatField(default=0)
     img = models.ForeignKey(PanelItems, on_delete=models.CASCADE, related_name='panelitem')
     dashboard = models.ForeignKey(Dasboard, on_delete=models.CASCADE, related_name='dashboard')
     def __str__(self):

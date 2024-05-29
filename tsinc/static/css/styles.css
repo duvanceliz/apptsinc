@@ -4,68 +4,35 @@
 
 .dropzone {
   background-color: #21242b;
-  border: 2px dashed rgb(148, 146, 146);
+  /* border: 2px dashed rgb(148, 146, 146); */
   border-radius: 4px;
   margin: 0;
   padding: 10px;
   width: 100%;
   transition: background-color 0.3s;
+  background: 
+  linear-gradient(to right, #606060 1px, transparent 1px),
+  linear-gradient(to bottom, #606060 1px, transparent 1px);
+  background-size: 20px 20px;
+  border: 1px solid #6c6c6c;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
-/* .drop-active {
-  border-color: #aaa;
-}
-
-.drop-target {
-  background-color: #29e;
-  border-color: #fff;
-  border-style: solid;
-} */
-
-/* .drag-drop {
-  display: inline-block;
-  min-width: 40px;
-  padding: 2em 0.5em;
-  margin: 1rem 0 0 1rem;
-
-  color: #fff;
-  background-color: #29e;
-  border: solid 2px #fff;
-
-  touch-action: none;
-  transform: translate(0px, 0px);
-
-  transition: background-color 0.3s;
-} */
-
-
-.drag{
-  width: 100px;
-  height: 30px;
-  background: red;
-  display: inline-block;
-  margin: 0;
-
-}
-
-.element{
-  width: 30px;
-  height: 30px;
-  background: rgb(10, 232, 95);
-  display: inline-block;
-  margin: 0;
-  cursor: pointer;
-}
-
-
-.box div.selected {
-  border: 2px solid black;
-}
-
 body{
   background: #1b1d23;
   color: white;
 }
+
+.dropzone{
+  margin: 0px;
+}
+
+.drag-drop{
+  position: absolute;
+}
+
+
+
 
 
 
