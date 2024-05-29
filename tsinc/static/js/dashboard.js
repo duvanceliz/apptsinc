@@ -10,8 +10,22 @@ const form2 = document.getElementById("form2");
 const btnon = document.getElementById("on");
 const btnunder = document.getElementById("under");
 const btnclone = document.getElementById("clone");
+const alertdiv = document.getElementById("alert")
+const btnlabel = document.getElementById('btnlabel')
 
 
+btnlabel.addEventListener('click', e=>{
+  let newInput = document.createElement('input')
+  newInput.style.width = '100px'
+  newInput.style.height = '40px'
+  newInput.style.textAlign = 'center'
+  newInput.style.zIndex = '0'
+  newInput.setAttribute('id_code', generateCode(4))
+  // newInput.style.backgroundColor = 'rgba(0, 0, 0, 0)'
+  newInput.style.border = '1px solid white'
+  newInput.className = 'drag-drop'
+  dropzone.appendChild(newInput)
+})
 
 btnon.addEventListener("click", (e) => {
   changeZindex(btnon);
@@ -228,7 +242,11 @@ interact(".dropzone").dropzone({
   ondropdeactivate: function (event) {
     var draggableElement = event.relatedTarget; // este se le aplica al objeto
     var dropzoneElement = event.target; // este le aplica a la zona
-    // console.log("dejo de moverse");
+    console.log("dejo de moverse");
+    alertdiv.hidden = false
+    
+    
+
   },
   ondrop: function (event) {
     // cuando el objeto es soltado dentro de la zona
@@ -273,7 +291,7 @@ interact(".drag-drop")
 
       // minimum size
       interact.modifiers.restrictSize({
-        min: { width: 50, height: 50 },
+        min: { width: 50, height: 20 },
       }),
     ],
 
@@ -290,7 +308,7 @@ interact(".drag-drop")
       interact.modifiers.snap({
         targets: [interact.snappers.grid({ x: 10, y: 10 })],
         range: Infinity,
-        relativePoints: [{ x: 5, y: 5 }],
+        relativePoints: [{ x: 1, y: 1 }],
       }),
     ],
   });

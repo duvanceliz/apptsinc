@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
-from .models import Project, Product, Offers, TabUnits, Tabs, Slots, Dasboard, PanelItems, Items
+from .models import Project, Product, Offers, TabUnits, Tabs, Slots, Dasboard, PanelItems, Items,Labels
 from .forms import CreateProject, CreateProduct, UploadProducts, CreateOffer, CreateTab, CreateUnit, Units, SearchForm, CreatePage
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
@@ -49,7 +49,8 @@ def dashboard(request, id):
     project = dashboard.project
     panelitems = PanelItems.objects.all()
     items = Items.objects.all()
-    return render(request, 'dashboard.html',{'project':project, 'panelitems':panelitems, 'items': items, 'dashboard':dashboard})
+    labels = Labels.objects.all()
+    return render(request, 'dashboard.html',{'project':project, 'panelitems':panelitems, 'items': items, 'dashboard':dashboard, 'labels':labels })
 
 
 
@@ -253,6 +254,25 @@ def save_items(request):
                 dashboard = get_object_or_404(Dasboard, id=int(data['dashboard_id']))                         
                 new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'],width =float(value['width'].replace("px","")),height=float(value['height'].replace("px","")), img=img_obj, dashboard= dashboard )
                 new_item.save()
+
+        for label in data['labels']:
+            try:
+                label_exist = Labels.objects.get(id_code = label['id_code'])
+            except ObjectDoesNotExist:
+                label_exist = None
+
+            if label_exist:
+                label_exist.value = label['value']
+                label_exist.x = label['x']
+                label_exist.y = label['y']
+                label_exist.zindex = int(label['zindex'])
+                label_exist.width = float(label['width'].replace("px",""))
+                label_exist.height = float(label['height'].replace("px",""))
+                label_exist.save()
+            else:
+                dashboard = get_object_or_404(Dasboard, id=int(data['dashboard_id']))                         
+                new_label = Labels(id_code=label['id_code'],value=label['value'],x=label['x'],y=label['y'],width =float(label['width'].replace("px","")),height=float(label['height'].replace("px","")), dashboard= dashboard )
+                new_label.save()
        
         return JsonResponse({'mensaje': 'Datos guardados con éxito!'})
     
@@ -282,9 +302,16 @@ def delete_page(request, id):
 def delete_item(request):
     if request.method == 'POST':
         raw_data = request.body
-        # print(f"desde delete_item: {raw_data}")
+        print(f"desde delete_item: {raw_data}")
         body_unicode = raw_data.decode('utf-8')
         data = json.loads(body_unicode)
-        item = get_object_or_404(Items,id_code=data['id_code'])
-        item.delete()
+        try:
+            item_exist = Items.objects.get(id_code = data['id_code'])
+        except ObjectDoesNotExist:
+            item_exist = None
+        if item_exist:
+            item_exist.delete()
+        else:
+            labels = get_object_or_404(Labels,id_code=data['id_code'])
+            labels.delete()
         return JsonResponse({'mensaje': 'eliminado con éxito!'})

@@ -88,5 +88,17 @@ class Items(models.Model):
     dashboard = models.ForeignKey(Dasboard, on_delete=models.CASCADE, related_name='dashboard')
     def __str__(self):
         return self.id_code
+    
+class Labels(models.Model):
+    id_code = models.CharField(max_length=50, default=None)
+    value = models.CharField(max_length=200, default=None)
+    x = models.FloatField()
+    y = models.FloatField()
+    zindex = models.IntegerField(default=0)
+    width = models.FloatField(default=0)
+    height = models.FloatField(default=0)
+    dashboard = models.ForeignKey(Dasboard, on_delete=models.CASCADE, related_name='labels')
+    def __str__(self):
+        return self.id_code
 
 

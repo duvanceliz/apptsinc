@@ -31,6 +31,13 @@ body{
   position: absolute;
 }
 
+#alert{
+  background: rgb(114, 114, 69);
+  border-radius: 2px;
+  padding: 2px;
+  text-align: center;
+}
+
 
 
 
