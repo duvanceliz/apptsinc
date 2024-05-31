@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
+from django.core import serializers
 from django.http import HttpResponse
 from .models import Project, Product, Offers, TabUnits, Tabs, Slots, Dasboard, PanelItems, Items,Labels
 from .forms import CreateProject, CreateProduct, UploadProducts, CreateOffer, CreateTab, CreateUnit, Units, SearchForm, CreatePage
@@ -13,24 +14,27 @@ import json
 
 @login_required
 def home(request):
-    projects = Project.objects.all()
+    projects = Project.objects.filter(usersesion=request.user)
     paginator = Paginator(projects, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'home.html',{'page_obj': page_obj})
+    user = request.user  # El usuario actualmente autenticado
+    session_key = request.session.session_key 
+    return render(request, 'home.html',{'page_obj': page_obj, 'username':user.username, 'session_key':session_key})
 
+@login_required
 def delete_project(request, id):
     object = get_object_or_404(Project, id=id)
     object.delete()
     return redirect('/')
 
-
+@login_required
 def create_project(request):
     if request.method == 'GET':
        return render(request, 'createproject.html',{'form': CreateProject()})
     else:
         print(request.POST)
-        project = Project.objects.create(name = request.POST['name'], dibujante = request.POST['dibujante'], approved = request.POST['approved'] )
+        project = Project.objects.create(name = request.POST['name'], dibujante = request.POST['dibujante'], approved = request.POST['approved'], usersesion=request.user )
         return redirect('/')
     
 @login_required
@@ -50,10 +54,19 @@ def dashboard(request, id):
     panelitems = PanelItems.objects.all()
     items = Items.objects.all()
     labels = Labels.objects.all()
-    return render(request, 'dashboard.html',{'project':project, 'panelitems':panelitems, 'items': items, 'dashboard':dashboard, 'labels':labels })
+    return render(request, 'dashboard.html',{'project':project, 'panelitems':panelitems, 'items': items, 'dashboard':dashboard, 'labels':labels, 'form':SearchForm()})
 
+@login_required
+def product_search(request):
+    if request.method == 'POST':
+        raw_data = request.body
+        body_unicode = raw_data.decode('utf-8')
+        data = json.loads(body_unicode)
+        results = Product.objects.filter(product_name__icontains= data['search']).values()
+        results = list(results)
+        return JsonResponse(results,safe=False)
 
-
+@login_required
 def create_product(request):
     if request.method == 'GET':
        return render(request, 'createproduct.html',{'form': CreateProduct()})
@@ -66,7 +79,7 @@ def create_product(request):
 
         project = Product.objects.create(code = request.POST['code'], product_name = request.POST['product_name'], factory_ref= request.POST['ref'], model= request.POST['model'], sale_price= request.POST['price'],iva=iva)
         return redirect('/product')
-    
+@login_required   
 def upload_products(request):
     if request.method == 'POST':
         form = UploadProducts(request.POST, request.FILES)
@@ -92,7 +105,7 @@ def upload_products(request):
         form = UploadProducts()
     return render(request, 'uploadproducts.html', {'form': form})
 
-
+@login_required
 def offer(request):
     if request.method == 'GET':
         offer = Offers.objects.all()
@@ -105,7 +118,7 @@ def offer(request):
         Offers.objects.create(title = request.POST['title'], controller = request.POST['controller'])
         return redirect('/offer')
 
-
+@login_required
 def tabs(request, id):
     if request.method == 'GET':
         offer = Offers.objects.get(id=id)
@@ -119,7 +132,7 @@ def tabs(request, id):
         return redirect("/offer/tabs/{}/".format(id))
 
 
-
+@login_required
 def units(request, id):
     if request.method == 'GET':
         tab = Tabs.objects.get(id=id)
@@ -134,7 +147,7 @@ def units(request, id):
         TabUnits.objects.create(unit = unit_name , quantity = request.POST['quantity'], tab = tab)
         return redirect("/offer/tabs/units/{}/".format(id))
 
-
+@login_required
 def config(request, id):
     if request.method == 'GET':
 
@@ -162,30 +175,30 @@ def config(request, id):
         Slots.objects.create(slot=prod, unit=unit)
         return redirect("/offer/tabs/units/configuration/{}/".format(id))
     # tabs = offer.tabs.all() 
-
+@login_required
 def delete_slot(request, id):
     object = get_object_or_404(Slots, id=id)
     unit = object.unit
     object.delete()
     return redirect("/offer/tabs/units/configuration/{}/".format(unit.pk))
-
+@login_required
 def delete_unit(request, id):
     object = get_object_or_404(TabUnits, id=id)
     tab = object.tab
     object.delete()
     return redirect("/offer/tabs/units/{}/".format(tab.pk))
-
+@login_required
 def delete_tab(request, id):
     object = get_object_or_404(Tabs, id=id)
     offer = object.offer
     object.delete()
     return redirect("/offer/tabs/{}/".format(offer.pk))
-
+@login_required
 def delete_offer(request, id):
     object = get_object_or_404(Offers, id=id)
     object.delete()
     return redirect("/offer/")
-
+@login_required
 def download_offer(request,id):
 
     workbook = openpyxl.Workbook()
@@ -226,7 +239,7 @@ def download_offer(request,id):
     return response
     # return redirect('/offer/')
     
-
+@login_required
 def save_items(request):
 
     if request.method == 'GET':
@@ -249,11 +262,19 @@ def save_items(request):
                 item_exist.zindex = int(value['zindex'])
                 item_exist.width = float(value['width'].replace("px",""))
                 item_exist.height = float(value['height'].replace("px",""))
+            
+                # item_exist.product = get_object_or_404(Product,id=value['product_id'])
                 item_exist.save()
             else:
-                dashboard = get_object_or_404(Dasboard, id=int(data['dashboard_id']))                         
-                new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'],width =float(value['width'].replace("px","")),height=float(value['height'].replace("px","")), img=img_obj, dashboard= dashboard )
-                new_item.save()
+                dashboard = get_object_or_404(Dasboard, id=int(data['dashboard_id'])) 
+                
+                if value['product_id'] != None:
+                    product = get_object_or_404(Product, id=value['product_id'])  
+                    new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'],width =float(value['width'].replace("px","")),height=float(value['height'].replace("px","")), img=img_obj, dashboard= dashboard, product=product)
+                    new_item.save()
+                else:       
+                    new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'],width =float(value['width'].replace("px","")),height=float(value['height'].replace("px","")), img=img_obj, dashboard= dashboard)
+                    new_item.save()
 
         for label in data['labels']:
             try:
@@ -276,7 +297,7 @@ def save_items(request):
        
         return JsonResponse({'mensaje': 'Datos guardados con éxito!'})
     
-
+@login_required
 def create_page(request,id):
     if request.method == 'GET':
         project = get_object_or_404(Project,id=id)
@@ -292,13 +313,13 @@ def create_page(request,id):
         Dasboard.objects.create(name = request.POST['name'],project=project)
         return redirect(f'/createpage/{id}/')
 
-
+@login_required
 def delete_page(request, id):
     object = get_object_or_404(Dasboard, id=id)
     project = object.project
     object.delete()
     return redirect(f'/createpage/{project.id}/')
-
+@login_required
 def delete_item(request):
     if request.method == 'POST':
         raw_data = request.body

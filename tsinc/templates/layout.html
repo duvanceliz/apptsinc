@@ -37,6 +37,10 @@
                   <a class="nav-link" href="http://localhost:8000/admin">Panel Admin</a>
                   <a class="nav-link" href="{% url 'product' %}">Inventario</a>
                   <a class="nav-link" href="{% url 'offer' %}">Generar una Oferta</a>
+                  <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-link">Salir</button>
+                  </form>
                   <!-- <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Ofertas</a> -->
                 </div>
               </div>

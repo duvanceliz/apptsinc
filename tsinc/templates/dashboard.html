@@ -3,21 +3,14 @@
 <div class="container">
   <div class="row mb-4">
 
-   <div class="col-4"></div>
    <div class="col-4">
-    <div class="card bg-dark p-2">
+    
+   </div>
+   <div class="col-4">
+    <div class="bg-dark p-2">
       <span class="fs-6 fw_light">
         Proyecto: {{project.name}}
     </span>
-    <span class="fs-6 fw-light">
-        Dibujante: {{project.dibujante}}
-    </span>
-    <span class="fs-6 fw-light">
-      Fecha: {{project.date}}
-  </span>
-  <span class="fs-6 fw-light">
-    Aprobado Por: {{project.approved}}
-</span>
     <span class="fs-6 fw-light">
       Nombre de pagina: {{dashboard.name}}
   </span>
@@ -40,7 +33,7 @@
       <input id="dashboard_id" type="text" value="{{dashboard.id}}" hidden >
       <form action="" id="form">
         {% csrf_token %}
-        <button id="save" class="btn btn-success btn-sm" type="submit">
+        <button id="save" class="btn btn-success btn-sm" type="submit" disabled>
           <i class="bi bi-floppy"></i>
         </button>
       </form>
@@ -50,9 +43,15 @@
         <button id="delete" type="submit" class="btn btn-danger btn-sm" disabled><i class="bi bi-trash"></i> </button>
       </form>
       <button id="clone" class="btn btn-primary btn-sm" disabled><i class="bi bi-copy"></i></button>
+      
+       <button id="btnlabel" class="btn btn-primary btn-sm"><i class="bi bi-bookmark-plus"></i></button>
+       <button id="btnInventory" type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>
+        <i class="bi bi-plus-circle"></i>
+      </button>
       <button id="on" class="btn btn-primary btn-sm " disabled>Encima</button>
        <button id="under" class="btn btn-primary btn-sm" disabled>Debajo</button>
-       <button id="btnlabel" class="btn btn-primary btn-sm"><i class="bi bi-bookmark-plus"></i></button>
+      {% include 'components/dashboardModal.html' %}
+      
     </div>
     <div class="col-4">
      
@@ -70,15 +69,17 @@
      
     </div>
     <div class="col-md-8">
-      
-      <div id="alert" hidden>
-        Cada vez que hagas un cambio no se te olvide guardar!!
+      <div id="notification-box">
+       <div id="alert" hidden >
+         <span>Recuerda Guardar!!</span>
+       </div>
       </div>
+      
       <div id="outer-dropzone" class="dropzone position-relative">
 
         {% for item in items %}
         {% if dashboard.id == item.dashboard.id%}
-        <img pk="{{item.img.id}}" id_code="{{item.id_code}}" class="drag-drop" src="{% static item.img %}" alt="items" style=" transform: translate({{item.x}}px,{{item.y}}px); z-index:{{item.zindex}}; width: {{item.width}}px; height: {{item.height}}px;" data-x="{{item.x}}" data-y="{{item.y}}">
+        <img pk="{{item.img.id}}" id_code="{{item.id_code}}" class="drag-drop" src="{% static item.img %}" alt="items" style=" transform: translate({{item.x}}px,{{item.y}}px); z-index:{{item.zindex}}; width: {{item.width}}px; height: {{item.height}}px;" data-x="{{item.x}}" data-y="{{item.y}}" product_id="{{item.product.id}}">
         {% endif %}
         {% endfor %}
         {% for label in labels %}
@@ -97,8 +98,4 @@
 </div>
 <script src="{% static 'js/save.js' %}"></script>
 <script src="{% static 'js/dashboard.js' %}"></script>
-
-
-
-
 {% endblock %}

@@ -21,5 +21,6 @@ urlpatterns = [
     path('saveitems/', views.save_items, name='save_items'),
     path('createpage/<int:id>/', views.create_page, name='create_page'),
     path('deleteitem/', views.delete_item, name='delete_item'),
+    path('productsearch/', views.product_search, name='product_search'),
     
 ]

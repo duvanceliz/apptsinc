@@ -5,27 +5,159 @@ const eventState = {
 const eventState2 = {
   target: null,
 };
+
+const eventStateTable = {
+  target: null,
+};
 const btndelete = document.getElementById("delete");
 const form2 = document.getElementById("form2");
 const btnon = document.getElementById("on");
 const btnunder = document.getElementById("under");
 const btnclone = document.getElementById("clone");
-const alertdiv = document.getElementById("alert")
-const btnlabel = document.getElementById('btnlabel')
+const alertdiv = document.getElementById("alert");
+const btnlabel = document.getElementById("btnlabel");
+const btnsave = document.querySelector("#save");
+const csrfToken = document.querySelector("#form > input");
+const form = document.getElementById("form");
+const dash_id = document.getElementById("dashboard_id").value;
+const btnInventory = document.getElementById("btnInventory");
+const results = document.getElementById("results");
+const linkProduct = document.getElementById("link-product")
+const formSearch = document.getElementById("form-search");
 
 
-btnlabel.addEventListener('click', e=>{
-  let newInput = document.createElement('input')
-  newInput.style.width = '100px'
-  newInput.style.height = '40px'
-  newInput.style.textAlign = 'center'
-  newInput.style.zIndex = '0'
-  newInput.setAttribute('id_code', generateCode(4))
-  // newInput.style.backgroundColor = 'rgba(0, 0, 0, 0)'
-  newInput.style.border = '1px solid white'
-  newInput.className = 'drag-drop'
-  dropzone.appendChild(newInput)
-})
+
+linkProduct.addEventListener('click',e=>{
+  if(eventState2.target.getAttribute('pk')){
+    eventState2.target.setAttribute('product_id',eventStateTable.target.id)
+    console.log(eventState2.target)
+    console.log(eventStateTable.target)
+  }
+}
+)
+
+formSearch.addEventListener("submit", (e) => {
+  e.preventDefault();
+  
+  const inputSearch = document.getElementById("input-search").value;
+  axios
+    .post(
+      "/productsearch/",
+      {
+        search: inputSearch,
+      },
+      {
+        headers: {
+          "X-CSRFToken": csrfToken.value,
+        },
+      }
+    )
+    .then(function (response) {
+      console.log(response.data);
+      results.innerHTML = ``;
+      response.data.forEach( (obj) =>{
+
+          results.innerHTML += `
+          <tr id="${obj.id}">
+            <th scope="row">${obj.id}</th>
+            <td>${obj.product_name}</td>
+            <td>${obj.model}</td>
+            <td>${obj.brand}</td>
+            <td>${obj.sale_price}</td>
+            </tr>
+      `;
+      })
+      const interactItemTable = document.querySelectorAll('#results > tr')
+      interactItemTable.forEach(row =>{
+        row.addEventListener('click',e =>{
+          interactItemTable.forEach(row =>{
+            row.style = ''
+          })
+           eventStateTable.target = row
+           row.style.border = '2px solid white'
+        })
+
+
+      })
+     
+      
+    })
+    .catch(function (error) {
+      // document.getElementById('mensaje').innerText = 'Error: ' + error.response.data.mensaje;
+      console.log(error.response.data.mensaje);
+    });
+});
+
+
+
+const notificationBox = form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  btnsave.disabled = true;
+  alertdiv.hidden = true;
+  const listItem = [];
+  const listLabel = [];
+  const todositem = document.querySelectorAll("div.dropzone > img");
+  const todoslabel = document.querySelectorAll("div.dropzone > input");
+  todositem.forEach((todo) => {
+    const obj = {};
+    obj.pk = todo.getAttribute("pk");
+    obj.id_code = todo.getAttribute("id_code");
+    obj.x = todo.getAttribute("data-x");
+    obj.y = todo.getAttribute("data-y");
+    obj.product_id = todo.getAttribute("product_id");
+    obj.zindex = todo.style.zIndex;
+    obj.width = todo.style.width;
+    obj.height = todo.style.height;
+    listItem.push(obj);
+  });
+  todoslabel.forEach((todo) => {
+    const obj = {};
+    obj.id_code = todo.getAttribute("id_code");
+    obj.x = todo.getAttribute("data-x");
+    obj.y = todo.getAttribute("data-y");
+    obj.value = todo.value;
+    obj.width = todo.style.width;
+    obj.height = todo.style.height;
+    obj.zindex = todo.style.zIndex;
+    listLabel.push(obj);
+  });
+
+  axios
+    .post(
+      "/saveitems/",
+      {
+        dashboard_id: dash_id,
+        values: listItem,
+        labels: listLabel,
+      },
+      {
+        headers: {
+          "X-CSRFToken": csrfToken.value,
+        },
+      }
+    )
+    .then(function (response) {
+      console.log(response.data.mensaje);
+    })
+    .catch(function (error) {
+      // document.getElementById('mensaje').innerText = 'Error: ' + error.response.data.mensaje;
+      console.log(error.response.data.mensaje);
+    });
+});
+
+btnlabel.addEventListener("click", (e) => {
+  let newInput = document.createElement("input");
+  newInput.style.width = "100px";
+  newInput.style.height = "40px";
+  // newInput.style.textAlign = "center";
+  newInput.style.zIndex = "0";
+  newInput.setAttribute("id_code", generateCode(4));
+  newInput.style.backgroundColor = 'rgba(0, 0, 0, 0)'
+  newInput.style.color = 'white'
+  newInput.style.border = "1px solid white";
+  newInput.className = "drag-drop";
+  dropzone.appendChild(newInput);
+});
 
 btnon.addEventListener("click", (e) => {
   changeZindex(btnon);
@@ -35,23 +167,20 @@ btnunder.addEventListener("click", (e) => {
   changeZindex(btnunder);
 });
 
-btnclone.addEventListener('click',e=>{
-
+btnclone.addEventListener("click", (e) => {
   // console.log(eventState2.target)
   const clone = eventState2.target.cloneNode(true);
 
-  
   clone.setAttribute("id_code", generateCode(4));
-  clone.style.transform = 'translate(-16.3754px, -19.729px)'
-  clone.setAttribute('data-x',"-16.3754")
-  clone.setAttribute('data-y',"-19.729")
+  clone.style.transform = "translate(-16.3754px, -19.729px)";
+  clone.setAttribute("data-x", "-16.3754");
+  clone.setAttribute("data-y", "-19.729");
   dropzone.appendChild(clone);
   //   // clone.style.width = "auto";
   //   clone.style.zIndex = "0";
-  //   
-  //   
-})
-
+  //
+  //
+});
 
 function changeZindex(btn) {
   if (btn.id == "on") {
@@ -127,7 +256,6 @@ dropzone.addEventListener("drop", (e) => {
     const clone = eventState.target.cloneNode(true);
     clone.classList.add("drag-drop");
     clone.removeAttribute("id");
-    clone.removeAttribute("id");
     // clone.style.width = "auto";
     clone.style.zIndex = "0";
     clone.setAttribute("id_code", generateCode(4));
@@ -182,6 +310,7 @@ interact(".drag-drop")
     btnunder.disabled = false;
     btndelete.disabled = false;
     btnclone.disabled = false;
+    btnInventory.disabled = false;
     eventState2.target = event.target;
 
     panel.innerHTML = `
@@ -237,16 +366,15 @@ interact(".dropzone").dropzone({
     // cuando el evento esta dentro de la zona o el obejeto esta dentro de la zona sin soltar
     var draggableElement = event.relatedTarget; // este se le aplica al objeto
     var dropzoneElement = event.target; // este le aplica a la zona
+
     // console.log("dentro de zona");
   },
   ondropdeactivate: function (event) {
     var draggableElement = event.relatedTarget; // este se le aplica al objeto
     var dropzoneElement = event.target; // este le aplica a la zona
-    console.log("dejo de moverse");
-    alertdiv.hidden = false
-    
-    
-
+    alertdiv.hidden = false;
+    btnsave.disabled = false;
+    // console.log("dejo de moverse");
   },
   ondrop: function (event) {
     // cuando el objeto es soltado dentro de la zona
@@ -306,7 +434,7 @@ interact(".drag-drop")
         endOnly: false,
       }),
       interact.modifiers.snap({
-        targets: [interact.snappers.grid({ x: 10, y: 10 })],
+        targets: [interact.snappers.grid({ x: 2.5, y: 2.5 })],
         range: Infinity,
         relativePoints: [{ x: 1, y: 1 }],
       }),
