@@ -260,9 +260,7 @@ def save_items(request):
                 item_exist.x = value['x']
                 item_exist.y = value['y']
                 item_exist.zindex = int(value['zindex'])
-                item_exist.width = float(value['width'].replace("px",""))
-                item_exist.height = float(value['height'].replace("px",""))
-            
+                item_exist.width = float(value['width'].replace("px",""))          
                 # item_exist.product = get_object_or_404(Product,id=value['product_id'])
                 item_exist.save()
             else:
@@ -270,10 +268,10 @@ def save_items(request):
                 
                 if value['product_id'] != None:
                     product = get_object_or_404(Product, id=value['product_id'])  
-                    new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'],width =float(value['width'].replace("px","")),height=float(value['height'].replace("px","")), img=img_obj, dashboard= dashboard, product=product)
+                    new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'],width =float(value['width'].replace("px","")), img=img_obj, dashboard= dashboard, product=product)
                     new_item.save()
-                else:       
-                    new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'],width =float(value['width'].replace("px","")),height=float(value['height'].replace("px","")), img=img_obj, dashboard= dashboard)
+                else:     
+                    new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'],width =float(value['width'].replace("px","")), img=img_obj, dashboard= dashboard)
                     new_item.save()
 
         for label in data['labels']:

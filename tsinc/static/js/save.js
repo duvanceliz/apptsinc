@@ -65,8 +65,6 @@
 //     });
 // });
 
-import { saludar } from "./saludo";
+import { saludo } from "./saludo";
 
-
-
-saludar('Hello')
+saludo()

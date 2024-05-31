@@ -1,3 +1,4 @@
-export function saludar(saludo){
-    console.log(saludo)
-  }
+
+export function saludo(){
+  return console.log('holaaaa')
+}
