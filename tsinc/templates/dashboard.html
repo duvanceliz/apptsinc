@@ -79,7 +79,7 @@
 
         {% for item in items %}
         {% if dashboard.id == item.dashboard.id%}
-        <img pk="{{item.img.id}}" id_code="{{item.id_code}}" class="drag-drop" src="{% static item.img %}" alt="items" style=" transform: translate({{item.x}}px,{{item.y}}px); z-index:{{item.zindex}}; width: {{item.width}}px;" data-x="{{item.x}}" data-y="{{item.y}}" product_id="{{item.product.id}}">
+        <img pk="{{item.img.id}}" id_code="{{item.id_code}}" class="drag-drop" src="{% static item.img %}" alt="items" style="transform: translate({{item.x}}px,{{item.y}}px);z-index:{{item.zindex}}; width: {{item.width}}px;"  product_id="{{item.product.id}}" data-x="{{item.x}}" data-y="{{item.y}}">
         {% endif %}
         {% endfor %}
         {% for label in labels %}
