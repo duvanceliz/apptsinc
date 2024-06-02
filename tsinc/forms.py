@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import formset_factory
-from .models import Units, Brand, Location
+from .models import Units, Brand, Location, Tabs
 
 
 class CreateProject(forms.Form):

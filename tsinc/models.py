@@ -32,10 +32,11 @@ class Product(models.Model):
     brand = models.CharField(max_length=200, default=None)
     location = models.CharField(max_length=200, default=None)
     quantity = models.IntegerField()
+    point = models.CharField(max_length=100,null=True,blank=True)
     iva = models.BooleanField(default=False)
     date = models.DateField(default=datetime.date.today)
     def __str__(self):
-        return self.product_name
+        return f"{self.brand} - {self.model}"
 
 class Units(models.Model):
     name = models.CharField(max_length=200, default=None)
@@ -51,7 +52,7 @@ class Offers(models.Model):
     
 class Tabs(models.Model):
     tab_name = models.CharField(max_length=200, default=None)
-    offer = models.ForeignKey(Offers,on_delete=models.CASCADE, related_name='tabs')
+    project = models.ForeignKey(Project,on_delete=models.CASCADE, related_name='tabs', null=True, blank=True)
     def __str__(self):
         return self.tab_name
     
@@ -68,13 +69,14 @@ class Slots(models.Model):
 
 class Dasboard(models.Model):
     name = models.CharField(max_length=200, default=None)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='dashboards')
+    tab = models.ForeignKey(Tabs, on_delete=models.CASCADE, related_name='dashboards',null=True,blank=True)
     def __str__(self):
         return self.name
 
 class PanelItems(models.Model):
     img = models.CharField(max_length=100, default=None)
     width = models.IntegerField()
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='items', null=True, blank=True)
     def __str__(self):
         return self.img
 
@@ -87,7 +89,6 @@ class Items(models.Model):
     height = models.FloatField(default=0)
     img = models.ForeignKey(PanelItems, on_delete=models.CASCADE, related_name='panelitem')
     dashboard = models.ForeignKey(Dasboard, on_delete=models.CASCADE, related_name='dashboard')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='items', null=True, blank=True)
     def __str__(self):
         return self.id_code
     

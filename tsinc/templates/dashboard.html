@@ -6,13 +6,16 @@
    <div class="col-4">
     
    </div>
-   <div class="col-4">
+   <div class="col-4 d-flex justify-content-center">
     <div class="bg-dark p-2">
       <span class="fs-6 fw_light">
-        Proyecto: {{project.name}}
+       {{tab.project.name}} --
     </span>
     <span class="fs-6 fw-light">
-      Nombre de pagina: {{dashboard.name}}
+      {{tab.tab_name}} --
+  </span>
+    <span class="fs-6 fw-light">
+      {{dashboard.name}}
   </span>
   </div>
    </div>
@@ -46,10 +49,11 @@
       
        <button id="btnlabel" class="btn btn-primary btn-sm"><i class="bi bi-bookmark-plus"></i></button>
        <button id="btnInventory" type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>
-        <i class="bi bi-plus-circle"></i>
+        <i class="bi bi-search"></i>
       </button>
       <button id="on" class="btn btn-primary btn-sm " disabled>Encima</button>
        <button id="under" class="btn btn-primary btn-sm" disabled>Debajo</button>
+       <button id="btntotal" class="btn btn-warning btn-sm">Total</button>
       {% include 'components/dashboardModal.html' %}
       
     </div>
@@ -69,6 +73,8 @@
      
     </div>
     <div class="col-md-8">
+
+      <input id="dashboard-id" type="text" value="{{dashboard.id}}" hidden>
       <div id="notification-box">
        <div id="alert" hidden >
          <span>Recuerda Guardar!!</span>
@@ -96,6 +102,6 @@
     </div>
   </div>
 </div>
-<!-- <script  type="module" src="{% static 'js/save.js' %}"></script> -->
+<script  type="module" src="{% static 'js/dashboard/total.js' %}"></script>
 <script src="{% static 'js/dashboard/main.js' %}"></script>
 {% endblock %}

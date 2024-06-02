@@ -9,7 +9,7 @@ urlpatterns = [
     path('dashboard/<int:id>/', views.dashboard, name='dashboard' ),
     path('uploadproducts/', views.upload_products, name='uploadproducts' ),
     path('offer/', views.offer, name='offer'),
-    path('offer/tabs/<int:id>/', views.tabs, name='tabs'),
+    path('project/tabs/<int:id>/', views.tabs, name='tabs'),
     path('offer/tabs/units/<int:id>/', views.units, name='units'),
     path('offer/tabs/units/configuration/<int:id>/', views.config, name='config' ),
     path('deleteslot/<int:id>/', views.delete_slot, name='delete_slot'),
@@ -22,5 +22,6 @@ urlpatterns = [
     path('createpage/<int:id>/', views.create_page, name='create_page'),
     path('deleteitem/', views.delete_item, name='delete_item'),
     path('productsearch/', views.product_search, name='product_search'),
+     path('totalproducts/', views.total, name='total'),
     
 ]

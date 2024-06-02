@@ -25,9 +25,7 @@ const results = document.getElementById("results");
 const linkProduct = document.getElementById("link-product");
 const formSearch = document.getElementById("form-search");
 const dropzone = document.getElementById("outer-dropzone");
-const todo = document.querySelectorAll(
-  "div.dropzone > img, div.dropzone > input"
-);
+
 
 // Función para guardar la posición de un elemento
 function savePosition(itemId, x, y) {
@@ -84,6 +82,9 @@ function changeZindex(btn) {
 //************************************************** */
 //FUNCION LIMPIA LA SELECCION DE TODOS LOS ELEMENTOS
 function clean(todo) {
+  const todo = document.querySelectorAll(
+    "div.dropzone > img, div.dropzone > input"
+  );
   todo.forEach((item) => {
     item.style.backgroundColor = "rgba(0, 0, 0, 0)";
   });
@@ -101,7 +102,6 @@ dropzone.addEventListener("click", (e) => {
     btndelete.disabled = true;
     btnclone.disabled = true;
     btnInventory.disabled = true;
-    btnsave.disabled = true;
   }
 });
 

@@ -50,11 +50,11 @@ def product(request):
 @login_required
 def dashboard(request, id):
     dashboard = Dasboard.objects.get(id=id)
-    project = dashboard.project
+    tab = dashboard.tab
     panelitems = PanelItems.objects.all()
     items = Items.objects.all()
     labels = Labels.objects.all()
-    return render(request, 'dashboard.html',{'project':project, 'panelitems':panelitems, 'items': items, 'dashboard':dashboard, 'labels':labels, 'form':SearchForm()})
+    return render(request, 'dashboard.html',{'tab':tab, 'panelitems':panelitems, 'items': items, 'dashboard':dashboard, 'labels':labels, 'form':SearchForm()})
 
 @login_required
 def product_search(request):
@@ -121,15 +121,15 @@ def offer(request):
 @login_required
 def tabs(request, id):
     if request.method == 'GET':
-        offer = Offers.objects.get(id=id)
-        tabs = offer.tabs.all()
+        project = Project.objects.get(id=id)
+        tabs = project.tabs.all()
         # tabs = offer.tabs.all()
-        return render(request,'tabs.html',{'tabs': tabs, 'form': CreateTab() , 'offer': offer})
+        return render(request,'tabs.html',{'tabs': tabs, 'form': CreateTab(), 'project':project})
     else:
         print(request.POST)
-        offer = Offers.objects.get(id=id)
-        Tabs.objects.create(tab_name = request.POST['tab_name'],offer = offer)
-        return redirect("/offer/tabs/{}/".format(id))
+        project = Project.objects.get(id=id)
+        Tabs.objects.create(tab_name = request.POST['tab_name'], project= project)
+        return redirect("/project/tabs/{}/".format(id))
 
 
 @login_required
@@ -261,18 +261,11 @@ def save_items(request):
                 item_exist.y = value['y']
                 item_exist.zindex = int(value['zindex'])
                 item_exist.width = float(value['width'].replace("px",""))          
-                # item_exist.product = get_object_or_404(Product,id=value['product_id'])
                 item_exist.save()
             else:
                 dashboard = get_object_or_404(Dasboard, id=int(data['dashboard_id'])) 
-                
-                if value['product_id'] != None:
-                    product = get_object_or_404(Product, id=value['product_id'])  
-                    new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'],width =float(value['width'].replace("px","")), img=img_obj, dashboard= dashboard, product=product)
-                    new_item.save()
-                else:     
-                    new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'],width =float(value['width'].replace("px","")), img=img_obj, dashboard= dashboard)
-                    new_item.save()
+                new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'],width =float(value['width'].replace("px","")), img=img_obj, dashboard= dashboard)
+                new_item.save()
 
         for label in data['labels']:
             try:
@@ -298,17 +291,16 @@ def save_items(request):
 @login_required
 def create_page(request,id):
     if request.method == 'GET':
-        project = get_object_or_404(Project,id=id)
-        pages_project = project.dashboards.all()
+        tab = get_object_or_404(Tabs,id=id)
+        pages_tab = tab.dashboards.all()
         # page = Dasboard.objects.all()
-        paginator = Paginator(pages_project, 5)
+        paginator = Paginator(pages_tab, 5)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         return render(request, 'createpage.html',{'page_obj': page_obj, 'form':CreatePage()})
     else:
-        project = Project.objects.get(id=id)
-        print(request.POST['name'])
-        Dasboard.objects.create(name = request.POST['name'],project=project)
+        tab = Tabs.objects.get(id=id)
+        Dasboard.objects.create(name = request.POST['name'],tab=tab)
         return redirect(f'/createpage/{id}/')
 
 @login_required
@@ -334,3 +326,42 @@ def delete_item(request):
             labels = get_object_or_404(Labels,id_code=data['id_code'])
             labels.delete()
         return JsonResponse({'mensaje': 'eliminado con éxito!'})
+    
+
+@login_required
+def total(request):
+    dashboard_products = []
+    total_points_list = []
+    items = Items.objects.all()
+    dashboard = Dasboard.objects.get(id=request.GET['id'])
+    for item in items:
+        if dashboard.id == item.dashboard.id:
+            dashboard_products.append(item.img.product)
+    total_set = set(dashboard_products)
+    total = list(total_set)
+    total_products = []
+    points = ['BI','BO','AI','AO']
+    subtotal = 0
+    for p in total:
+        count = 0
+        for product in dashboard_products:
+            if p.id == product.id:
+                count += 1
+        total_product = {}
+        total_product['product']  = p
+        total_product['quantity'] = count
+        total_product['total_price'] = p.sale_price * count
+        subtotal += p.sale_price * count
+        total_products.append(total_product)
+    for point in points:
+        total = 0
+        for total_product in total_products:
+            if total_product['product'].point == point:
+                total += total_product['quantity']
+        total_points={}
+        total_points['pointtype'] = point
+        total_points['quantity'] = total
+        total_points_list.append(total_points)
+    print(total_points_list)
+
+    return render(request, 'total.html', {'dashboard':dashboard,'items':items, 'total_products':total_products, 'subtotal':subtotal, 'total_points_list':total_points_list})
