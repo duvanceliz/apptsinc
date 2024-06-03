@@ -25,7 +25,9 @@ const results = document.getElementById("results");
 const linkProduct = document.getElementById("link-product");
 const formSearch = document.getElementById("form-search");
 const dropzone = document.getElementById("outer-dropzone");
-
+const todo = document.querySelectorAll(
+  "div.dropzone > img, div.dropzone > input"
+);
 
 // Función para guardar la posición de un elemento
 function savePosition(itemId, x, y) {
@@ -82,9 +84,6 @@ function changeZindex(btn) {
 //************************************************** */
 //FUNCION LIMPIA LA SELECCION DE TODOS LOS ELEMENTOS
 function clean(todo) {
-  const todo = document.querySelectorAll(
-    "div.dropzone > img, div.dropzone > input"
-  );
   todo.forEach((item) => {
     item.style.backgroundColor = "rgba(0, 0, 0, 0)";
   });
@@ -95,6 +94,11 @@ function clean(todo) {
 //DESACTIVA TODOD LOS BOTONES SUPERIORES Y EL PANEL DERECHO
 dropzone.addEventListener("click", (e) => {
   if (e.target.id == "outer-dropzone") {
+    const todo = document.querySelectorAll(
+      "div.dropzone > img, div.dropzone > input"
+    );
+    
+    console.log('click zona')
     clean(todo);
     panel.innerHTML = ``;
     btnon.disabled = true;
@@ -176,6 +180,7 @@ formSearch.addEventListener("submit", (e) => {
 // ENVIA TODO LOS ITEMS AL SERVIDOR Y LOS GUARDA EN LA BASE DE DATOS
 form.addEventListener("submit", (e) => {
   e.preventDefault();
+  
   clean(todo)
   btnsave.disabled = true;
   alertdiv.hidden = true;

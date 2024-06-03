@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 
 class Project(models.Model):
     name = models.CharField(max_length=200, default=None)
-    dibujante = models.CharField(max_length=200, default=None)
-    approved = models.CharField(max_length=200, default=None)
+    company_name = models.CharField(max_length=200, default=None)
+    asesor = models.CharField(max_length=200, default=None)
     verified = models.BooleanField(default=False)
     done = models.BooleanField(default=False)
     date = models.DateField(default=datetime.date.today)
@@ -69,6 +69,7 @@ class Slots(models.Model):
 
 class Dasboard(models.Model):
     name = models.CharField(max_length=200, default=None)
+    quantity = models.IntegerField(default=0)
     tab = models.ForeignKey(Tabs, on_delete=models.CASCADE, related_name='dashboards',null=True,blank=True)
     def __str__(self):
         return self.name

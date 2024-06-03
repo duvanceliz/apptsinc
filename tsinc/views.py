@@ -10,6 +10,7 @@ import pandas as pd
 import openpyxl
 from django.http import JsonResponse
 import json
+from openpyxl.styles import Font, PatternFill
 # Create your views here.
 
 @login_required
@@ -34,7 +35,7 @@ def create_project(request):
        return render(request, 'createproject.html',{'form': CreateProject()})
     else:
         print(request.POST)
-        project = Project.objects.create(name = request.POST['name'], dibujante = request.POST['dibujante'], approved = request.POST['approved'], usersesion=request.user )
+        project = Project.objects.create(name = request.POST['name'], company_name = request.POST['company_name'], asesor = request.POST['asesor'], usersesion=request.user )
         return redirect('/')
     
 @login_required
@@ -200,44 +201,126 @@ def delete_offer(request, id):
     return redirect("/offer/")
 @login_required
 def download_offer(request,id):
+    project =Project.objects.get(id=id)
+    tabs = project.tabs.all()
+    equipos = Dasboard.objects.filter(tab__in=tabs).select_related('tab')
+    items = Items.objects.filter(dashboard__in=equipos).select_related('dashboard')
+
+    def print_data(units,items,sheet):
+      
+        units_items = []
+        models =[]
+        points =[]
+        points_quantity = []
+        count = 0
+        count2 = 0
+        sheet.cell(row=2, column=2, value='DESCRIPCIÓN')
+        points_hedader = ['BI','BO','AI','AO']
+        sheet.column_dimensions['A'].width = 50
+        sheet.column_dimensions['B'].width = 30
+    
+        for unit in units:
+            units_items.append(f'{unit.quantity}*{unit.name} -- {unit.tab.tab_name}')
+            for item in items:
+                if unit.pk == item.dashboard.pk:
+                    units_items.append(item.img.product.product_name)
+            units_items.append(' ')
+
+        for unit_item in units_items:
+            count+=1
+            sheet.cell(row=count+2, column=1, value=unit_item)
+    
+        for unit in units:
+            models.append(' ')
+            for item in items:
+                if unit.pk == item.dashboard.pk:
+                    models.append(f'{item.img.product.model} -- {item.img.product.brand}')
+            models.append(' ')
+        
+        for model in models:
+            count2+=1
+            sheet.cell(row=count2+2, column=2, value=model)
+
+        for i in range(1,len(points_hedader)+1):
+            sheet.cell(row=2, column=i+2, value=points_hedader[i-1])
+
+        for unit in units:
+            points.append(' ')
+            points_quantity.append(' ')
+            for item in items:
+                if unit.pk == item.dashboard.pk:
+                    points.append(f'{item.img.product.point}')
+                    points_quantity.append(unit.quantity)
+            points.append(' ')
+            points_quantity.append(' ')
+
+        subtotal_point_bi = 0
+        subtotal_point_bo = 0
+        subtotal_point_ai = 0
+        subtotal_point_ao = 0
+        for i in range(1,len(points)+1):
+            point = points[i-1]
+            if point == 'BI':
+                subtotal_point_bi+= points_quantity[i-1]
+                sheet.cell(row=i+2, column=3, value=points_quantity[i-1])
+            elif  point == 'BO':
+                subtotal_point_bo+= points_quantity[i-1]
+                sheet.cell(row=i+2, column=4, value=points_quantity[i-1])
+            elif  point == 'AI':
+                subtotal_point_ai+= points_quantity[i-1]
+                sheet.cell(row=i+2, column=5, value=points_quantity[i-1])
+            elif  point == 'AO':
+                subtotal_point_ao+= points_quantity[i-1]
+                sheet.cell(row=i+2, column=6, value=points_quantity[i-1])
+    
+        sheet.cell(row=1, column=3, value=subtotal_point_bi)
+        sheet.cell(row=1, column=4, value=subtotal_point_bo)
+        sheet.cell(row=1, column=5, value=subtotal_point_ai)
+        sheet.cell(row=1, column=6, value=subtotal_point_ao)
+
+      
+
+    def create_sheet(tabs):
+        sheets = []
+        for tab in tabs:
+            sheet = workbook.create_sheet(title=tab.tab_name)
+            sheets.append(sheet)
+        return sheets
+        
 
     workbook = openpyxl.Workbook()
-    sheet = workbook.active
-    sheet.title = 'Datos'
-
-    offer = Offers.objects.get(id=id)
-    tabs = offer.tabs.all()
-    units = TabUnits.objects.filter(tab__in=tabs).select_related('tab')
-    slots = Slots.objects.filter(unit__in=units).select_related('unit')
-    total = 0
+    # sheet = workbook.active
+    # sheet.title = 'TAB01'
+    sheet_to_delete = workbook.active
+    workbook.remove(sheet_to_delete)
     
-    
-    sheet.cell(row=1, column=1, value='PROYECTO')
-    sheet.cell(row=1, column=2, value=offer.title)
-    sheet.cell(row=1, column=3, value=offer.controller)
-    encabezado = ['PARAMETROS','MODELO','PRECIO','TOTAL']
-    # for i,tab in enumerate(tabs,2):
-    #     sheet.cell(row=2, column=i, value=tab.tab_name)
+    # header_font = Font(bold=True, color="FFFFFF")
+    # header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
+  
+    units_list_tab =[]
+
+    for tab in tabs:
+        units =[]
+        for equipo in equipos:
+            if tab.id == equipo.tab.id:
+                units.append(equipo)
+        units_list_tab.append(units)
+
+    sheets = create_sheet(tabs)
+
+    for i in range(1,len(units_list_tab)+1):
+        print_data(units_list_tab[i-1],items,sheets[i-1])
 
 
-    for i,value in enumerate(encabezado,1):
-        sheet.cell(row=3, column=i, value=value)
 
-    for i,slot in enumerate(slots,4):
-        total += slot.slot.sale_price
-        sheet.cell(row=i, column=1, value=slot.slot.product_name)
-        sheet.cell(row=i, column=2, value=slot.slot.model)
-        sheet.cell(row=i, column=3, value=slot.slot.sale_price)
-        
-    sheet.cell(row=4, column=4, value=total)
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=datos.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=points.xlsx'
 
     workbook.save(response)
     
     return response
-    # return redirect('/offer/')
+    return redirect('/')
     
 @login_required
 def save_items(request):
@@ -300,15 +383,15 @@ def create_page(request,id):
         return render(request, 'createpage.html',{'page_obj': page_obj, 'form':CreatePage()})
     else:
         tab = Tabs.objects.get(id=id)
-        Dasboard.objects.create(name = request.POST['name'],tab=tab)
+        Dasboard.objects.create(name = request.POST['name'], quantity=request.POST['quantity'], tab=tab)
         return redirect(f'/createpage/{id}/')
 
 @login_required
 def delete_page(request, id):
     object = get_object_or_404(Dasboard, id=id)
-    project = object.project
+    tab = object.tab
     object.delete()
-    return redirect(f'/createpage/{project.id}/')
+    return redirect(f'/createpage/{tab.id}/')
 @login_required
 def delete_item(request):
     if request.method == 'POST':

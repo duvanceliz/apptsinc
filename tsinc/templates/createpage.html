@@ -7,7 +7,7 @@
         <div class="col-3">
 
         <div class="card bg-dark p-4">
-          <h5>Crear una pagina</h5>
+          <h5>Crear un Equipo</h5>
           {% include 'components/form.html' %}
         </div>
         
@@ -21,7 +21,8 @@
         
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Pagina</th>
+              <th scope="col">Nombre del Equipo</th>
+              <th scope="col">Cantidad</th>
               <th scope="col"></th>
             </tr>
           
@@ -32,6 +33,7 @@
   
                 <th scope="row">{{page.id}}</th>
               <td>{{page.name}}</td>
+              <td>{{page.quantity}}</td>
               <td>
                 <a class="btn btn-primary btn-sm" href="{% url 'dashboard' page.id %}"> <i class="bi bi-box-arrow-right"></i></a> 
                 <a class="btn btn-danger btn-sm" href="{% url 'delete_page' page.id %}" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>

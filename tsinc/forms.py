@@ -5,15 +5,14 @@ from .models import Units, Brand, Location, Tabs
 
 class CreateProject(forms.Form):
     name = forms.CharField(label="Nombre del proyecto", max_length=200)
-    dibujante = forms.CharField(label="Nombre del dibujante",max_length=200)
-    dibujante = forms.CharField(label="Nombre del dibujante",max_length=200)
+    company_name = forms.CharField(label="Nombre de la empresa",max_length=200)
     OPCIONES_CHOICES = [
         ('Roberto Bravo', 'Roberto Bravo'),
         ('Andres Montoya', 'Andres Montoya'),
         ('Julian Alvarado', 'Julian Alvarado'),
     ]
 
-    approved = forms.ChoiceField(choices=OPCIONES_CHOICES)
+    asesor = forms.ChoiceField(label="Asesor",choices=OPCIONES_CHOICES)
 
 
 class CreateProduct(forms.Form):
@@ -47,7 +46,9 @@ class CreateUnit(forms.Form):
     quantity = forms.IntegerField(label="Cuantos")
 
 class CreatePage(forms.Form):
-    name = forms.CharField(label="Nombre de la pagina", max_length=100)
+    name = forms.CharField(label="Nombre del equipo", max_length=100)
+    quantity = forms.IntegerField(label="Cuantos")
+
 
 class SearchForm(forms.Form):
     search = forms.CharField(label='Buscar', max_length=100)
