@@ -25,10 +25,11 @@
           <tr>
             <th scope="col">#</th>
             <th scope="col">Nombre del proyecto</th>
+            <th scope="col">Controlador</th>
             <th scope="col">Empresa</th>
             <th scope="col">Estado</th>
+            <th scope="col">Etapa del proyecto</th>
             <th scope="col">Fecha</th>
-            <th scope="col">Aprobado</th>
             <th scope="col"></th>
           </tr>
         
@@ -39,20 +40,10 @@
 
               <th scope="row">{{project.id}}</th>
             <td>{{project.name}}</td>
+            <td>
+              {{project.controller}}
+            </td>
             <td>{{project.company_name}}</td>
-            <td>
-              {% if project.done == False%}
-
-              En proceso
-    
-              {%else%}
-              Realizado
-    
-              {% endif %}
-            </td>
-            <td>
-              {{project.date}}
-            </td>
 
             <td>
               {% if project.verified == False%}
@@ -60,11 +51,36 @@
               No aprobado
     
               {%else%}
-              Aprobado por: {{ project.approved }}
+              Aprobado
     
               {% endif %}
             </td>
-            
+            <td>
+              <!-- {% if project.done == False%}
+
+              En proceso
+    
+              {%else%}
+              Finalizado
+    
+              {% endif %} -->
+              {% if project.progress == 100 %}
+              <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{project.progress}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{project.progress}}%</div>
+              </div>
+            </td>
+
+            {% else %}
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: {{project.progress}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{project.progress}}%</div>
+            </div>
+          </td>
+            {% endif %}
+
+           
+            <td>
+              {{project.date}}
+            </td>
             <td>
               <a class="btn btn-primary btn-sm" href="{% url 'tabs' project.id %}"> <i class="bi bi-box-arrow-right"></i></a>
               <button class="btn btn-success btn-sm"><i class="bi bi-pencil-square"></i></button>

@@ -6,8 +6,9 @@ class Project(models.Model):
     name = models.CharField(max_length=200, default=None)
     company_name = models.CharField(max_length=200, default=None)
     asesor = models.CharField(max_length=200, default=None)
+    controller = models.CharField(max_length=100, null=True, blank=True)
     verified = models.BooleanField(default=False)
-    done = models.BooleanField(default=False)
+    progress = models.IntegerField(default=0)
     date = models.DateField(default=datetime.date.today)
     usersesion = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     def __str__(self):
@@ -33,6 +34,7 @@ class Product(models.Model):
     location = models.CharField(max_length=200, default=None)
     quantity = models.IntegerField()
     point = models.CharField(max_length=100,null=True,blank=True)
+    description = models.CharField(max_length=200,null=True,blank=True)
     iva = models.BooleanField(default=False)
     date = models.DateField(default=datetime.date.today)
     def __str__(self):

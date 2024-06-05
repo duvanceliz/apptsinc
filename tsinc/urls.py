@@ -22,6 +22,7 @@ urlpatterns = [
     path('createpage/<int:id>/', views.create_page, name='create_page'),
     path('deleteitem/', views.delete_item, name='delete_item'),
     path('productsearch/', views.product_search, name='product_search'),
-     path('totalproducts/', views.total, name='total'),
+    path('totalproducts/', views.total, name='total'),
+    path('downloadproducts/', views.download_products, name='download_products'),
     
 ]

@@ -12,7 +12,14 @@ class CreateProject(forms.Form):
         ('Julian Alvarado', 'Julian Alvarado'),
     ]
 
+    OPCIONES_CHOICES_CONTROLLER = [
+        ('LG CONTROLLER', 'LG CONTROLLER'),
+        ('JONHSON CONTROLS', 'JONHSON CONTROLS'),
+        
+    ]
+
     asesor = forms.ChoiceField(label="Asesor",choices=OPCIONES_CHOICES)
+    controller= forms.ChoiceField(label='Tipo de controlador',choices=OPCIONES_CHOICES_CONTROLLER)
 
 
 class CreateProduct(forms.Form):
