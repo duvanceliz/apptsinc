@@ -22,7 +22,7 @@ const form = document.getElementById("form");
 const dash_id = document.getElementById("dashboard_id").value;
 const btnInventory = document.getElementById("btnInventory");
 const results = document.getElementById("results");
-const linkProduct = document.getElementById("link-product");
+// const linkProduct = document.getElementById("link-product");
 const formSearch = document.getElementById("form-search");
 const dropzone = document.getElementById("outer-dropzone");
 const todo = document.querySelectorAll(
@@ -105,7 +105,7 @@ dropzone.addEventListener("click", (e) => {
     btnunder.disabled = true;
     btndelete.disabled = true;
     btnclone.disabled = true;
-    btnInventory.disabled = true;
+
   }
 });
 
@@ -114,13 +114,13 @@ dropzone.addEventListener("click", (e) => {
 //*************************************************** */
 
 // LINKEA LOS PRODUCTO A CADA ITEM DE LA DAHSBOARD
-linkProduct.addEventListener("click", (e) => {
-  if (eventState2.target.getAttribute("pk")) {
-    eventState2.target.setAttribute("product_id", eventStateTable.target.id);
-    console.log(eventState2.target);
-    console.log(eventStateTable.target);
-  }
-});
+// linkProduct.addEventListener("click", (e) => {
+//   if (eventState2.target.getAttribute("pk")) {
+//     eventState2.target.setAttribute("product_id", eventStateTable.target.id);
+//     console.log(eventState2.target);
+//     console.log(eventStateTable.target);
+//   }
+// });
 
 //*************************************************** */
 

@@ -1,4 +1,4 @@
-from .utils import get_breadcrumbs
+# from .utils import get_breadcrumbs
 
-def breadcrumbs(request):
-    return {'breadcrumbs': get_breadcrumbs(request)}
+# def breadcrumbs(request):
+#     return {'breadcrumbs': get_breadcrumbs(request)}

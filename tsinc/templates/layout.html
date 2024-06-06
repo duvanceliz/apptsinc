@@ -31,12 +31,18 @@
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
-              <div class="collapse navbar-collapse justify-content-center" id="navbarNavAltMarkup">
+              <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                   <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Inicio</a>
+                  
+                  {% if is_admin %}
+                  
                   <a class="nav-link" href="http://localhost:8000/admin">Panel Admin</a>
+                  {% endif %}
+                  {% if is_admin %}
                   <a class="nav-link" href="{% url 'product' %}">Inventario</a>
-                  <a class="nav-link" href="{% url 'offer' %}">Generar una Oferta</a>
+                  {% endif %}
+                  <!-- <a class="nav-link" href="{% url 'offer' %}">Generar una Oferta</a> -->
                   <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-link">Salir</button>

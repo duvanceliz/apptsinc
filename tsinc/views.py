@@ -12,6 +12,7 @@ from django.http import JsonResponse
 import json
 from openpyxl.styles import Font, PatternFill
 from .utils import print_data
+
 # Create your views here.
 
 @login_required
@@ -22,7 +23,9 @@ def home(request):
     page_obj = paginator.get_page(page_number)
     user = request.user  # El usuario actualmente autenticado
     session_key = request.session.session_key 
-    return render(request, 'home.html',{'page_obj': page_obj, 'username':user.username, 'session_key':session_key})
+    is_admin = request.user.is_staff  # Verifica si el usuario es administrador
+                       
+    return render(request, 'home.html',{'page_obj': page_obj, 'username':user.username, 'session_key':session_key, 'is_admin':is_admin})
 
 @login_required
 def delete_project(request, id):
@@ -387,3 +390,5 @@ def total(request):
     print(total_points_list)
 
     return render(request, 'total.html', {'dashboard':dashboard,'items':items, 'total_products':total_products, 'subtotal':subtotal, 'total_points_list':total_points_list})
+
+
