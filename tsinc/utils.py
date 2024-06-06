@@ -1,5 +1,5 @@
 from django.urls import reverse
-from .models import TabUnits, Tabs, Offers, Product
+from .models import Tabs, Product
 
 # def get_breadcrumbs(request):
    

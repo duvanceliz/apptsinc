@@ -42,7 +42,7 @@
                   {% if is_admin %}
                   <a class="nav-link" href="{% url 'product' %}">Inventario</a>
                   {% endif %}
-                  <!-- <a class="nav-link" href="{% url 'offer' %}">Generar una Oferta</a> -->
+        
                   <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-link">Salir</button>

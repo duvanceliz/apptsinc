@@ -40,34 +40,14 @@ class Product(models.Model):
     def __str__(self):
         return f"{self.brand} - {self.model}"
 
-class Units(models.Model):
-    name = models.CharField(max_length=200, default=None)
-    description = models.CharField(max_length=200, default=None)
-    def __str__(self):
-        return self.name
-class Offers(models.Model):
-    title = models.CharField(max_length=200, default=None)
-    controller = models.CharField(max_length=200, default=None)
-    date = models.DateField(default=datetime.date.today)
-    def __str__(self):
-        return self.title
     
 class Tabs(models.Model):
     tab_name = models.CharField(max_length=200, default=None)
+    controller = models.CharField(max_length=100, null=True)
     project = models.ForeignKey(Project,on_delete=models.CASCADE, related_name='tabs', null=True, blank=True)
     def __str__(self):
         return self.tab_name
     
-class TabUnits(models.Model):
-    unit = models.CharField(max_length=200, default=None)
-    quantity = models.IntegerField()
-    tab = models.ForeignKey(Tabs,on_delete=models.CASCADE, related_name='units')
-    def __str__(self):
-        return self.unit
-
-class Slots(models.Model):
-    slot = models.ForeignKey(Product,on_delete=models.CASCADE, related_name='product')
-    unit = models.ForeignKey(TabUnits,on_delete=models.CASCADE, related_name='slots')
 
 class Dasboard(models.Model):
     name = models.CharField(max_length=200, default=None)

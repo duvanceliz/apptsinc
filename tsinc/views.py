@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 from django.http import HttpResponse
-from .models import Project, Product, Offers, TabUnits, Tabs, Slots, Dasboard, PanelItems, Items,Labels
-from .forms import CreateProject, CreateProduct, UploadProducts, CreateOffer, CreateTab, CreateUnit, Units, SearchForm, CreatePage
+from .models import Project, Product, Tabs, Dasboard, PanelItems, Items,Labels
+from .forms import CreateProject, CreateProduct, UploadProducts, CreateTab, SearchForm, CreatePage
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 import pandas as pd
@@ -51,7 +51,6 @@ def product(request):
     return render(request, 'product.html',{'page_obj': page_obj})
 
 
-
 @login_required
 def dashboard(request, id):
     dashboard = Dasboard.objects.get(id=id)
@@ -84,6 +83,7 @@ def create_product(request):
 
         project = Product.objects.create(code = request.POST['code'], product_name = request.POST['product_name'], factory_ref= request.POST['ref'], model= request.POST['model'], sale_price= request.POST['price'],iva=iva)
         return redirect('/product')
+    
 @login_required   
 def upload_products(request):
     if request.method == 'POST':
@@ -126,18 +126,6 @@ def download_products(request):
         df.to_excel(writer, index=False, sheet_name='Datos')
     return response
 
-@login_required
-def offer(request):
-    if request.method == 'GET':
-        offer = Offers.objects.all()
-        paginator = Paginator(offer, 5)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        return render(request, 'offer.html',{'page_obj': page_obj, 'form':CreateOffer()})
-    else:
-        print(request.POST)
-        Offers.objects.create(title = request.POST['title'], controller = request.POST['controller'])
-        return redirect('/offer')
 
 @login_required
 def tabs(request, id):
@@ -149,76 +137,18 @@ def tabs(request, id):
     else:
         print(request.POST)
         project = Project.objects.get(id=id)
-        Tabs.objects.create(tab_name = request.POST['tab_name'], project= project)
+        Tabs.objects.create(tab_name = request.POST['tab_name'], controller= request.POST['controller'], project= project)
         return redirect("/project/tabs/{}/".format(id))
 
 
-@login_required
-def units(request, id):
-    if request.method == 'GET':
-        tab = Tabs.objects.get(id=id)
-        offer = tab.offer
-        units = tab.units.all()
-        # tabs = offer.tabs.all()
-        return render(request,'units.html',{'units': units, 'form':CreateUnit(), 'offer': offer, 'tab': tab})
-    else:
-        print(request.POST)
-        tab = Tabs.objects.get(id=id)
-        unit_name = Units.objects.get(id=request.POST['unit'])
-        TabUnits.objects.create(unit = unit_name , quantity = request.POST['quantity'], tab = tab)
-        return redirect("/offer/tabs/units/{}/".format(id))
 
-@login_required
-def config(request, id):
-    if request.method == 'GET':
-
-        search = request.GET.get('search')
-        page_number = request.GET.get('page')          
-        results = []
-        unit = TabUnits.objects.get(id=id)
-        slots = unit.slots.all()
-        products = Product.objects.all()
-        paginator = Paginator(products, 5)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        if search:
-            results = Product.objects.filter(product_name__icontains=search)
-            paginator = Paginator(results, 10)
-            page_obj = paginator.get_page(page_number)
-            
-  
-
-        return render(request, 'configuration.html',{'unit': unit, 'slots':slots, 'page_obj': page_obj, 'form':SearchForm()})
-    else:
-        unit = TabUnits.objects.get(id=id)
-        prod = Product.objects.get(id=request.POST.get('productid'))
-        Slots.objects.create(slot=prod, unit=unit)
-        return redirect("/offer/tabs/units/configuration/{}/".format(id))
-    # tabs = offer.tabs.all() 
-@login_required
-def delete_slot(request, id):
-    object = get_object_or_404(Slots, id=id)
-    unit = object.unit
-    object.delete()
-    return redirect("/offer/tabs/units/configuration/{}/".format(unit.pk))
-@login_required
-def delete_unit(request, id):
-    object = get_object_or_404(TabUnits, id=id)
-    tab = object.tab
-    object.delete()
-    return redirect("/offer/tabs/units/{}/".format(tab.pk))
 @login_required
 def delete_tab(request, id):
     object = get_object_or_404(Tabs, id=id)
-    offer = object.offer
+    project = object.project
     object.delete()
-    return redirect("/offer/tabs/{}/".format(offer.pk))
-@login_required
-def delete_offer(request, id):
-    object = get_object_or_404(Offers, id=id)
-    object.delete()
-    return redirect("/offer/")
+    return redirect(f"project/tabs/{project.id}/")
+
 @login_required
 def download_offer(request,id):
     project =Project.objects.get(id=id)
@@ -325,7 +255,7 @@ def create_page(request,id):
         return render(request, 'createpage.html',{'page_obj': page_obj, 'form':CreatePage()})
     else:
         tab = Tabs.objects.get(id=id)
-        Dasboard.objects.create(name = request.POST['name'], quantity=request.POST['quantity'], tab=tab)
+        Dasboard.objects.create(name = request.POST['name'], tab=tab)
         return redirect(f'/createpage/{id}/')
 
 @login_required

@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import formset_factory
-from .models import Units, Brand, Location, Tabs
+from .models import Brand, Location, Tabs
 
 
 class CreateProject(forms.Form):
@@ -11,16 +11,8 @@ class CreateProject(forms.Form):
         ('Andres Montoya', 'Andres Montoya'),
         ('Julian Alvarado', 'Julian Alvarado'),
     ]
-
-    OPCIONES_CHOICES_CONTROLLER = [
-        ('LG CONTROLLER', 'LG CONTROLLER'),
-        ('JONHSON CONTROLS', 'JONHSON CONTROLS'),
-        
-    ]
-
     asesor = forms.ChoiceField(label="Asesor",choices=OPCIONES_CHOICES)
-    controller= forms.ChoiceField(label='Tipo de controlador',choices=OPCIONES_CHOICES_CONTROLLER)
-
+  
 
 class CreateProduct(forms.Form):
     code = forms.CharField(label="Codigo del Producto", max_length=200)
@@ -36,26 +28,27 @@ class CreateProduct(forms.Form):
 class UploadProducts(forms.Form):
     file = forms.FileField()
 
-class CreateOffer(forms.Form):
-    title = forms.CharField(label="Nombre del proyecto", max_length=200)
-    OPCIONES_CHOICES = [
-        ('JONHSON CONTROLS', 'JONHSON CONTROLS'),
-        ('LG CONTROLLER', 'LG CONTROLLER')
-    ]
-    controller = forms.ChoiceField(choices=OPCIONES_CHOICES)
-
-
 class CreateTab(forms.Form):
     tab_name = forms.CharField(label="Nombre del tablero", max_length=200)
+    OPCIONS_CHOICES_CONTROLLER = [
+        ('LG CONTROLLER', 'LG CONTROLLER'),
+        ('JONHSON CONTROLS', 'JONHSON CONTROLS'),
+        
+    ]
 
-class CreateUnit(forms.Form):
-    unit = forms.ModelChoiceField(queryset=Units.objects.all())
-    quantity = forms.IntegerField(label="Cuantos")
+    controller = forms.ChoiceField(label="Elige el controlador", choices=OPCIONS_CHOICES_CONTROLLER)
+    
 
 class CreatePage(forms.Form):
-    name = forms.CharField(label="Nombre del equipo", max_length=100)
-    quantity = forms.IntegerField(label="Cuantos")
-
+    name = forms.CharField(label="Nombre de pagina", max_length=100)
 
 class SearchForm(forms.Form):
     search = forms.CharField(label='Buscar', max_length=100)
+
+# class CreateOffer(forms.Form):
+#     title = forms.CharField(label="Nombre del proyecto", max_length=200)
+#     OPCIONES_CHOICES = [
+#         ('JONHSON CONTROLS', 'JONHSON CONTROLS'),
+#         ('LG CONTROLLER', 'LG CONTROLLER')
+#     ]
+#     controller = forms.ChoiceField(choices=OPCIONES_CHOICES)
