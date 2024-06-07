@@ -36,7 +36,25 @@ const panel2 = document.getElementById("panel2")
 
 const selectedItems = new Set()
 
+function scan_items(){
 
+  document.querySelectorAll('.drag-drop').forEach(item => {
+    item.addEventListener('click', (event) => {
+        if (event.ctrlKey) { 
+    
+            selectedItems.add(item);
+            item.classList.add('selected-group')
+            console.log(selectedItems)
+  
+          }
+            // item.classList.toggle('selected');
+        
+    });
+  });
+
+}
+
+scan_items()
 
 // Función para guardar la posición de un elemento
 function savePosition(itemId, x, y) {
@@ -508,19 +526,7 @@ interact(".dropzone").dropzone({
     // cuando el objeto es soltado dentro de la zona
     //       event.relatedTarget.textContent = 'Dropped'
 
-    document.querySelectorAll('.drag-drop').forEach(item => {
-      item.addEventListener('click', (event) => {
-          if (event.ctrlKey) { 
-      
-              selectedItems.add(item);
-              item.classList.add('selected-group')
-              console.log(selectedItems)
-    
-            }
-              // item.classList.toggle('selected');
-          
-      });
-    });
+   scan_items()
   },
 });
 //*************************************************** */
