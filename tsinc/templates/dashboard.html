@@ -79,20 +79,24 @@
        <div id="alert" hidden >
          <span>Recuerda Guardar!!</span>
        </div>
+       <div id="alert2" hidden>
+
+       </div>
       </div>
       
       <div id="outer-dropzone" class="dropzone position-relative">
 
         {% for item in items %}
         {% if dashboard.id == item.dashboard.id%}
-        <img pk="{{item.img.id}}" id_code="{{item.id_code}}" class="drag-drop" src="{% static item.img %}" alt="items" style="transform: translate({{item.x}}px,{{item.y}}px);z-index:{{item.zindex}}; width: {{item.width}}px;"  product_id="{{item.product.id}}" data-x="{{item.x}}" data-y="{{item.y}}">
+        <img pk="{{item.img.id}}" id_code="{{item.id_code}}" class="drag-drop" src="{% static item.img %}" alt="items" style="transform: translate({{item.x}}px,{{item.y}}px);z-index:{{item.zindex}}; width: {{item.width}}px;"  product_id="{{item.product.id}}" data-x="{{item.x}}" data-y="{{item.y}}" description="{{item.img.product.description}}">
         {% endif %}
         {% endfor %}
         {% for label in labels %}
         {% if dashboard.id == label.dashboard.id%}
-        <input id_code="{{label.id_code}}" value="{{label.value}}" class="drag-drop text-center" alt="labels" style=" transform: translate({{label.x}}px,{{label.y}}px); z-index:{{label.zindex}}; width: {{label.width}}px; height: {{label.height}}px; background-color:rgba(0, 0, 0, 0); color:white; " data-x="{{label.x}}" data-y="{{label.y}}">
+        <input id_code="{{label.id_code}}" value="{{label.value}}" class="drag-drop" alt="labels" style=" transform: translate({{label.x}}px,{{label.y}}px); z-index:{{label.zindex}}; width: {{label.width}}px; height: {{label.height}}px;" data-x="{{label.x}}" data-y="{{label.y}}">
         {% endif %}
         {% endfor %}
+        <svg id="svgContainer"></svg>
       </div>
 
 

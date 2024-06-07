@@ -15,6 +15,7 @@ const btnon = document.getElementById("on");
 const btnunder = document.getElementById("under");
 const btnclone = document.getElementById("clone");
 const alertdiv = document.getElementById("alert");
+const alertdiv2 = document.getElementById("alert2");
 const btnlabel = document.getElementById("btnlabel");
 const btnsave = document.querySelector("#save");
 const csrfToken = document.querySelector("#form > input").value;
@@ -29,10 +30,19 @@ const todo = document.querySelectorAll(
   "div.dropzone > img, div.dropzone > input"
 );
 
+
+
+const panel2 = document.getElementById("panel2")
+
+const selectedItems = new Set()
+
+
+
 // Función para guardar la posición de un elemento
 function savePosition(itemId, x, y) {
     const positions = JSON.parse(localStorage.getItem("itemPositions")) || {};
     positions[itemId] = { x: x, y: y };
+    console.log(positions)
     localStorage.setItem("itemPositions", JSON.stringify(positions));
 }
 
@@ -59,7 +69,7 @@ function post(url, data, csrfToken) {
 // FUNCION PARA GENERAR UN CODIGO ALEATORIO
 function generateCode(length) {
   const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let result = "";
   const charactersLength = characters.length;
   for (let i = 0; i < length; i++) {
@@ -85,7 +95,15 @@ function changeZindex(btn) {
 //FUNCION LIMPIA LA SELECCION DE TODOS LOS ELEMENTOS
 function clean(todo) {
   todo.forEach((item) => {
-    item.style.backgroundColor = "rgba(0, 0, 0, 0)";
+    item.classList.remove('selected')
+    // item.style.backgroundColor = "rgba(0, 0, 0, 0)";
+  });
+}
+
+function clean2(todo) {
+  todo.forEach((item) => {
+    item.classList.remove('selected-group')
+    // item.style.backgroundColor = "rgba(0, 0, 0, 0)";
   });
 }
 //************************************************** */
@@ -99,12 +117,20 @@ dropzone.addEventListener("click", (e) => {
     );
     
     console.log('click zona')
-    clean(todo);
+
+    
+   clean(todo);
+    
+    clean2(todo)
     panel.innerHTML = ``;
+    panel2.innerHTML = ``;
     btnon.disabled = true;
     btnunder.disabled = true;
     btndelete.disabled = true;
     btnclone.disabled = true;
+    eventState2.target = null
+    
+
 
   }
 });
@@ -198,6 +224,7 @@ form.addEventListener("submit", (e) => {
     obj.zindex = todo.style.zIndex;
     obj.width = todo.style.width;
     obj.height = todo.style.height;
+    obj.relationship = todo.getAttribute('relationship')
     listItem.push(obj);
   });
   todoslabel.forEach((todo) => {
@@ -228,18 +255,21 @@ form.addEventListener("submit", (e) => {
 //BOTON LABEL: AGREGA UN NUEVO LABEL A LA DASHBOARD
 
 btnlabel.addEventListener("click", (e) => {
-
-clean(todo)
+  const todo = document.querySelectorAll(
+    "div.dropzone > img, div.dropzone > input"
+  );
+  clean(todo)
   let newInput = document.createElement("input");
   newInput.style.width = "100px";
   newInput.style.height = "40px";
   newInput.style.textAlign = "center";
   newInput.style.zIndex = "0";
-  newInput.setAttribute("id_code", generateCode(4));
-  newInput.style.backgroundColor = "rgba(0, 0, 0, 0)";
-  newInput.style.color = "white";
-  newInput.style.border = "1px solid white";
+  newInput.setAttribute("id_code", generateCode(2));
+  // newInput.style.color = "white";
+  // newInput.style.border = "1px solid white";
   newInput.className = "drag-drop";
+  newInput.alt = "labels"
+  newInput.classList.add('selected')
   dropzone.appendChild(newInput);
 });
 
@@ -266,14 +296,17 @@ btnunder.addEventListener("click", (e) => {
 //BOTON CLONAR: CLONA UN ITEM SELECCIONADO
 btnclone.addEventListener("click", (e) => {
   // console.log(eventState2.target)
+  const todo = document.querySelectorAll(
+    "div.dropzone > img, div.dropzone > input"
+  );
   clean(todo)
   const clone = eventState2.target.cloneNode(true);
 
-  clone.setAttribute("id_code", generateCode(4));
+  clone.setAttribute("id_code", generateCode(2));
   clone.style.transform = "translate(-16.3754px, -19.729px)";
   clone.setAttribute("data-x", "-16.3754");
   clone.setAttribute("data-y", "-19.729");
-  clone.style.backgroundColor = "rgba(0, 0, 0, 0)";
+  // clone.style.backgroundColor = "rgba(0, 0, 0, 0)";
   dropzone.appendChild(clone);
   //   // clone.style.width = "auto";
   //   clone.style.zIndex = "0";
@@ -289,12 +322,28 @@ form2.addEventListener("submit", (e) => {
   e.preventDefault();
   const csrfToken = document.querySelector("#form2 > input").value;
   const item = eventState2.target;
+  const data = []
 
-  const data = {
-    id_code: item.getAttribute("id_code"),
-  };
-  post("/deleteitem/", data, csrfToken);
-  item.remove();
+
+  selectedItems.forEach(item => {
+    // Remove the item from the DOM
+    item.parentNode.removeChild(item);
+      data.push(item.getAttribute('id_code'))
+   });
+   selectedItems.clear();
+   // Clear the Set
+   
+   console.log(data)
+  if (data.length === 0){
+    console.log('vacia!')
+    post("/deleteitem/", {id_code: [item.getAttribute("id_code")],}, csrfToken);
+    item.remove();
+  }else{
+    post("/deleteitem/", {id_code: data,}, csrfToken);
+  }
+  
+  // post("/deleteitem/", data, csrfToken);
+  
 });
 //*************************************************** */
 
@@ -316,13 +365,23 @@ dropzone.addEventListener("dragover", (e) => {
 
 dropzone.addEventListener("drop", (e) => {
   if (eventState.target.id == "item") {
+  
     const clone = eventState.target.cloneNode(true);
     clone.classList.add("drag-drop");
     clone.removeAttribute("id");
     // clone.style.width = "auto";
     clone.style.zIndex = "0";
-    clone.setAttribute("id_code", generateCode(4));
+    if(eventState2.target != null && eventState2.target.getAttribute('alt')=='labels'){
+    if(eventState2.target.getAttribute('alt')=='labels'){
+        clone.setAttribute('relationship',eventState2.target.getAttribute('id_code'))
+    }
+    clone.setAttribute("id_code", generateCode(2));
     dropzone.appendChild(clone);
+    }else{
+      alertdiv2.hidden = false
+      alertdiv2.innerText = 'Debe selecionar una etiqueta!'
+    }
+    
   }
 });
 //*************************************************** */
@@ -355,9 +414,11 @@ interact(".drag-drop")
   .on("tap", function (event) {
     // event.currentTarget.classList.toggle("switch-bg");
     console.log("click al objeto");
+    const todo = document.querySelectorAll(
+      "div.dropzone > img, div.dropzone > input"
+    );
 
     clean(todo);
-
     btnon.disabled = false;
     btnunder.disabled = false;
     btndelete.disabled = false;
@@ -391,9 +452,9 @@ interact(".drag-drop")
         event.target.style.zIndex
       }" aria-label=".form-control-sm example">
       `;
+      panel2.innerHTML = `${event.target.getAttribute('description')}`
 
-    event.target.style.backgroundColor = "rgba(70, 157, 186, 0.4)";
-    event.target.style.borderRadius = "4px";
+    event.target.classList.add('selected')
 
     event.preventDefault();
   })
@@ -428,7 +489,7 @@ interact(".dropzone").dropzone({
     // cuando el evento esta dentro de la zona o el obejeto esta dentro de la zona sin soltar
     var draggableElement = event.relatedTarget; // este se le aplica al objeto
     var dropzoneElement = event.target; // este le aplica a la zona
-
+    alertdiv2.hidden = true
     // console.log("dentro de zona");
   },
   ondropdeactivate: function (event) {
@@ -446,6 +507,20 @@ interact(".dropzone").dropzone({
   ondrop: function (event) {
     // cuando el objeto es soltado dentro de la zona
     //       event.relatedTarget.textContent = 'Dropped'
+
+    document.querySelectorAll('.drag-drop').forEach(item => {
+      item.addEventListener('click', (event) => {
+          if (event.ctrlKey) { 
+      
+              selectedItems.add(item);
+              item.classList.add('selected-group')
+              console.log(selectedItems)
+    
+            }
+              // item.classList.toggle('selected');
+          
+      });
+    });
   },
 });
 //*************************************************** */

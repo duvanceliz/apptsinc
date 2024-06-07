@@ -219,7 +219,7 @@ def save_items(request):
                 item_exist.save()
             else:
                 dashboard = get_object_or_404(Dasboard, id=int(data['dashboard_id'])) 
-                new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'],width =float(value['width'].replace("px","")), img=img_obj, dashboard= dashboard)
+                new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'],width =float(value['width'].replace("px","")),relationship=value['relationship'], img=img_obj, dashboard= dashboard)
                 new_item.save()
 
         for label in data['labels']:
@@ -268,18 +268,19 @@ def delete_page(request, id):
 def delete_item(request):
     if request.method == 'POST':
         raw_data = request.body
-        print(f"desde delete_item: {raw_data}")
+        # print(f"desde delete_item: {raw_data}")
         body_unicode = raw_data.decode('utf-8')
         data = json.loads(body_unicode)
-        try:
-            item_exist = Items.objects.get(id_code = data['id_code'])
-        except ObjectDoesNotExist:
-            item_exist = None
-        if item_exist:
-            item_exist.delete()
-        else:
-            labels = get_object_or_404(Labels,id_code=data['id_code'])
-            labels.delete()
+        for item in data['id_code']:
+            try: 
+                item_exist = Items.objects.get(id_code = item)     
+            except ObjectDoesNotExist:
+                item_exist = None
+            if item_exist:
+                item_exist.delete()
+            else:
+                labels = get_object_or_404(Labels,id_code=item)
+                labels.delete()
         return JsonResponse({'mensaje': 'eliminado con éxito!'})
     
 
