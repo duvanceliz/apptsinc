@@ -51,9 +51,11 @@
        <button id="btnInventory" type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
         <i class="bi bi-search"></i>
       </button>
-      <button id="on" class="btn btn-primary btn-sm " disabled>Encima</button>
-       <button id="under" class="btn btn-primary btn-sm" disabled>Debajo</button>
+      <button id="on" class="btn btn-primary btn-sm " disabled><i class="bi bi-box-arrow-in-up"></i></button>
+       <button id="under" class="btn btn-primary btn-sm" disabled><i class="bi bi-box-arrow-in-down"></i></button>
        <button id="btntotal" class="btn btn-warning btn-sm"><i class="bi bi-cart"></i></button>
+       <button class="btn btn-success btn-sm" id="btngroup"><i class="bi bi-link"></i></button>
+  
       {% include 'components/dashboardModal.html' %}
       
     </div>
@@ -79,7 +81,7 @@
        <div id="alert" hidden >
          <span>Recuerda Guardar!!</span>
        </div>
-       <div id="alert2" hidden>
+       <div class ="alert2">
 
        </div>
       </div>

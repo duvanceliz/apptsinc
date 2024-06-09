@@ -15,7 +15,6 @@ const btnon = document.getElementById("on");
 const btnunder = document.getElementById("under");
 const btnclone = document.getElementById("clone");
 const alertdiv = document.getElementById("alert");
-const alertdiv2 = document.getElementById("alert2");
 const btnlabel = document.getElementById("btnlabel");
 const btnsave = document.querySelector("#save");
 const csrfToken = document.querySelector("#form > input").value;
@@ -23,45 +22,79 @@ const form = document.getElementById("form");
 const dash_id = document.getElementById("dashboard_id").value;
 const btnInventory = document.getElementById("btnInventory");
 const results = document.getElementById("results");
-// const linkProduct = document.getElementById("link-product");
 const formSearch = document.getElementById("form-search");
 const dropzone = document.getElementById("outer-dropzone");
-const todo = document.querySelectorAll(
-  "div.dropzone > img, div.dropzone > input"
-);
+const btngroup = document.getElementById("btngroup");
+const panel2 = document.getElementById("panel2");
 
+const selectedItems = new Set();
 
-
-const panel2 = document.getElementById("panel2")
-
-const selectedItems = new Set()
-
-function scan_items(){
-
-  document.querySelectorAll('.drag-drop').forEach(item => {
-    item.addEventListener('click', (event) => {
-        if (event.ctrlKey) { 
-    
-            selectedItems.add(item);
-            item.classList.add('selected-group')
-            console.log(selectedItems)
-  
-          }
-            // item.classList.toggle('selected');
-        
-    });
+btngroup.addEventListener("click", (e) => {
+  const alertdiv2 = document.querySelector(".alert2");
+  const todo = scanItems();
+  const id_code = generateCode(2);
+  let count = 0;
+  todo.forEach((item) => {
+    if (item.classList.contains("selected-group")) {
+      count += 1;
+      item.setAttribute("relationship", id_code);
+    }
+ 
   });
 
+  alertdiv2.innerText = `${count} elementos han sido agrupados`;
+  alertdiv2.classList.toggle("visible");
+
+  
+    setTimeout(() => {
+      alertdiv2.classList.remove("visible");
+      alertdiv2.classList.add("fade-out");
+    }, 2000);
+    setTimeout(() => {
+      alertdiv2.classList.remove("fade-out");
+    }, 2000);
+ 
+  
+ 
+  
+});
+
+// Función para desactivar los botones
+function btnDisable() {
+  btnon.disabled = true;
+  btnunder.disabled = true;
+  btndelete.disabled = true;
+  btnclone.disabled = true;
 }
 
-scan_items()
+// funcion para escanear los elementos dentro de la zona
+function scanItems() {
+  const todo = document.querySelectorAll(".drag-drop");
+
+  return todo;
+}
+
+// Función la seleccion multiple
+
+function multipleSelection(todo) {
+  todo.forEach((item) => {
+    item.addEventListener("click", (event) => {
+      if (event.ctrlKey) {
+        selectedItems.add(item);
+        item.classList.add("selected-group");
+      }
+      // item.classList.toggle('selected');
+    });
+  });
+}
+
+multipleSelection(scanItems());
 
 // Función para guardar la posición de un elemento
 function savePosition(itemId, x, y) {
-    const positions = JSON.parse(localStorage.getItem("itemPositions")) || {};
-    positions[itemId] = { x: x, y: y };
-    console.log(positions)
-    localStorage.setItem("itemPositions", JSON.stringify(positions));
+  const positions = JSON.parse(localStorage.getItem("itemPositions")) || {};
+  positions[itemId] = { x: x, y: y };
+  localStorage.setItem("itemPositions", JSON.stringify(positions));
 }
 
 //*************************************************** */
@@ -86,8 +119,7 @@ function post(url, data, csrfToken) {
 //*************************************************** */
 // FUNCION PARA GENERAR UN CODIGO ALEATORIO
 function generateCode(length) {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let result = "";
   const charactersLength = characters.length;
   for (let i = 0; i < length; i++) {
@@ -111,62 +143,38 @@ function changeZindex(btn) {
 
 //************************************************** */
 //FUNCION LIMPIA LA SELECCION DE TODOS LOS ELEMENTOS
-function clean(todo) {
-  todo.forEach((item) => {
-    item.classList.remove('selected')
-    // item.style.backgroundColor = "rgba(0, 0, 0, 0)";
-  });
+function selectionClean(todo, opt) {
+  if (opt == 1) {
+    todo.forEach((item) => {
+      item.classList.remove("selected");
+    });
+  } else {
+    todo.forEach((item) => {
+      item.classList.remove("selected-group");
+    });
+  }
 }
 
-function clean2(todo) {
-  todo.forEach((item) => {
-    item.classList.remove('selected-group')
-    // item.style.backgroundColor = "rgba(0, 0, 0, 0)";
-  });
-}
 //************************************************** */
 
 // SI LA DROPZONE ES CLICKEADA LIMPIA LA SELECCION
 //DESACTIVA TODOD LOS BOTONES SUPERIORES Y EL PANEL DERECHO
 dropzone.addEventListener("click", (e) => {
   if (e.target.id == "outer-dropzone") {
-    const todo = document.querySelectorAll(
-      "div.dropzone > img, div.dropzone > input"
-    );
-    
-    console.log('click zona')
-
-    
-   clean(todo);
-    
-    clean2(todo)
+    const todo = scanItems();
+    selectionClean(todo, 1);
+    selectionClean(todo, 2);
+    btnDisable();
+    selectedItems.clear();
     panel.innerHTML = ``;
     panel2.innerHTML = ``;
-    btnon.disabled = true;
-    btnunder.disabled = true;
-    btndelete.disabled = true;
-    btnclone.disabled = true;
-    eventState2.target = null
-    
-
-
+    eventState2.target = null;
+    // alertdiv2.classList.remove('visible')
+    multipleSelection(scanItems());
   }
 });
 
 //************************************************** */
-
-//*************************************************** */
-
-// LINKEA LOS PRODUCTO A CADA ITEM DE LA DAHSBOARD
-// linkProduct.addEventListener("click", (e) => {
-//   if (eventState2.target.getAttribute("pk")) {
-//     eventState2.target.setAttribute("product_id", eventStateTable.target.id);
-//     console.log(eventState2.target);
-//     console.log(eventStateTable.target);
-//   }
-// });
-
-//*************************************************** */
 
 //*************************************************** */
 
@@ -224,8 +232,8 @@ formSearch.addEventListener("submit", (e) => {
 // ENVIA TODO LOS ITEMS AL SERVIDOR Y LOS GUARDA EN LA BASE DE DATOS
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  
-  clean(todo)
+  const todo = scanItems();
+  selectionClean(todo, 1);
   btnsave.disabled = true;
   alertdiv.hidden = true;
   const listItem = [];
@@ -242,7 +250,7 @@ form.addEventListener("submit", (e) => {
     obj.zindex = todo.style.zIndex;
     obj.width = todo.style.width;
     obj.height = todo.style.height;
-    obj.relationship = todo.getAttribute('relationship')
+    obj.relationship = todo.getAttribute("relationship");
     listItem.push(obj);
   });
   todoslabel.forEach((todo) => {
@@ -273,10 +281,8 @@ form.addEventListener("submit", (e) => {
 //BOTON LABEL: AGREGA UN NUEVO LABEL A LA DASHBOARD
 
 btnlabel.addEventListener("click", (e) => {
-  const todo = document.querySelectorAll(
-    "div.dropzone > img, div.dropzone > input"
-  );
-  clean(todo)
+  const todo = scanItems();
+  selectionClean(todo, 1);
   let newInput = document.createElement("input");
   newInput.style.width = "100px";
   newInput.style.height = "40px";
@@ -286,9 +292,10 @@ btnlabel.addEventListener("click", (e) => {
   // newInput.style.color = "white";
   // newInput.style.border = "1px solid white";
   newInput.className = "drag-drop";
-  newInput.alt = "labels"
-  newInput.classList.add('selected')
+  newInput.alt = "labels";
+  newInput.classList.add("selected");
   dropzone.appendChild(newInput);
+  multipleSelection(scanItems());
 });
 
 //*************************************************** */
@@ -314,10 +321,8 @@ btnunder.addEventListener("click", (e) => {
 //BOTON CLONAR: CLONA UN ITEM SELECCIONADO
 btnclone.addEventListener("click", (e) => {
   // console.log(eventState2.target)
-  const todo = document.querySelectorAll(
-    "div.dropzone > img, div.dropzone > input"
-  );
-  clean(todo)
+  const todo = scanItems();
+  selectionClean(todo, 1);
   const clone = eventState2.target.cloneNode(true);
 
   clone.setAttribute("id_code", generateCode(2));
@@ -329,7 +334,7 @@ btnclone.addEventListener("click", (e) => {
   //   // clone.style.width = "auto";
   //   clone.style.zIndex = "0";
   //
-  //
+  multipleSelection(scanItems());
 });
 //*************************************************** */
 
@@ -340,28 +345,31 @@ form2.addEventListener("submit", (e) => {
   e.preventDefault();
   const csrfToken = document.querySelector("#form2 > input").value;
   const item = eventState2.target;
-  const data = []
+  const data = [];
 
-
-  selectedItems.forEach(item => {
+  selectedItems.forEach((item) => {
     // Remove the item from the DOM
     item.parentNode.removeChild(item);
-      data.push(item.getAttribute('id_code'))
-   });
-   selectedItems.clear();
-   // Clear the Set
-   
-   console.log(data)
-  if (data.length === 0){
-    console.log('vacia!')
-    post("/deleteitem/", {id_code: [item.getAttribute("id_code")],}, csrfToken);
+    data.push(item.getAttribute("id_code"));
+  });
+  selectedItems.clear();
+
+  eventState2.target = null;
+  // Clear the Set
+
+  console.log(data);
+  if (data.length === 0) {
+    post(
+      "/deleteitem/",
+      { id_code: [item.getAttribute("id_code")] },
+      csrfToken
+    );
     item.remove();
-  }else{
-    post("/deleteitem/", {id_code: data,}, csrfToken);
+  } else {
+    post("/deleteitem/", { id_code: data }, csrfToken);
   }
-  
-  // post("/deleteitem/", data, csrfToken);
-  
+
+  btnDisable();
 });
 //*************************************************** */
 
@@ -382,25 +390,21 @@ dropzone.addEventListener("dragover", (e) => {
 });
 
 dropzone.addEventListener("drop", (e) => {
-  if (eventState.target.id == "item") {
-  
-    const clone = eventState.target.cloneNode(true);
-    clone.classList.add("drag-drop");
-    clone.removeAttribute("id");
-    // clone.style.width = "auto";
-    clone.style.zIndex = "0";
-    if(eventState2.target != null && eventState2.target.getAttribute('alt')=='labels'){
-    if(eventState2.target.getAttribute('alt')=='labels'){
-        clone.setAttribute('relationship',eventState2.target.getAttribute('id_code'))
-    }
-    clone.setAttribute("id_code", generateCode(2));
-    dropzone.appendChild(clone);
-    }else{
-      alertdiv2.hidden = false
-      alertdiv2.innerText = 'Debe selecionar una etiqueta!'
-    }
-    
-  }
+  // if (eventState.target.id == "item") {
+  const clone = eventState.target.cloneNode(true);
+  clone.classList.add("drag-drop");
+  clone.removeAttribute("id");
+  // clone.style.width = "auto";
+  clone.style.zIndex = "0";
+  clone.setAttribute("id_code", generateCode(2));
+  clone.style.transform = "translate(" + 0 + "px, " + 0 + "px)";
+  // update the posiion attributes
+  clone.setAttribute("data-x", 0);
+  clone.setAttribute("data-y", 0);
+  dropzone.appendChild(clone);
+  eventState.target = null;
+  multipleSelection(scanItems());
+  // }
 });
 //*************************************************** */
 
@@ -408,7 +412,6 @@ dropzone.addEventListener("drop", (e) => {
 // FUNCION PARA MOVER CADA ITEM DENTRO DE LA ZONA
 function dragMoveListener(event) {
   var target = event.target;
-
   // keep the dragged position in the data-x/data-y attributes
   var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
   var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
@@ -431,19 +434,16 @@ function dragMoveListener(event) {
 interact(".drag-drop")
   .on("tap", function (event) {
     // event.currentTarget.classList.toggle("switch-bg");
-    console.log("click al objeto");
-    const todo = document.querySelectorAll(
-      "div.dropzone > img, div.dropzone > input"
-    );
-
-    clean(todo);
+    // console.log("click al objeto");
+    const todo = scanItems();
+    selectionClean(todo, 1);
     btnon.disabled = false;
     btnunder.disabled = false;
     btndelete.disabled = false;
     btnclone.disabled = false;
     btnInventory.disabled = false;
     eventState2.target = event.target;
-    btnsave.disabled = false
+    btnsave.disabled = false;
 
     panel.innerHTML = `
       
@@ -470,9 +470,10 @@ interact(".drag-drop")
         event.target.style.zIndex
       }" aria-label=".form-control-sm example">
       `;
-      panel2.innerHTML = `${event.target.getAttribute('description')}`
-
-    event.target.classList.add('selected')
+    panel2.innerHTML = `${event.target.getAttribute("description")}`;
+    if (!event.ctrlKey) {
+      event.target.classList.add("selected");
+    }
 
     event.preventDefault();
   })
@@ -507,7 +508,6 @@ interact(".dropzone").dropzone({
     // cuando el evento esta dentro de la zona o el obejeto esta dentro de la zona sin soltar
     var draggableElement = event.relatedTarget; // este se le aplica al objeto
     var dropzoneElement = event.target; // este le aplica a la zona
-    alertdiv2.hidden = true
     // console.log("dentro de zona");
   },
   ondropdeactivate: function (event) {
@@ -515,7 +515,7 @@ interact(".dropzone").dropzone({
     var dropzoneElement = event.target; // este le aplica a la zona
     alertdiv.hidden = false;
     btnsave.disabled = false;
-    console.log("dejo de moverse");
+    // console.log("dejo de moverse");
     // const itemId = event.target;
     // console.log(itemId)
     // const x = event.clientX; // Obtén la nueva posición X
@@ -525,8 +525,6 @@ interact(".dropzone").dropzone({
   ondrop: function (event) {
     // cuando el objeto es soltado dentro de la zona
     //       event.relatedTarget.textContent = 'Dropped'
-
-   scan_items()
   },
 });
 //*************************************************** */
@@ -581,9 +579,9 @@ interact(".drag-drop")
     listeners: {
       move: window.dragMoveListener,
       end(event) {
-        const itemId = event.target.getAttribute('id_code');
-        const x = event.target.getAttribute('data-x'); // Obtén la nueva posición X
-        const y = event.target.getAttribute('data-y'); // Obtén la nueva posición Y
+        const itemId = event.target.getAttribute("id_code");
+        const x = event.target.getAttribute("data-x"); // Obtén la nueva posición X
+        const y = event.target.getAttribute("data-y"); // Obtén la nueva posición Y
         savePosition(itemId, x, y);
       },
     },
@@ -604,21 +602,21 @@ interact(".drag-drop")
 window.dragMoveListener = dragMoveListener;
 //*************************************************** */
 
-function loadPositions(){
-    const positions = JSON.parse(localStorage.getItem('itemPositions')) || {};
+function loadPositions() {
+  const positions = JSON.parse(localStorage.getItem("itemPositions")) || {};
 
-    for (const itemId in positions) {
-        const item = document.querySelector(`[id_code="${itemId}"]`);
-           
-        if (item) {
-            const pos = positions[itemId];
-            item.style.transform = `translate(${pos.x}px,${pos.y}px)`
-            item.setAttribute('data-x',pos.x)
-            item.setAttribute('data-y',pos.y)
-            // item.style.left = pos.x + 'px';
-            // item.style.top = pos.y + 'px';
-        }
+  for (const itemId in positions) {
+    const item = document.querySelector(`[id_code="${itemId}"]`);
+
+    if (item) {
+      const pos = positions[itemId];
+      item.style.transform = `translate(${pos.x}px,${pos.y}px)`;
+      item.setAttribute("data-x", pos.x);
+      item.setAttribute("data-y", pos.y);
+      // item.style.left = pos.x + 'px';
+      // item.style.top = pos.y + 'px';
     }
+  }
 }
 
 window.onload = loadPositions;

@@ -38,7 +38,9 @@ body{
   text-align: center;
   /* background-color:  rgba(70, 157, 186, 0.445); */
 }
-#alert2{
+.alert2{
+  opacity: 0; /* Comienza oculto */
+  transition: opacity 2s; /* Transición de 2 segundos */
   background: rgb(114, 81, 69);
   border-radius: 2px;
   padding: 2px;
@@ -46,6 +48,13 @@ body{
   /* background-color:  rgba(70, 157, 186, 0.445); */
 }
 
+.alert2.visible {
+  opacity: 1; /* Visible */
+}
+
+.alert2.fade-out {
+  opacity: 0; /* Oculto */
+}
 
 
 html, body {
