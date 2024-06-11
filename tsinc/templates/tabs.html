@@ -2,7 +2,7 @@
 {% extends 'layout.html' %} {% block body %}
 
 <div class="container">
-  <div class="row mb-2">
+  <!-- <div class="row mb-2">
     <div class="col-3">
       <a  class="btn btn-link" href="{% url 'home' %}">Volver</a>
       <div class="card bg-dark p-2">
@@ -11,14 +11,27 @@
   </div>
     <div class="col-6"></div>
     <div class="col-3"></div>
-  </div>
+  </div> -->
 
 
     <div class="row">      
         <div class="col-3">
-          <div class="card bg-dark p-4">
-            <h5>Crear Tablero</h5>
-            {% include 'components/form.html' %}
+          <div class="card bg-dark">
+
+            <div class="card-header bg-secondary">
+              <span class="fs-6 fw_light">
+                  {{project.name}}
+              </span>
+          
+            </div>
+          
+          
+            <div class="card-body">
+              <h5>Crear Tablero</h5>
+              {% include 'components/form.html' %}
+            </div>
+           
+           
           </div>
 
         </div>
@@ -31,6 +44,7 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">Tableros</th>
+              <th scope="col">Controlador</th>
               <th scope="col"></th>
             </tr>
           
@@ -41,6 +55,7 @@
   
                 <th scope="row">{{tab.id}}</th>
               <td>{{tab.tab_name}}</td>
+              <td>{{tab.controller}}</td>
               <td>
                 <a class="btn btn-primary btn-sm" href="{% url 'create_page' tab.id %}"> <i class="bi bi-box-arrow-right"></i></a>
                 <a class="btn btn-danger btn-sm" href="{% url 'delete_tab' tab.id %}" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>

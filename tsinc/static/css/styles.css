@@ -21,6 +21,7 @@
 body{
   background: #1b1d23;
   color: white;
+  height: 100vh;
 }
 
 .dropzone{
@@ -116,6 +117,28 @@ input.selected-group{
   height: 100%;
   pointer-events: none;
 }
+
+#panelLeft{
+  height: 450px;
+  overflow-y: scroll; 
+}
+
+
+#panelLeft::-webkit-scrollbar {
+  width: 8px; /* Ancho de la barra de desplazamiento */
+  border-radius: 2px;
+  background-color: #3c3f49;
+}
+#panelLeft::-webkit-scrollbar-thumb {
+  background: #666666; /* Color del pulgar de la barra de desplazamiento */
+  border-radius: 2px; /* Bordes redondeados */
+}
+
+
+
+
+
+
 
 
 

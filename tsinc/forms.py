@@ -31,8 +31,8 @@ class UploadProducts(forms.Form):
 class CreateTab(forms.Form):
     tab_name = forms.CharField(label="Nombre del tablero", max_length=200)
     OPCIONS_CHOICES_CONTROLLER = [
-        ('LG CONTROLLER', 'LG CONTROLLER'),
-        ('JONHSON CONTROLS', 'JONHSON CONTROLS'),
+        ('LG-(VDQ-00QA2)', 'LG-(VDQ-00QA2)'),
+        ('JC-(M4-SGM09090)', 'JC-(M4-SGM09090)'),
         
     ]
 

@@ -6,9 +6,21 @@
           
         <div class="col-3">
 
-        <div class="card bg-dark p-4">
-          <h5>Crear Página</h5>
-          {% include 'components/form.html' %}
+        <div class="card bg-dark">
+          <div class="card-header bg-secondary">
+            <span class="fs-6 fw_light">
+                {{tab.tab_name}}
+            </span>
+        
+          </div>
+
+
+          <div class="card-body">
+            <h5>Crear Página</h5>
+            {% include 'components/form.html' %}
+
+          </div>
+         
         </div>
         
         </div>
@@ -65,7 +77,7 @@
       </div>
       </div>
       <div class="col-3">
-
+          <a href="{% url 'tabs' tab.project.id %}" class=" btn btn-primary btn-sm">Volver</a>
       </div>
       
     </div>

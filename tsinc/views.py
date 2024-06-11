@@ -147,7 +147,7 @@ def delete_tab(request, id):
     object = get_object_or_404(Tabs, id=id)
     project = object.project
     object.delete()
-    return redirect(f"project/tabs/{project.id}/")
+    return redirect(f"/project/tabs/{project.id}/")
 
 @login_required
 def download_offer(request,id):
@@ -252,7 +252,7 @@ def create_page(request,id):
         paginator = Paginator(pages_tab, 5)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-        return render(request, 'createpage.html',{'page_obj': page_obj, 'form':CreatePage()})
+        return render(request, 'createpage.html',{'page_obj': page_obj, 'form':CreatePage(), 'tab':tab})
     else:
         tab = Tabs.objects.get(id=id)
         Dasboard.objects.create(name = request.POST['name'], tab=tab)
