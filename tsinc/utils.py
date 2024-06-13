@@ -101,7 +101,7 @@ def print_data(units,items,sheet,project):
         for unit in units:
             column.append(format_unit(unit, col))
             for item in items:
-                if unit.pk == item.dashboard.pk:
+                if unit.pk == item.dashboard.pk and item.img.product != None:
                     column.append(format_item(item, col))
             column.append(' ')
 

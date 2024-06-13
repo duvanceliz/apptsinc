@@ -1,7 +1,7 @@
 {% extends 'layout.html' %} {% block body %}
 
 <div class="container">
-  <div class="row">
+  <div class="row mb-2">
     <div class="col-2"><a class="btn btn-primary" href="{% url 'create_product' %}">Nuevo Producto</a></div>
     <div class="col-2"><a class="btn btn-success" href="{% url 'uploadproducts' %}">Importar Tabla</a></div>
     <div class="col-2"><a class="btn btn-success" href="{% url 'download_products' %}">Exportar Tabla</a></div>
@@ -14,7 +14,7 @@
       
       <div class="col-12">
   
-        <table class="table table-hover table-dark">
+        <table class="table table-hover table-light">
           <thead>
             
         

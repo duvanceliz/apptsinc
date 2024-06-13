@@ -39,7 +39,7 @@ def create_project(request):
        return render(request, 'createproject.html',{'form': CreateProject()})
     else:
         print(request.POST)
-        project = Project.objects.create(name = request.POST['name'], company_name = request.POST['company_name'], asesor = request.POST['asesor'],controller = request.POST['controller'], usersesion=request.user )
+        project = Project.objects.create(name = request.POST['name'], company_name = request.POST['company_name'], asesor = request.POST['asesor'], usersesion=request.user )
         return redirect('/')
     
 @login_required
@@ -187,7 +187,7 @@ def download_offer(request,id):
         print_data(units_list_tab[i-1],items,sheets[i-1],project)
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=points.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=C-1-552 CLEAN AIR.pdf'
 
     workbook.save(response)
     
@@ -292,7 +292,8 @@ def total(request):
     dashboard = Dasboard.objects.get(id=request.GET['id'])
     for item in items:
         if dashboard.id == item.dashboard.id:
-            dashboard_products.append(item.img.product)
+            if item.img.product != None:
+                dashboard_products.append(item.img.product)
     total_set = set(dashboard_products)
     total = list(total_set)
     total_products = []

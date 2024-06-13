@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generado por Microsoft Visio, SVG Export TEMP_SENSOR.svg Página-1 -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
+		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="0.311423in" height="0.483438in"
+		viewBox="0 0 22.4225 34.8075" xml:space="preserve" color-interpolation-filters="sRGB" class="st8">
+	<v:documentProperties v:langID="9226" v:metric="true" v:viewMarkup="false"/>
+
+	<style type="text/css">
+	<![CDATA[
+		.st1 {fill:#dfdfdf;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75}
+		.st2 {fill:#808080;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75}
+		.st3 {fill:url(#grad0-9);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.24}
+		.st4 {fill:url(#grad0-9);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.24;visibility:hidden}
+		.st5 {fill:url(#grad0-20);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.24}
+		.st6 {fill:#c0c0c0;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75}
+		.st7 {stroke:#000000;stroke-linecap:butt;stroke-width:0.75}
+		.st8 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
+	]]>
+	</style>
+
+	<defs id="Patterns_And_Gradients">
+		<linearGradient id="grad0-9" x1="0" y1="0" x2="1" y2="0" gradientTransform="rotate(0 0.5 0.5)">
+			<stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
+			<stop offset="1" stop-color="#c6c600" stop-opacity="1"/>
+		</linearGradient>
+		<linearGradient id="grad0-13" x1="0" y1="0" x2="1" y2="0" gradientTransform="rotate(0 0.5 0.5)">
+			<stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
+			<stop offset="1" stop-color="#c0c0c0" stop-opacity="1"/>
+		</linearGradient>
+		<linearGradient id="grad0-20" x1="0" y1="0" x2="1" y2="0" gradientTransform="rotate(0 0.5 0.5)">
+			<stop offset="0" stop-color="#e6e6e6" stop-opacity="1"/>
+			<stop offset="1" stop-color="#b3b3b3" stop-opacity="1"/>
+		</linearGradient>
+	</defs>
+	<g v:mID="0" v:index="1" v:groupContext="foregroundPage">
+		<v:custProps>
+			<v:cp v:nameU="TooltipFont" v:lbl="Tooltip Font"
+					v:prompt="This property controls the font that all the tooltips will appear in. You must type the font exactly correct for the tooltips to work. Remember that each client machine must have the font as well. There is no auto-download of fonts."
+					v:type="0" v:format="" v:sortKey="" v:ask="false" v:langID="1033" v:cal="0" v:val="VT4(Arial)"/>
+		</v:custProps>
+		<title>Página-1</title>
+		<v:pageProperties v:drawingScale="0.0393701" v:pageScale="0.0393701" v:drawingUnits="24" v:shadowOffsetX="8.50394"
+				v:shadowOffsetY="-8.50394"/>
+		<v:layer v:name="Drawing" v:index="0"/>
+		<g id="group167-1" transform="translate(2.2536,-6.14725)" v:mID="167" v:groupContext="group" v:layerMember="0">
+			<v:custProps>
+				<v:cp v:nameU="PropertySet" v:lbl="Property Set"
+						v:prompt="Select the set of custom properties to display then close and re-open the custom properties window."
+						v:type="4" v:format="Binding;Tooltip" v:sortKey="A" v:invis="false" v:ask="false" v:langID="1033" v:cal="0"
+						v:val="VT4(Binding)"/>
+				<v:cp v:nameU="ObjRef" v:lbl="Object Reference"
+						v:prompt="Enter the fully qualified object reference of the object that this shape will be bound to. If this shape is aliased enter a partial reference. The binding reference for this shape will be the concatenation of the network alias value (if set), the system alias value (if set) and this property."
+						v:type="0" v:format="" v:sortKey="B" v:invis="false" v:ask="false" v:langID="1033" v:cal="0" v:val="VT4()"/>
+				<v:cp v:nameU="NetworkAlias" v:lbl="Network Alias"
+						v:prompt="Enter the name of the local variable that contains the network portion of the object reference that this shape is to bind to. Enter &#60;none&#62; if you do not wish to use a network alias. If set, the bound reference is the concatenation of the value of network alias variable, the value of the system alias variable (if set) and the object reference property."
+						v:type="4" v:format="&#60;none&#62;;net1;net2;net3" v:sortKey="C" v:invis="false" v:ask="false"
+						v:langID="1033" v:cal="0" v:val="VT4()"/>
+				<v:cp v:nameU="SystemAlias" v:lbl="System Alias"
+						v:prompt="Enter the name of the local variable that contains the system portion of the object reference that this shape is to bind to. Enter &#60;none&#62; if you do not wish to use a system alias. If set, the bound reference is the concatenation of the value of network alias variable (if set), the value of the system alias variable and the object reference property."
+						v:type="4" v:format="&#60;none&#62;;sys1;sys2;sys3" v:sortKey="D" v:invis="false" v:ask="false"
+						v:langID="1033" v:cal="0" v:val="VT4()"/>
+				<v:cp v:nameU="BindEnable" v:lbl="Binding Enable"
+						v:prompt="Select whether any bindings will occur at all on this shape. This setting overrides all others. Setting this property to false will make the shape completely static."
+						v:type="3" v:format="" v:sortKey="E" v:invis="false" v:ask="false" v:langID="1033" v:cal="0"
+						v:val="VT0(1):5"/>
+				<v:cp v:nameU="AlarmEnable" v:lbl="Alarm Extension Enable"
+						v:prompt="Select whether any portion of the shape will attempt to bind to an Alarm extension. This setting will override other Alarm properties."
+						v:type="3" v:format="" v:sortKey="F" v:invis="false" v:ask="false" v:langID="1033" v:cal="0"
+						v:val="VT0(0):5"/>
+				<v:cp v:nameU="AlarmRef" v:lbl="Alarm Ref"
+						v:prompt="Enter the Object name of the Alarm extension you wish this shape to bind to for alarm indication purposes. Hover the mouse cursor over desired alarmed attribute in the Alarm view to see the ref of the Alarm object."
+						v:type="0" v:format="" v:sortKey="G" v:invis="false" v:ask="false" v:langID="1033" v:cal="0" v:val="VT4()"/>
+				<v:cp v:nameU="RefArg" v:lbl="Ref Argument"
+						v:prompt="Use Extreme Caution before editing. This property contains the JavaScript formula to concatenate the network, system and objref fields at runtime, subject to the alias enables."
+						v:type="0" v:format="" v:sortKey="H" v:invis="true" v:ask="false" v:langID="1033" v:cal="0"
+						v:val="VT4(&#39;cpipkirpc1.cg.na.jci.com:cpipkirpc1.cg.na.jci.com/TemplateDemo.RA-T&#39;)"/>
+				<v:cp v:nameU="TooltipStatus" v:lbl="Tolltip Status Enable"
+						v:prompt="Select whether the tooltip displays the bound object&#39;s Status (.512)." v:type="3" v:format=""
+						v:sortKey="B" v:invis="true" v:ask="false" v:langID="1033" v:cal="0" v:val="VT0(1):5"/>
+				<v:cp v:nameU="TooltipName" v:lbl="Tooltip Name Enable"
+						v:prompt="Select whether the tooltip displays the bound object&#39;s Name (.2390) ." v:type="3" v:format=""
+						v:sortKey="C" v:invis="true" v:ask="false" v:langID="1033" v:cal="0" v:val="VT0(1):5"/>
+				<v:cp v:nameU="TooltipRef" v:lbl="Tooltip Ref Enable"
+						v:prompt="Select whether the tooltip displays the (calculated) object reference the shape is attempting to bind to."
+						v:type="3" v:format="" v:sortKey="D" v:invis="true" v:ask="false" v:langID="1033" v:cal="0"
+						v:val="VT0(0):5"/>
+				<v:cp v:nameU="TooltipDesc" v:lbl="Tooltip Desc Enable"
+						v:prompt="Select whether the tooltip displays the bound object&#39;s Description (.28)." v:type="3"
+						v:format="" v:sortKey="E" v:invis="true" v:ask="false" v:langID="1033" v:cal="0" v:val="VT0(0):5"/>
+				<v:cp v:nameU="TooltipAlarmMsg" v:lbl="Tooltip Alarm Msg Enable"
+						v:prompt="Select whether the tooltip displays the Alarm Message Text (.Alarm1.537) of the Alarm Extension when the object is in alarm."
+						v:type="3" v:format="" v:sortKey="F" v:invis="true" v:ask="false" v:langID="1033" v:cal="0"
+						v:val="VT0(1):5"/>
+				<v:cp v:nameU="TooltipFont" v:lbl="Tooltip Font Enable"
+						v:prompt="Enter the name of the font the tooltip will use. Remember that the client must already have this font. There is no auto-download mechanism."
+						v:type="0" v:format="" v:sortKey="G" v:invis="true" v:ask="false" v:langID="1033" v:cal="0" v:val="VT4()"/>
+			</v:custProps>
+			<v:userDefs>
+				<v:ud v:nameU="Row_1" v:prompt=""
+						v:val="VT4(TOOLTIP Arial,bsv(&#39;cpipkirpc1.cg.na.jci.com:cpipkirpc1.cg.na.jci.com/TemplateDemo.RA-T&#39; + &#39;.512&#39;, me) + &#39; &#39; + bsv(&#39;cpipkirpc1.cg.na.jci.com:cpipkirpc1.cg.na.jci.com/TemplateDemo.RA-T&#39; + &#39;.2390&#39;,me);)"/>
+				<v:ud v:nameU="Row_2" v:prompt=""
+						v:val="VT4(LEFTCLICK 2,ShowObjWindow(&#39;cpipkirpc1.cg.na.jci.com:cpipkirpc1.cg.na.jci.com/TemplateDemo.RA-T&#39;);)"/>
+				<v:ud v:nameU="Row_3" v:prompt=""
+						v:val="VT4(RIGHTCLICK 1,ShowCmdWindow(&#39;cpipkirpc1.cg.na.jci.com:cpipkirpc1.cg.na.jci.com/TemplateDemo.RA-T&#39;);)"/>
+			</v:userDefs>
+			<title>Temp Sensor.167</title>
+			<g id="shape168-2" v:mID="168" v:groupContext="shape" v:layerMember="0" transform="translate(4.47642E-13,-31.3557)">
+				<title>Hoja.168</title>
+				<path d="M0 34.81 L17.94 34.81 L22.42 31.81 L4.48 31.81 L0 34.81 L0 34.81 Z" class="st1"/>
+			</g>
+			<g id="shape169-4" v:mID="169" v:groupContext="shape" v:layerMember="0" transform="translate(17.938,-23.8631)">
+				<title>Hoja.169</title>
+				<path d="M0 27.31 L0 34.81 L4.48 31.81 L4.48 24.32 L0 27.31 L0 27.31 Z" class="st2"/>
+			</g>
+			<g id="shape170-6" v:mID="170" v:groupContext="shape" v:layerMember="0" transform="translate(5.97656,0.334791)">
+				<title>Hoja.170</title>
+				<path d="M6.4 13.94 A1.91836 1.91836 0 0 1 4.99 15.91 C2.23 15.54 0.93 17.73 1.52 19.21 C2.19 20.9 5.32 21.67 7.41
+							 22.8 C8.36 23.31 9.1 23.91 8.96 24.54 C8.7 25.63 5.8 26.83 4.21 27.94 C3.16 28.68 2.69 29.38 2.71 30.1
+							 C2.78 31.91 5.97 33.88 7.52 33.63 a0.5625 0.5625 0 1 1 0 1.125 C7.14 34.91 5.84 34.71 4.71 34.28 C2.88
+							 33.59 1.52 32.32 0.97 30.39 C0.76 29.63 0.67 28.77 1.64 27.96 C3.13 26.72 7.11 25.6 7.08 24.57 C7.05
+							 23.71 4.19 22.91 2.8 22.45 C2.16 22.23 1.83 22.09 1.52 21.83 C0.48 20.99 -0.39 18.93 0.18 17.32 C0.42
+							 16.64 0.93 16.04 2.2 15.09 C2.56 14.81 3 14.5 4.15 14.5 a0.444695 0.444695 -180 0 0 0.5625 -0.5625 L6.4
+							 13.94 Z" class="st3"/>
+			</g>
+			<g id="shape171-10" v:mID="171" v:groupContext="shape" v:layerMember="0" transform="translate(10.5103,-13.0386)">
+				<title>Duct Temp Sensor.25</title>
+				<v:custProps>
+					<v:cp v:nameU="TEXT" v:lbl="Text" v:prompt="Enter Text String" v:type="0" v:invis="true" v:ask="true"
+							v:langID="1033" v:cal="0" v:val="VT4(MyNAE:MyNAE/N2-1.VMA1.ZN-T)"/>
+					<v:cp v:nameU="Geom_Visible" v:lbl="Geometry Visible" v:prompt="Is the geometry visible?" v:type="3"
+							v:invis="true" v:ask="true" v:langID="1033" v:cal="0" v:val="VT0(1):5"/>
+					<v:cp v:nameU="Geom_x" v:lbl="Geometry X coordinate" v:prompt="Enter X coordinate" v:type="2"
+							v:format="#.#################" v:invis="true" v:ask="true" v:langID="1033" v:cal="0"
+							v:val="VT0(-60.473372781065):26"/>
+					<v:cp v:nameU="Geom_y" v:lbl="Geometry Y coordinate" v:prompt="Enter Y coordinate" v:type="2"
+							v:format="#.#################" v:invis="true" v:ask="true" v:langID="1033" v:cal="0"
+							v:val="VT0(34.319526627219):26"/>
+					<v:cp v:nameU="Geom_Width" v:lbl="Geometry Width" v:prompt="Enter Width" v:type="2"
+							v:format="#.#################" v:invis="true" v:ask="true" v:langID="1033" v:cal="0" v:val="VT0(80):26"/>
+					<v:cp v:nameU="Geom_Height" v:lbl="Geometry Height" v:prompt="Enter Height" v:type="2"
+							v:format="#.#################" v:invis="true" v:ask="true" v:langID="1033" v:cal="0" v:val="VT0(25):26"/>
+					<v:cp v:nameU="Geom_Resize" v:lbl="Geometry Resize" v:prompt="Resize" v:type="2" v:invis="true" v:ask="true"
+							v:langID="1033" v:cal="0" v:val="VT0(0):26"/>
+					<v:cp v:nameU="Geom_Orig_Width" v:lbl="Geometry Original Width" v:prompt="Enter Original Width" v:type="2"
+							v:format="#.#################" v:invis="true" v:ask="true" v:langID="1033" v:cal="0" v:val="VT0(80):26"/>
+					<v:cp v:nameU="Geom_Orig_Height" v:lbl="Geometry Original Height" v:prompt="Enter Original Height" v:type="2"
+							v:format="#.#################" v:invis="true" v:ask="true" v:langID="1033" v:cal="0" v:val="VT0(25):26"/>
+					<v:cp v:nameU="Con_Visible" v:lbl="Connector Visible" v:prompt="Connector Visible" v:type="3" v:invis="true"
+							v:ask="true" v:langID="1033" v:cal="0" v:val="VT0(1):5"/>
+					<v:cp v:nameU="Con_Movable" v:lbl="Connector Moveable" v:prompt="Connector Moveable" v:type="3" v:invis="true"
+							v:ask="true" v:langID="1033" v:cal="0" v:val="VT0(1):5"/>
+					<v:cp v:nameU="Con_Specified" v:lbl="Connector Specified" v:prompt="Connector Specified" v:type="3"
+							v:invis="true" v:ask="true" v:langID="1033" v:cal="0" v:val="VT0(0):5"/>
+					<v:cp v:nameU="Con_OffsetX" v:lbl="Connector Offset X" v:prompt="Connector Offset X" v:type="2" v:invis="true"
+							v:ask="true" v:langID="1033" v:cal="0" v:val="VT0(0):26"/>
+					<v:cp v:nameU="Con_OffsetY" v:lbl="Connector Offset Y" v:prompt="Connector Offset Y" v:type="2" v:invis="true"
+							v:ask="true" v:langID="1033" v:cal="0" v:val="VT0(0):26"/>
+					<v:cp v:nameU="Con_MagX" v:lbl="Connector Magnified X" v:prompt="Connector Magnified X" v:type="2"
+							v:invis="true" v:ask="true" v:langID="1033" v:cal="0" v:val="VT0(0):26"/>
+					<v:cp v:nameU="Con_MagY" v:lbl="Connector Magnified Y" v:prompt="Connector Magnified Y" v:type="2"
+							v:invis="true" v:ask="true" v:langID="1033" v:cal="0" v:val="VT0(0):26"/>
+					<v:cp v:nameU="UI_Name" v:lbl="UI Name" v:prompt="UI Name" v:type="0" v:invis="true" v:ask="true"
+							v:langID="1033" v:cal="0" v:val="VT4(com.jci.ugt.ui.JCValueDisplayNodeUI)"/>
+					<v:cp v:nameU="UI_Font_Type" v:lbl="UI Font Type" v:prompt="UI Font Type" v:type="1"
+							v:format="Dialog;SansSerif;Serif;Monospaced;DialogInput" v:invis="true" v:ask="true" v:langID="1033"
+							v:cal="0" v:val="VT4(Dialog)"/>
+					<v:cp v:nameU="UI_Font_Style" v:lbl="UI Font Style" v:prompt="UI Font Style" v:type="1"
+							v:format="Plain;Bold;Italic;Bold Italic;" v:invis="true" v:ask="true" v:langID="1033" v:cal="0"
+							v:val="VT4(Bold)"/>
+					<v:cp v:nameU="UI_Font_Size" v:lbl="UI Font Size" v:prompt="UI Font Size" v:type="4"
+							v:format="8;9;10;11;12;14;16;18;20;22;24;26;28;36;48;72" v:invis="true" v:ask="true" v:langID="1033"
+							v:cal="0" v:val="VT4(12)"/>
+					<v:cp v:nameU="Type_Str" v:lbl="Type String" v:prompt="Type String" v:type="0" v:invis="true" v:ask="true"
+							v:langID="1033" v:cal="0" v:val="VT4(textnode)"/>
+					<v:cp v:nameU="Node_Image" v:lbl="Node Image" v:prompt="Node Image" v:type="0" v:invis="true" v:ask="true"
+							v:langID="1033" v:cal="0" v:val="VT4(&#34;null&#34;)"/>
+					<v:cp v:nameU="Hyp_Text" v:lbl="Hyperlink Text" v:prompt="Hyperlink Text" v:type="0" v:invis="true"
+							v:ask="true" v:langID="1033" v:cal="0" v:val="VT4(null)"/>
+					<v:cp v:nameU="Bind_Obj_Name_Text" v:lbl="Binding Object Name Text" v:prompt="Binding Object Name Text"
+							v:type="0" v:ask="true" v:langID="1033" v:cal="0" v:val="VT4(MyNAE:MyNAE/N2-1.SYS.SA-T)"/>
+					<v:cp v:nameU="Show_Obj_Name" v:lbl="Show Object Name" v:prompt="Show Object Name" v:type="3" v:invis="true"
+							v:ask="true" v:langID="1033" v:cal="0" v:val="VT0(0):5"/>
+					<v:cp v:nameU="Status" v:lbl="Show Status" v:prompt="Show Status" v:type="3" v:ask="true" v:langID="1033"
+							v:cal="0" v:val="VT0(1):5"/>
+					<v:cp v:nameU="Units" v:lbl="Show Units" v:prompt="Show Units" v:type="3" v:ask="true" v:langID="1033"
+							v:cal="0" v:val="VT0(1):5"/>
+					<v:cp v:nameU="Value_Font_Type" v:lbl="Value Font Type" v:prompt="Value Font Type" v:type="1"
+							v:format="Dialog;SansSerif;Serif;Monospaced;DialogInput" v:ask="true" v:langID="1033" v:cal="0"
+							v:val="VT4(Dialog)"/>
+					<v:cp v:nameU="Value_Font_Style" v:lbl="Value Font Style" v:prompt="Value Font Style" v:type="1"
+							v:format="Plain;Bold;Italic;Bold Italic;" v:ask="true" v:langID="1033" v:cal="0" v:val="VT4(Bold)"/>
+					<v:cp v:nameU="Value_Font_Size" v:lbl="Value Font Size" v:prompt="Value Font Size" v:type="4"
+							v:format="8;9;10;11;12;14;16;18;20;22;24;26;28;36;48;72" v:ask="true" v:langID="1033" v:cal="0"
+							v:val="VT4(12)"/>
+					<v:cp v:nameU="Group_Num" v:lbl="Group Number" v:prompt="Group Number" v:type="2" v:invis="true" v:ask="true"
+							v:langID="1033" v:cal="0" v:val="VT0(0):26"/>
+					<v:cp v:nameU="Ref" v:lbl="Reference" v:prompt="Reference" v:type="0" v:invis="true" v:ask="true"
+							v:langID="1033" v:cal="0" v:val="VT4(MyNAE:MyNAE/N2-1.VMA1.ZN-T)"/>
+				</v:custProps>
+			</g>
+			<g id="shape172-14" v:mID="172" v:groupContext="shape" v:layerMember="0" transform="translate(9.76292,-1.7997)">
+				<title>Duct Temp Sensor.26</title>
+				<rect x="0" y="23.5686" width="3.73708" height="11.2389" class="st4"/>
+			</g>
+			<g id="shape173-17" v:mID="173" v:groupContext="shape" v:layerMember="0" transform="translate(10.5103,-20.6719)">
+				<title>Duct Temp Sensor.630</title>
+				<path d="M0 34.81 L0 31.29 L2.24 31.29 L2.24 34.81 L0 34.81 L0 34.81 Z" class="st5"/>
+			</g>
+			<g id="shape174-21" v:mID="174" v:groupContext="shape" v:layerMember="0" transform="translate(0,-23.8631)">
+				<title>Hoja.174</title>
+				<path d="M0 34.81 L17.94 34.81 L17.94 27.31 L0 27.31 L0 34.81 L0 34.81 Z" class="st6"/>
+			</g>
+			<g id="shape175-23" v:mID="175" v:groupContext="shape" v:layerMember="0" transform="translate(10.2656,-20.8828)">
+				<title>Hoja.175</title>
+				<path d="M0 34.81 L2.67 34.81" class="st7"/>
+			</g>
+		</g>
+	</g>
+</svg>

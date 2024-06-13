@@ -17,18 +17,31 @@
   <body>
   
     <div class="container">
-      <div class="row mt-4">
+      <div class="row mb-5">
+
+      </div>
+      <div class="row">
         <div class="col-4"></div>
         <div class="col-4">
-          <div class="card bg-dark p-5 text-center">
-            <h2>INGRESAR</h2>
-            <form method="post">
-              {% csrf_token %} {{ form.as_p }}
-              
-            <button type="submit" class="btn btn-primary" style="width: 200px;">Login</button>
-             
-              
+          <div class="card">
+
+            <div class="card-header d-flex justify-content-center bg-white">
+              <img src="{% static 'img/logo.png' %}" alt="logotsinc" style="width: 250px;">
+
+            </div>
+            <!-- <h2>LOGIN</h2> -->
+            
+            <div class="card-body p-4">
+              <form method="post"  class="fs-6 text-center">
+                {% csrf_token %} {{ form.as_p}}
+                
+              <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
             </form>
+               
+            </div>
+           
+              
+           
           </div>
         </div>
         <div class="col-4"></div>

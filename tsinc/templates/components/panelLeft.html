@@ -1,6 +1,6 @@
 {% load static %}
 
-  <div class="card-header bg-secondary">HVAC AIRE</div>
+  <div class="card-header text-white" style="background-color: #005bc5;">HVAC AIRE</div>
 
 
   
@@ -15,9 +15,11 @@
       <div class="accordion-body">
         
       {% for item in panelitems %}
-      <img id="item" pk="{{item.id}}" src="{% static item.img %}" alt="items" style="width: {{item.width}}px;"  description="{{item.product.description}}" >
+      {% if item.tag == 'ducts' %}
+      <img id="item" pk="{{item.id}}" src="{% static item.img %}" alt="items" style="width: {{item.width}}px;"  description="{{item.product.description}}" draggable="true" >
+      {% endif %}
       {% endfor %}
-   
+
       </div>
     </div>
   </div>
@@ -29,7 +31,13 @@
       </button>
     </h2>
     <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionHVACaire">
-      <div class="accordion-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, quod.</div>
+      <div class="accordion-body">
+        {% for item in panelitems %}
+        {% if item.tag == 'coils' %}
+        <img id="item" pk="{{item.id}}" src="{% static item.img %}" alt="items" style="width: {{item.width}}px;"  description="{{item.product.description}}">
+        {% endif %}
+        {% endfor %}
+      </div>
     </div>
   </div>
   <div class="accordion-item">
@@ -39,7 +47,13 @@
       </button>
     </h2>
     <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionHVACaire">
-      <div class="accordion-body">lorem10</div>
+      <div class="accordion-body">
+        {% for item in panelitems %}
+        {% if item.tag == 'sensors' %}
+        <img id="item" pk="{{item.id}}" src="{% static item.img %}" alt="items" style="width: {{item.width}}px;"  description="{{item.product.description}}" >
+        {% endif %}
+        {% endfor %}
+      </div>
     </div>
   </div>
 </div>
@@ -48,7 +62,7 @@
   
  
 
-<div class="card-header bg-secondary">HVAC AGUA</div>
+<div class="card-header text-white" style="background-color: #005bc5;">HVAC AGUA</div>
 
 <div class="accordion accordion-flush" id="accordionHVACagua">
   <div class="accordion-item">

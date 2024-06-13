@@ -59,6 +59,7 @@ class Dasboard(models.Model):
 class PanelItems(models.Model):
     img = models.CharField(max_length=100, default=None)
     width = models.IntegerField()
+    tag = models.CharField(max_length=100,null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='items', null=True, blank=True)
     def __str__(self):
         return self.img

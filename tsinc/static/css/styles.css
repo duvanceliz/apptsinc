@@ -1,5 +1,5 @@
 #outer-dropzone {
-  height: 450px;
+  height: 80%;
 }
 
 .dropzone {
@@ -8,19 +8,20 @@
   border-radius: 4px;
   margin: 0;
   padding: 10px;
-  width: 100%;
+  width: 80%;
   transition: background-color 0.3s;
   background: 
-  linear-gradient(to right, #606060 1px, transparent 1px),
-  linear-gradient(to bottom, #606060 1px, transparent 1px);
+  linear-gradient(to right, #6060607b 1px, transparent 1px),
+  linear-gradient(to bottom, #6060607b 1px, transparent 1px);
   background-size: 20px 20px;
   border: 1px solid #6c6c6c;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  /* transform: translate(50%,50%); */
 }
 body{
-  background: #1b1d23;
-  color: white;
+  background: #e4e4e4;
+  color: #202020;
   height: 100vh;
 }
 
@@ -32,8 +33,14 @@ body{
   position: absolute;
 }
 
+#item{
+
+  cursor: grab;
+
+}
+
 #alert{
-  background: rgb(114, 114, 69);
+  background: rgb(215, 130, 130);
   border-radius: 2px;
   padding: 2px;
   text-align: center;
@@ -42,7 +49,7 @@ body{
 .alert2{
   opacity: 0; /* Comienza oculto */
   transition: opacity 2s; /* Transición de 2 segundos */
-  background: rgb(114, 81, 69);
+  background: rgb(99, 176, 122);
   border-radius: 2px;
   padding: 2px;
   text-align: center;
@@ -72,8 +79,8 @@ body {
 }
 
 .dropzone > input{
-  color: white ;
   background: #00000000;
+  font-family: Arial, Helvetica, sans-serif;
   border: 0;
   outline: none;
   text-align: center;
@@ -127,11 +134,26 @@ input.selected-group{
 #panelLeft::-webkit-scrollbar {
   width: 8px; /* Ancho de la barra de desplazamiento */
   border-radius: 2px;
-  background-color: #3c3f49;
 }
 #panelLeft::-webkit-scrollbar-thumb {
-  background: #666666; /* Color del pulgar de la barra de desplazamiento */
+  background: #b8b4b4; /* Color del pulgar de la barra de desplazamiento */
   border-radius: 2px; /* Bordes redondeados */
+}
+
+#parent-container-dropzone{
+  height: 500px;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
+
+
+.container-dropzone{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1000px;
+  height: 1000px;
 }
 
 

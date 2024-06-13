@@ -373,11 +373,18 @@ form2.addEventListener("submit", (e) => {
 });
 //*************************************************** */
 
+const offsetxy = {
+  offsetX:null,
+  offsetY:null,
+}
 //*************************************************** */
 // LE AGREGA UN EVENTO DE ESCUCHA DARGSTART A CADA ITEM DEL PANEL Y LE PASA EL TARGET AL OBJ EVENTSTATE
 const items = document.querySelectorAll("#item").forEach((item) => {
   item.addEventListener("dragstart", (e) => {
     eventState.target = e.target;
+    offsetxy.offsetX = e.offsetX
+    offsetxy.offsetY = e.offsetY
+    
   });
 });
 
@@ -386,24 +393,40 @@ const items = document.querySelectorAll("#item").forEach((item) => {
 //*************************************************** */
 // UNA VEZ ARRASTRADO Y SOLTADO DENTRO DE LA ZONA EL ITEM ES CLONADO.
 dropzone.addEventListener("dragover", (e) => {
-  e.preventDefault();
+  e.preventDefault();  
+  // console.log('sobre la zona')
 });
 
+
+
+
 dropzone.addEventListener("drop", (e) => {
+  console.log(offsetxy.offsetX,offsetxy.offsetY )
   // if (eventState.target.id == "item") {
+  const dropzoneRect = dropzone.getBoundingClientRect();
+  // Calcular offsetX y offsetY relativos a la dropzone
+  const offsetX = e.clientX - dropzoneRect.left;
+  const offsetY = e.clientY - dropzoneRect.top;
+  let x, y =0
+  x = offsetX - offsetxy.offsetX
+  y =  offsetY - offsetxy.offsetY
+  console.log(x,y)
   const clone = eventState.target.cloneNode(true);
   clone.classList.add("drag-drop");
   clone.removeAttribute("id");
   // clone.style.width = "auto";
   clone.style.zIndex = "0";
   clone.setAttribute("id_code", generateCode(2));
-  clone.style.transform = "translate(" + 0 + "px, " + 0 + "px)";
+  
+  
+  clone.style.transform = "translate(" + x + "px, " + y + "px)";
   // update the posiion attributes
-  clone.setAttribute("data-x", 0);
-  clone.setAttribute("data-y", 0);
+  clone.setAttribute("data-x", x);
+  clone.setAttribute("data-y", y);
   dropzone.appendChild(clone);
   eventState.target = null;
   multipleSelection(scanItems());
+  
   // }
 });
 //*************************************************** */
@@ -447,26 +470,26 @@ interact(".drag-drop")
 
     panel.innerHTML = `
       
-      <input class="form-control form-control-sm bg-dark text-white" type="text" disabled value=" Item: ${event.target.getAttribute(
+      <input class="form-control form-control-sm  type="text" disabled value=" Item: ${event.target.getAttribute(
         "id_code"
       )}" aria-label=".form-control-sm example">
-      <input class="form-control form-control-sm bg-dark text-white" type="text" disabled value=" x: ${event.target.getAttribute(
+      <input class="form-control form-control-sm  type="text" disabled value=" x: ${event.target.getAttribute(
         "data-x"
       )}" aria-label=".form-control-sm example">
-      <input class="form-control form-control-sm  bg-dark text-white
-      bg-dark text-white" type="text" disabled value=" y: ${event.target.getAttribute(
+      <input class="form-control form-control-sm  
+      type="text" disabled value=" y: ${event.target.getAttribute(
         "data-y"
       )}" aria-label=".form-control-sm example">
-      <input class="form-control form-control-sm  bg-dark text-white
-      bg-dark text-white" type="text" disabled value=" Ancho: ${
+      <input class="form-control form-control-sm  
+      type="text" disabled value=" Ancho: ${
         event.target.style.width
       }" aria-label=".form-control-sm example">
-      <input class="form-control form-control-sm  bg-dark text-white
-      bg-dark text-white" type="text" disabled value=" Alto: ${
+      <input class="form-control form-control-sm  
+      type="text" disabled value=" Alto: ${
         event.target.style.height
       }" aria-label=".form-control-sm example">
-      <input class="form-control form-control-sm  bg-dark text-white
-      bg-dark text-white" type="text" disabled value=" zindex: ${
+      <input class="form-control form-control-sm  
+      type="text" disabled value=" zindex: ${
         event.target.style.zIndex
       }" aria-label=".form-control-sm example">
       `;
@@ -503,12 +526,13 @@ interact(".dropzone").dropzone({
 
   ondropactivate: function (event) {
     // cuando se activa el evento o mientras se mueve el objeto
+    
   },
   ondragenter: function (event) {
     // cuando el evento esta dentro de la zona o el obejeto esta dentro de la zona sin soltar
     var draggableElement = event.relatedTarget; // este se le aplica al objeto
     var dropzoneElement = event.target; // este le aplica a la zona
-    // console.log("dentro de zona");
+    
   },
   ondropdeactivate: function (event) {
     var draggableElement = event.relatedTarget; // este se le aplica al objeto
