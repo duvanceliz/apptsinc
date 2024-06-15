@@ -26,6 +26,12 @@ const formSearch = document.getElementById("form-search");
 const dropzone = document.getElementById("outer-dropzone");
 const btngroup = document.getElementById("btngroup");
 const panel2 = document.getElementById("panel2");
+const inputx = document.getElementById("inputx");
+const inputy = document.getElementById("inputy");
+const inputitem = document.getElementById("inputitem");
+const inputwidth = document.getElementById("inputwidth");
+const inputheight = document.getElementById("inputheight");
+const inputzindex = document.getElementById("inputzindex");
 
 const selectedItems = new Set();
 
@@ -39,24 +45,18 @@ btngroup.addEventListener("click", (e) => {
       count += 1;
       item.setAttribute("relationship", id_code);
     }
- 
   });
 
   alertdiv2.innerText = `${count} elementos han sido agrupados`;
   alertdiv2.classList.toggle("visible");
 
-  
-    setTimeout(() => {
-      alertdiv2.classList.remove("visible");
-      alertdiv2.classList.add("fade-out");
-    }, 2000);
-    setTimeout(() => {
-      alertdiv2.classList.remove("fade-out");
-    }, 2000);
- 
-  
- 
-  
+  setTimeout(() => {
+    alertdiv2.classList.remove("visible");
+    alertdiv2.classList.add("fade-out");
+  }, 2000);
+  setTimeout(() => {
+    alertdiv2.classList.remove("fade-out");
+  }, 2000);
 });
 
 // Función para desactivar los botones
@@ -134,9 +134,11 @@ function generateCode(length) {
 function changeZindex(btn) {
   if (btn.id == "on") {
     eventState2.target.style.zIndex = "10";
+    proxyState.zindex = eventState2.target.style.zIndex;
   }
   if (btn.id == "under") {
     eventState2.target.style.zIndex = "0";
+    proxyState.zindex = eventState2.target.style.zIndex;
   }
 }
 //************************************************** */
@@ -166,9 +168,9 @@ dropzone.addEventListener("click", (e) => {
     selectionClean(todo, 2);
     btnDisable();
     selectedItems.clear();
-    panel.innerHTML = ``;
     panel2.innerHTML = ``;
     eventState2.target = null;
+
     // alertdiv2.classList.remove('visible')
     multipleSelection(scanItems());
   }
@@ -374,17 +376,16 @@ form2.addEventListener("submit", (e) => {
 //*************************************************** */
 
 const offsetxy = {
-  offsetX:null,
-  offsetY:null,
-}
+  offsetX: null,
+  offsetY: null,
+};
 //*************************************************** */
 // LE AGREGA UN EVENTO DE ESCUCHA DARGSTART A CADA ITEM DEL PANEL Y LE PASA EL TARGET AL OBJ EVENTSTATE
 const items = document.querySelectorAll("#item").forEach((item) => {
   item.addEventListener("dragstart", (e) => {
     eventState.target = e.target;
-    offsetxy.offsetX = e.offsetX
-    offsetxy.offsetY = e.offsetY
-    
+    offsetxy.offsetX = e.offsetX;
+    offsetxy.offsetY = e.offsetY;
   });
 });
 
@@ -393,32 +394,29 @@ const items = document.querySelectorAll("#item").forEach((item) => {
 //*************************************************** */
 // UNA VEZ ARRASTRADO Y SOLTADO DENTRO DE LA ZONA EL ITEM ES CLONADO.
 dropzone.addEventListener("dragover", (e) => {
-  e.preventDefault();  
+  e.preventDefault();
   // console.log('sobre la zona')
 });
 
-
-
-
 dropzone.addEventListener("drop", (e) => {
-  console.log(offsetxy.offsetX,offsetxy.offsetY )
+  console.log(offsetxy.offsetX, offsetxy.offsetY);
   // if (eventState.target.id == "item") {
   const dropzoneRect = dropzone.getBoundingClientRect();
   // Calcular offsetX y offsetY relativos a la dropzone
   const offsetX = e.clientX - dropzoneRect.left;
   const offsetY = e.clientY - dropzoneRect.top;
-  let x, y =0
-  x = offsetX - offsetxy.offsetX
-  y =  offsetY - offsetxy.offsetY
-  console.log(x,y)
+  let x,
+    y = 0;
+  x = offsetX - offsetxy.offsetX;
+  y = offsetY - offsetxy.offsetY;
+  console.log(x, y);
   const clone = eventState.target.cloneNode(true);
   clone.classList.add("drag-drop");
   clone.removeAttribute("id");
   // clone.style.width = "auto";
   clone.style.zIndex = "0";
   clone.setAttribute("id_code", generateCode(2));
-  
-  
+
   clone.style.transform = "translate(" + x + "px, " + y + "px)";
   // update the posiion attributes
   clone.setAttribute("data-x", x);
@@ -426,25 +424,58 @@ dropzone.addEventListener("drop", (e) => {
   dropzone.appendChild(clone);
   eventState.target = null;
   multipleSelection(scanItems());
-  
+
   // }
 });
 //*************************************************** */
+const state = {
+  item: "",
+  x: 0,
+  y: 0,
+  width: 0,
+  height: 0,
+  zindex: 0,
+};
 
+const proxyState = new Proxy(state, {
+  set(target, property, value) {
+    target[property] = value;
+    render();
+    return true;
+  },
+});
+
+function render() {
+  inputitem.value = proxyState.item;
+  inputx.value = proxyState.x;
+  inputy.value = proxyState.y;
+  inputwidth.value = proxyState.width;
+  inputheight.value = proxyState.height;
+  inputzindex.value = proxyState.zindex;
+}
+render();
 //*************************************************** */
 // FUNCION PARA MOVER CADA ITEM DENTRO DE LA ZONA
 function dragMoveListener(event) {
-  var target = event.target;
+  var item = event.target;
+
   // keep the dragged position in the data-x/data-y attributes
-  var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
-  var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
+  var x = (parseFloat(item.getAttribute("data-x")) || 0) + event.dx;
+  var y = (parseFloat(item.getAttribute("data-y")) || 0) + event.dy;
 
+  updateState(
+    item.getAttribute("id_code"),
+    item.getAttribute("data-x"),
+    item.getAttribute("data-y"),
+    item.style.width,
+    item.style.height,
+    item.style.zIndex
+  );
   // translate the element
-  target.style.transform = "translate(" + x + "px, " + y + "px)";
-
+  item.style.transform = "translate(" + x + "px, " + y + "px)";
   // update the posiion attributes
-  target.setAttribute("data-x", x);
-  target.setAttribute("data-y", y);
+  item.setAttribute("data-x", x);
+  item.setAttribute("data-y", y);
 }
 //*************************************************** */
 
@@ -454,45 +485,41 @@ function dragMoveListener(event) {
 //AGREGA EL PANEL DERECHO CON LA INFORMACION
 //AGREGA SELECCION
 
+function btnActivate() {
+  btnon.disabled = false;
+  btnunder.disabled = false;
+  btndelete.disabled = false;
+  btnclone.disabled = false;
+  btnInventory.disabled = false;
+  btnsave.disabled = false;
+}
+
+function updateState(id_code, x, y, width, height, zindex) {
+  proxyState.item = id_code;
+  proxyState.x = x;
+  proxyState.y = y;
+  proxyState.width = width;
+  proxyState.height = height;
+  proxyState.zindex = zindex;
+}
+
 interact(".drag-drop")
   .on("tap", function (event) {
     // event.currentTarget.classList.toggle("switch-bg");
     // console.log("click al objeto");
+    const item = event.target;
     const todo = scanItems();
     selectionClean(todo, 1);
-    btnon.disabled = false;
-    btnunder.disabled = false;
-    btndelete.disabled = false;
-    btnclone.disabled = false;
-    btnInventory.disabled = false;
-    eventState2.target = event.target;
-    btnsave.disabled = false;
-
-    panel.innerHTML = `
-      
-      <input class="form-control form-control-sm  type="text" disabled value=" Item: ${event.target.getAttribute(
-        "id_code"
-      )}" aria-label=".form-control-sm example">
-      <input class="form-control form-control-sm  type="text" disabled value=" x: ${event.target.getAttribute(
-        "data-x"
-      )}" aria-label=".form-control-sm example">
-      <input class="form-control form-control-sm  
-      type="text" disabled value=" y: ${event.target.getAttribute(
-        "data-y"
-      )}" aria-label=".form-control-sm example">
-      <input class="form-control form-control-sm  
-      type="text" disabled value=" Ancho: ${
-        event.target.style.width
-      }" aria-label=".form-control-sm example">
-      <input class="form-control form-control-sm  
-      type="text" disabled value=" Alto: ${
-        event.target.style.height
-      }" aria-label=".form-control-sm example">
-      <input class="form-control form-control-sm  
-      type="text" disabled value=" zindex: ${
-        event.target.style.zIndex
-      }" aria-label=".form-control-sm example">
-      `;
+    btnActivate();
+    eventState2.target = item;
+    updateState(
+      item.getAttribute("id_code"),
+      item.getAttribute("data-x"),
+      item.getAttribute("data-y"),
+      item.style.width,
+      item.style.height,
+      item.style.zIndex
+    );
     panel2.innerHTML = `${event.target.getAttribute("description")}`;
     if (!event.ctrlKey) {
       event.target.classList.add("selected");
@@ -526,13 +553,11 @@ interact(".dropzone").dropzone({
 
   ondropactivate: function (event) {
     // cuando se activa el evento o mientras se mueve el objeto
-    
   },
   ondragenter: function (event) {
     // cuando el evento esta dentro de la zona o el obejeto esta dentro de la zona sin soltar
     var draggableElement = event.relatedTarget; // este se le aplica al objeto
     var dropzoneElement = event.target; // este le aplica a la zona
-    
   },
   ondropdeactivate: function (event) {
     var draggableElement = event.relatedTarget; // este se le aplica al objeto

@@ -4,12 +4,29 @@
   <div class="row m-4">
     <div class="col"></div>
     <div class="col">
-      <h2>Subir archivo Excel</h2>
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Subir</button>
-      </form>
+      {% if messages %}
+      <div class="alert alert-success" role="alert">
+        <ul class="messages">
+          {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      <div class="card">
+            <div class="card-header text-center">
+              <h2>Subir archivo Excel</h2>
+            </div>
+            <div class="card-body p-4">
+
+              <form method="post" enctype="multipart/form-data" class="d-flex flex-column p-4">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Subir</button>
+              </form>
+
+            </div>
+      </div>
     </div>
     <div class="col"></div>
   </div>

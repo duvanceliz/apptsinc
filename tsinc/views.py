@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 from django.http import HttpResponse
-from .models import Project, Product, Tabs, Dasboard, PanelItems, Items,Labels
-from .forms import CreateProject, CreateProduct, UploadProducts, CreateTab, SearchForm, CreatePage
+from .models import Project, Product, Tabs, Dasboard, PanelItems, Items,Labels, Category, Subcategory
+from .forms import CreateProject, CreateProduct, UploadProducts, CreateTab, SearchForm, CreatePage, UploadSVGForm
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 import pandas as pd
@@ -12,6 +12,9 @@ from django.http import JsonResponse
 import json
 from openpyxl.styles import Font, PatternFill
 from .utils import print_data
+import os
+from django.conf import settings
+from django.contrib import messages
 
 # Create your views here.
 
@@ -56,9 +59,11 @@ def dashboard(request, id):
     dashboard = Dasboard.objects.get(id=id)
     tab = dashboard.tab
     panelitems = PanelItems.objects.all()
+    categorys = Category.objects.all()
+    subcategorys = Subcategory.objects.all()
     items = Items.objects.all()
     labels = Labels.objects.all()
-    return render(request, 'dashboard.html',{'tab':tab, 'panelitems':panelitems, 'items': items, 'dashboard':dashboard, 'labels':labels, 'form':SearchForm()})
+    return render(request, 'dashboard.html',{'tab':tab, 'panelitems':panelitems, 'items': items, 'dashboard':dashboard, 'labels':labels, 'categorys':categorys, 'subcategorys':subcategorys, 'form':SearchForm()})
 
 @login_required
 def product_search(request):
@@ -92,19 +97,43 @@ def upload_products(request):
             excel_file = request.FILES['file']
             df = pd.read_excel(excel_file, engine='openpyxl')
 
-            print(df.iterrows())
+            products = Product.objects.all()
+            products.delete()
+
+            # print(df.iterrows())
             for _,row in df.iterrows():
-                
-                Product.objects.create(
-                    code=row['codigo'],
-                    product_name=row['nombre'],
-                    factory_ref=row['referencia'],
-                    model=row['modelo'],
-                    brand=row['marca'],
-                    location=row['ubicacion'],
-                    quantity=row['cantidad'],
-                    sale_price=row['precio']
-                )
+                if pd.notna(row['Nombre del Producto / Servicio (obligatorio)']) and pd.notna( row['Referencia de Fábrica']) and pd.notna(row['Modelo'] ) and pd.notna(row['Marca'] ):
+                    code = row['Código del Producto (obligatorio)'] if pd.notna(row['Código del Producto (obligatorio)']) else 'nn'
+                    product_name = row['Nombre del Producto / Servicio (obligatorio)'] 
+                    factory_ref = row['Referencia de Fábrica'] 
+                    model = row['Modelo'] 
+                    brand = row['Marca'] 
+                    location = row['UBICACIÓN'] if pd.notna(row['UBICACIÓN']) else 'nn'
+                    quantity = row['CANTIDAD'] if pd.notna(row['CANTIDAD']) else 0
+                    description = row['ORBSERVACION'] if pd.notna(row['ORBSERVACION']) else 'nn'
+        
+                    product = Product.objects.create(
+                        code=code,
+                        product_name=product_name,
+                        factory_ref=factory_ref,
+                        model=model,
+                        brand=brand,
+                        location=location,
+                        quantity= quantity,
+                        description=description,
+                    )
+                    if product.description != 'nn':
+                        description_list = product.description.split(",")
+                    
+                        PanelItems.objects.create(
+                            img=description_list[0],
+                            tag = description_list[1],
+                            width = description_list[2],
+                            product = product
+
+                        )
+
+            messages.success(request, 'Productos subidos y creados exitosamente.')
             return redirect('/uploadproducts')
     else:
         form = UploadProducts()
@@ -219,7 +248,11 @@ def save_items(request):
                 item_exist.save()
             else:
                 dashboard = get_object_or_404(Dasboard, id=int(data['dashboard_id'])) 
-                new_item = Items(id_code=value['id_code'],x=value['x'],y=value['y'],width =float(value['width'].replace("px","")),relationship=value['relationship'], img=img_obj, dashboard= dashboard)
+                new_item = Items(id_code=value['id_code'],
+                                 x=value['x'],y=value['y'],
+                                 width =float(value['width'].replace("px","")),
+                                 relationship=value['relationship'], 
+                                 img=img_obj, dashboard= dashboard)
                 new_item.save()
 
         for label in data['labels']:
@@ -322,5 +355,47 @@ def total(request):
     print(total_points_list)
 
     return render(request, 'total.html', {'dashboard':dashboard,'items':items, 'total_products':total_products, 'subtotal':subtotal, 'total_points_list':total_points_list})
+
+
+
+def handle_uploaded_file(file, path):
+    with open(path, 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
+
+
+def upload_svg(request):
+    if request.method == 'POST' and request.FILES.getlist('files'):
+        folder_name = request.POST.get('folder_name')
+        tag = request.POST.get('tag')
+        areproducts = request.POST.get('areproducts')
+        
+        files = request.FILES.getlist('files')
+        if areproducts == 'on':
+            for file in files:
+                product = get_object_or_404(Product,model=file.name.split(".")[0])
+                panelitem = PanelItems(img=f'img/{folder_name}/{file.name}', tag=tag, product=product )
+                panelitem.save()
+        else:
+            for file in files:
+                panelitem = PanelItems(img=f'img/{folder_name}/{file.name}', tag=tag )
+                panelitem.save()
+
+        
+        # print(os.path.join(settings.BASE_DIR, 'tsinc','static', 'img', folder_name))        
+        for file in files:
+            # Define la ruta donde quieres guardar los archivos
+            upload_dir = os.path.join(settings.BASE_DIR, 'tsinc','static', 'img', folder_name)
+            os.makedirs(upload_dir, exist_ok=True)  # Crea la carpeta si no existe
+            file_path = os.path.join(upload_dir, file.name)
+            handle_uploaded_file(file, file_path)
+            
+        return HttpResponse('Archivos subidos exitosamente')
+    
+    return render(request, 'uploadsvg.html')
+
+    
+
+
 
 

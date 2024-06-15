@@ -1,21 +1,22 @@
 {% load static %}
 
-  <div class="card-header text-white" style="background-color: #005bc5;">HVAC AIRE</div>
+{% for category in categorys %}
+<div class="card-header text-white" style="background-color: #005bc5;">{{category.name}}</div>
 
-
-  
-<div class="accordion accordion-flush" id="accordionHVACaire">
+<div class="accordion accordion-flush" id="accordionHVAC">
+  {% for subcategory in subcategorys %}
+  {% if category.id == subcategory.category.id %}
   <div class="accordion-item">
-    <h2 class="accordion-header" id="flush-headingOne">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-        Ductos
+    <h2 class="accordion-header" id="flush-heading{{subcategory.tag}}">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{subcategory.tag}}" aria-expanded="false" aria-controls="flush-collapse{{subcategory.tag}}">
+        {{subcategory.name}}
       </button>
     </h2>
-    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionHVACaire">
+    <div id="flush-collapse{{subcategory.tag}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{subcategory.tag}}" data-bs-parent="#accordionHVAC">
       <div class="accordion-body">
         
       {% for item in panelitems %}
-      {% if item.tag == 'ducts' %}
+      {% if  subcategory.tag == item.tag %}
       <img id="item" pk="{{item.id}}" src="{% static item.img %}" alt="items" style="width: {{item.width}}px;"  description="{{item.product.description}}" draggable="true" >
       {% endif %}
       {% endfor %}
@@ -23,44 +24,16 @@
       </div>
     </div>
   </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="flush-headingTwo">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-       
-        Coils
-      </button>
-    </h2>
-    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionHVACaire">
-      <div class="accordion-body">
-        {% for item in panelitems %}
-        {% if item.tag == 'coils' %}
-        <img id="item" pk="{{item.id}}" src="{% static item.img %}" alt="items" style="width: {{item.width}}px;"  description="{{item.product.description}}">
-        {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="flush-headingThree">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-        Sensores
-      </button>
-    </h2>
-    <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionHVACaire">
-      <div class="accordion-body">
-        {% for item in panelitems %}
-        {% if item.tag == 'sensors' %}
-        <img id="item" pk="{{item.id}}" src="{% static item.img %}" alt="items" style="width: {{item.width}}px;"  description="{{item.product.description}}" >
-        {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-  </div>
+  {% endif %}
+{% endfor %}
 </div>
 
 
+{% endfor %}
+
+
   
- 
+<!--  
 
 <div class="card-header text-white" style="background-color: #005bc5;">HVAC AGUA</div>
 
@@ -95,4 +68,4 @@
       <div class="accordion-body">lorem10</div>
     </div>
   </div>
-</div>
+</div> -->

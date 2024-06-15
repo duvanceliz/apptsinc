@@ -40,6 +40,9 @@
               {% if is_admin %}
               <a class="nav-link" href="{% url 'product' %}">Inventario</a>
               {% endif %}
+              {% if is_admin %}
+              <a class="nav-link" href="{% url 'upload_svg' %}">Subir SVG</a>
+              {% endif %}
 
               <form method="post" action="{% url 'logout' %}" class="d-flex align-items-center">
                 {% csrf_token %}

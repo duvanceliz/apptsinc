@@ -46,6 +46,9 @@ class CreatePage(forms.Form):
 class SearchForm(forms.Form):
     search = forms.CharField(label='Buscar', max_length=100)
 
+class UploadSVGForm(forms.Form):
+    files = forms.FileField(widget=forms.ClearableFileInput(attrs={'allow_multiple_selected': True}), label='Select multiple files')
+
 # class CreateOffer(forms.Form):
 #     title = forms.CharField(label="Nombre del proyecto", max_length=200)
 #     OPCIONES_CHOICES = [

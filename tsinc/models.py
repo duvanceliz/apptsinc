@@ -29,7 +29,7 @@ class Product(models.Model):
     product_name = models.CharField(max_length=200, default=None)
     factory_ref = models.CharField(max_length=200, default=None)
     model = models.CharField(max_length=200, default=None)
-    sale_price = models.FloatField()
+    sale_price = models.FloatField(default=0)
     brand = models.CharField(max_length=200, default=None)
     location = models.CharField(max_length=200, default=None)
     quantity = models.IntegerField()
@@ -58,7 +58,6 @@ class Dasboard(models.Model):
 
 class PanelItems(models.Model):
     img = models.CharField(max_length=100, default=None)
-    width = models.IntegerField()
     tag = models.CharField(max_length=100,null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='items', null=True, blank=True)
     def __str__(self):
@@ -90,3 +89,15 @@ class Labels(models.Model):
         return self.id_code
 
 
+class Category(models.Model):
+    name= models.CharField(max_length=100, default=None)
+    def __str__(self):
+        return self.name
+
+
+class Subcategory(models.Model):
+    name = models.CharField(max_length=100, default=None)
+    tag = models.CharField(max_length=100, default=None)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='subcategory')
+    def __str__(self):
+        return self.name
