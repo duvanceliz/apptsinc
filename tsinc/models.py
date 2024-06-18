@@ -1,6 +1,7 @@
 from django.db import models
 import datetime
 from django.contrib.auth.models import User 
+import os
 
 class Project(models.Model):
     name = models.CharField(max_length=200, default=None)
@@ -55,11 +56,19 @@ class Dasboard(models.Model):
     tab = models.ForeignKey(Tabs, on_delete=models.CASCADE, related_name='dashboards',null=True,blank=True)
     def __str__(self):
         return self.name
+    
+class Folders(models.Model):
+    name = models.CharField(max_length=100, default=None)
+    path = models.CharField(max_length=200,  default=None)
+    def __str__(self):
+        return self.name
 
 class PanelItems(models.Model):
+    name = models.CharField(max_length=100, null=True)
     img = models.CharField(max_length=100, default=None)
     tag = models.CharField(max_length=100,null=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='items', null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, related_name='items', null=True, blank=True)
+    folder = models.ForeignKey(Folders, on_delete=models.CASCADE, related_name='panelitems', null=True)
     def __str__(self):
         return self.img
 
@@ -84,6 +93,7 @@ class Labels(models.Model):
     zindex = models.IntegerField(default=0)
     width = models.FloatField(default=0)
     height = models.FloatField(default=0)
+    relationship = models.CharField(max_length=50, null=True)
     dashboard = models.ForeignKey(Dasboard, on_delete=models.CASCADE, related_name='labels')
     def __str__(self):
         return self.id_code
@@ -101,3 +111,4 @@ class Subcategory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='subcategory')
     def __str__(self):
         return self.name
+    

@@ -264,6 +264,7 @@ form.addEventListener("submit", (e) => {
     obj.width = todo.style.width;
     obj.height = todo.style.height;
     obj.zindex = todo.style.zIndex;
+    obj.relationship = todo.getAttribute("relationship");
     listLabel.push(obj);
   });
 
@@ -328,9 +329,12 @@ btnclone.addEventListener("click", (e) => {
   const clone = eventState2.target.cloneNode(true);
 
   clone.setAttribute("id_code", generateCode(2));
-  clone.style.transform = "translate(-16.3754px, -19.729px)";
-  clone.setAttribute("data-x", "-16.3754");
-  clone.setAttribute("data-y", "-19.729");
+  x = Number(clone.getAttribute('data-x')) + 40
+  y = Number(clone.getAttribute('data-y')) 
+
+  clone.style.transform = `translate(${x}px, ${y}px)`;
+  clone.setAttribute("data-x", x);
+  clone.setAttribute("data-y", y);
   // clone.style.backgroundColor = "rgba(0, 0, 0, 0)";
   dropzone.appendChild(clone);
   //   // clone.style.width = "auto";

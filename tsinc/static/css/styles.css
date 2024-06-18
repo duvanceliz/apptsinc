@@ -156,6 +156,11 @@ input.selected-group{
   height: 1000px;
 }
 
+#sidebar-home{
+  height: 400px;
+  overflow-y: scroll;
+}
+
 
 
 

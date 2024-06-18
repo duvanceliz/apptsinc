@@ -5,12 +5,54 @@
     <div class="row">
        
         <div class="col-3">
-      
-            
+           
+          <div class="card-header" style="background: #005bc5;">
+            <h4>
+              Carpetas creadas
+            </h4>
+          </div>
+          <div class="card-body bg-light p-0" style="overflow-y: scroll; height: 400px;">
+            {% for folder in folders%}
+
+            <ul class="list-group">
+              <li class="list-group-item">
+                {{folder}}
+              </li>
+            </ul>
+
+          {% endfor %}
+          
+          </div>
+          <a href="{% url 'files_folders' %}" class="btn btn-link">Eliminar carpetas o archivos</a>
         </div>
         <div class="col-6">
           
-    
+          {% if messages %}
+          
+          
+              {% for message in messages %}
+
+                {% if message.tags == 'success' %}
+                <div class="alert alert-success" role="alert">
+                  {{ message }}
+                </div>
+                {% endif %}
+
+                {% if message.tags == 'info' %}
+                <div class="alert alert-warning" role="alert">
+                  {{ message }}
+                </div>
+                {% endif %}
+                {% if message.tags == 'error' %}
+                <div class="alert alert-danger" role="alert">
+                  {{ message }}
+                </div>
+                {% endif %}
+
+              {% endfor %}
+           
+         
+          {% endif %}
 
     <div class="card">
       <div class="card-header text-center">
@@ -23,8 +65,6 @@
           <input type="text" id="folder_name" name="folder_name" placeholder="Por ejemplo: ductos">
           <label for="tag">Etiqueta</label>
           <input type="text" id="tag" name="tag" >
-          <label for="areproducts">Estan relacinados con productos?</label>
-          <input type="checkbox" id="areproducts" name="areproducts" class="form-check-input">
           <br><br>
           <input type="file" name="files" multiple>
           <br><br>

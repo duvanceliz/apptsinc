@@ -10,3 +10,26 @@ function verificar() {
     }
 
 }
+
+
+function confirm_delete_folder() {
+
+    let resultado = window.confirm('Estas seguro de borrar la carpeta, esta accción eliminará todo los archivos que contenga');
+    if (resultado === true) {
+        return true
+    } else {
+        return false
+    }
+
+}
+
+function confirm_delete_file() {
+
+    let resultado = window.confirm('Estas seguro de borrar el archivo?');
+    if (resultado === true) {
+        return true
+    } else {
+        return false
+    }
+
+}

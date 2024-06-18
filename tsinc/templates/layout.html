@@ -43,6 +43,9 @@
               {% if is_admin %}
               <a class="nav-link" href="{% url 'upload_svg' %}">Subir SVG</a>
               {% endif %}
+              {% if is_admin %}
+              <a class="nav-link" href="{% url 'files_folders' %}">Carpetas de Items</a>
+              {% endif %}
 
               <form method="post" action="{% url 'logout' %}" class="d-flex align-items-center">
                 {% csrf_token %}
@@ -56,7 +59,7 @@
 
 
 
-     <div class="container content">
+     <div class="container-flow content p-2">
         <div class="row mb-4">
           
        

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Project, Brand, Location, Product, Tabs, Dasboard, PanelItems, Items,Labels, Category, Subcategory
+from .models import Project, Brand, Location, Product, Tabs, Dasboard, PanelItems, Items,Labels, Category, Subcategory,Folders
 # Register your models here.
 
 
@@ -14,3 +14,4 @@ admin.site.register(Items)
 admin.site.register(Labels)
 admin.site.register(Category)
 admin.site.register(Subcategory)
+admin.site.register(Folders)

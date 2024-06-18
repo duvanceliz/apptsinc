@@ -1,0 +1,48 @@
+<div class="card" id="sidebar-home">
+    <div class="card-header text-center p-2">
+      <h3 class="fs-5">
+        TABLEROS CREADOS
+      </h3>
+    </div>
+
+    <div class="card-body p-0">
+
+      <div class="accordion accordion-flush" id="accordionHVAC">
+        {% for tab in tabs %}
+        
+        
+        <div class="accordion-item">
+          <div class="accordion-header d-flex p-2" id="flush-heading{{tab.id}}">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{tab.id}}" aria-expanded="false" aria-controls="flush-collapse{{tab.id}}">
+               {{tab.tab_name}}
+              {{tab.project.name}}
+              
+            </button>
+    
+        </div>
+          <div id="flush-collapse{{tab.id}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{tab.id}}" data-bs-parent="#accordionHVAC">
+            <div class="accordion-body p-0">
+                <ul class="list-group">
+                {% for page in pages %}
+                {% if tab.id == page.tab.id %}
+                
+                    <li class="list-group-item d-flex justify-content-between ">
+                        <a href="{% url 'dashboard' page.id %}"><span>{{page.name}}</span></a>
+                     
+                    </li>
+                
+
+              {% endif %}
+              {% endfor %}
+            </ul>
+            </div>
+          </div>
+        </div>
+       
+       
+      {% endfor %}
+      </div>
+
+
+    </div>
+  </div>

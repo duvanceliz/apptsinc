@@ -1,0 +1,86 @@
+{% extends 'layout.html' %} {% block body %} {% load static %}
+
+<div class="container">
+  <div class="row m-4">
+    <div class="col-3"></div>
+    <div class="col-6">
+          
+    
+          
+      {% if messages %}
+          
+          
+      {% for message in messages %}
+
+        {% if message.tags == 'success' %}
+        <div class="alert alert-success" role="alert">
+          {{ message }}
+        </div>
+        {% else %}
+        <div class="alert alert-danger" role="alert">
+          {{ message }}
+        </div>
+
+        {% endif %}
+
+      {% endfor %}
+   
+ 
+       {% endif %}
+
+          <div class="card">
+            <div class="card-header text-center p-4">
+              <h3 class="fs-5">
+                CARPETAS Y ARCHIVOS ESTATICOS
+              </h3>
+            </div>
+
+            <div class="card-body p-0">
+
+              <div class="accordion accordion-flush" id="accordionHVAC">
+                {% for folder in folders %}
+                
+                
+                <div class="accordion-item">
+                  <div class="accordion-header d-flex p-2" id="flush-heading{{folder.name}}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{folder.name}}" aria-expanded="false" aria-controls="flush-collapse{{folder.name}}">
+                       {{folder.name}}
+                      
+                    </button>
+                    <a class="btn btn-link" href="{% url 'delete_folder' folder.id %}" onclick="return confirm_delete_folder()">Borrar</i> </a>
+                </div>
+                  <div id="flush-collapse{{folder.name}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{folder.name}}" data-bs-parent="#accordionHVAC">
+                    <div class="accordion-body p-0">
+                        <ul class="list-group">
+                        {% for panelitem in panelitems %}
+                        {% if folder.id == panelitem.folder.id %}
+                        
+                            <li class="list-group-item d-flex justify-content-between ">
+                                <span>{{panelitem.name}}</span>
+                                <a class="btn btn-danger btn-sm" href=" {% url 'delete_file' panelitem.id %} " onclick="return confirm_delete_file()"> <i class="bi bi-trash"></i> </a>
+                            </li>
+                        
+    
+                      {% endif %}
+                      {% endfor %}
+                    </ul>
+                    </div>
+                  </div>
+                </div>
+               
+               
+              {% endfor %}
+              </div>
+
+
+            </div>
+          </div>
+ 
+    
+     
+    </div>
+    <div class="col-3"></div>
+  </div>
+</div>
+<script src="{% static 'js/confirm.js' %}"></script>
+{% endblock %}

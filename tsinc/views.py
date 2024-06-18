@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 from django.http import HttpResponse
-from .models import Project, Product, Tabs, Dasboard, PanelItems, Items,Labels, Category, Subcategory
+from .models import Project, Product, Tabs, Dasboard, PanelItems, Items,Labels, Category, Subcategory, Folders
 from .forms import CreateProject, CreateProduct, UploadProducts, CreateTab, SearchForm, CreatePage, UploadSVGForm
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
@@ -12,7 +12,7 @@ from django.http import JsonResponse
 import json
 from openpyxl.styles import Font, PatternFill
 from .utils import print_data
-import os
+import os, shutil
 from django.conf import settings
 from django.contrib import messages
 
@@ -21,6 +21,8 @@ from django.contrib import messages
 @login_required
 def home(request):
     projects = Project.objects.filter(usersesion=request.user)
+    tabs = Tabs.objects.filter(project__in=projects)
+    pages = Dasboard.objects.filter(tab__in=tabs)
     paginator = Paginator(projects, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -28,7 +30,7 @@ def home(request):
     session_key = request.session.session_key 
     is_admin = request.user.is_staff  # Verifica si el usuario es administrador
                        
-    return render(request, 'home.html',{'page_obj': page_obj, 'username':user.username, 'session_key':session_key, 'is_admin':is_admin})
+    return render(request, 'home.html',{'page_obj': page_obj, 'username':user.username, 'session_key':session_key, 'is_admin':is_admin, 'tabs':tabs, 'pages':pages})
 
 @login_required
 def delete_project(request, id):
@@ -111,7 +113,10 @@ def upload_products(request):
                     location = row['UBICACIÓN'] if pd.notna(row['UBICACIÓN']) else 'nn'
                     quantity = row['CANTIDAD'] if pd.notna(row['CANTIDAD']) else 0
                     description = row['ORBSERVACION'] if pd.notna(row['ORBSERVACION']) else 'nn'
-        
+                    if description != 'nn':
+                        description_list = description.split(",")
+                        point = description_list[0]
+
                     product = Product.objects.create(
                         code=code,
                         product_name=product_name,
@@ -121,17 +126,10 @@ def upload_products(request):
                         location=location,
                         quantity= quantity,
                         description=description,
+                        point = point
                     )
-                    if product.description != 'nn':
-                        description_list = product.description.split(",")
                     
-                        PanelItems.objects.create(
-                            img=description_list[0],
-                            tag = description_list[1],
-                            width = description_list[2],
-                            product = product
-
-                        )
+                    
 
             messages.success(request, 'Productos subidos y creados exitosamente.')
             return redirect('/uploadproducts')
@@ -182,44 +180,53 @@ def delete_tab(request, id):
 def download_offer(request,id):
     project =Project.objects.get(id=id)
     tabs = project.tabs.all()
-    equipos = Dasboard.objects.filter(tab__in=tabs).select_related('tab')
-    items = Items.objects.filter(dashboard__in=equipos).select_related('dashboard')          
-            # sheet.cell(row=i+3, column=9, value=controller.point)           
+    pages = Dasboard.objects.filter(tab__in=tabs).select_related('tab')
+    items = Items.objects.filter(dashboard__in=pages).select_related('dashboard') 
+    labels = Labels.objects.filter(dashboard__in=pages).select_related('dashboard')  
+
+    
+    parent_labels = [ label for label in labels if label.relationship != 'None'] 
+        
+    data = [ {
+            'tab_name': label.dashboard.tab.tab_name,
+            'unit_name': label.value,
+            'related_items': [ item for item in items if label.relationship == item.relationship]
+        }
+        for label in parent_labels
+        ]
+    
+    # print(pd.DataFrame(data))
+    
+    
+    # sheet.cell(row=i+3, column=9, value=controller.point) 
+
     def create_sheet(tabs):
-        sheets = []
-        for tab in tabs:
-            sheet = workbook.create_sheet(title=tab.tab_name)
-            sheets.append(sheet)
+        sheets = [ workbook.create_sheet(title=tab.tab_name) for tab in tabs ]
         return sheets
     
     workbook = openpyxl.Workbook()
-    # sheet = workbook.active
-    # sheet.title = 'TAB01'
+    # # sheet = workbook.active
+    # # sheet.title = 'TAB01'
     sheet_to_delete = workbook.active
     workbook.remove(sheet_to_delete)
     
-    # header_font = Font(bold=True, color="FFFFFF")
-    # header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
+    # # header_font = Font(bold=True, color="FFFFFF")
+    # # header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
   
-    units_list_tab =[]
+    # units_per_tab =[
+    #     [page for page in pages if tab.id == page.tab.id] for tab in tabs
+    # ]
 
-    for tab in tabs:
-        units =[]
-        for equipo in equipos:
-            if tab.id == equipo.tab.id:
-                units.append(equipo)
-        units_list_tab.append(units)
 
     sheets = create_sheet(tabs)
-
-    for i in range(1,len(units_list_tab)+1):
-        print_data(units_list_tab[i-1],items,sheets[i-1],project)
+    for i in range(0,len(tabs)):
+        print_data(data,tabs,sheets[i],project)
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=C-1-552 CLEAN AIR.pdf'
+    response['Content-Disposition'] = 'attachment; filename=Points.xlsx'
 
     workbook.save(response)
-    
+    # return redirect('/')
     return response
 
     
@@ -239,18 +246,19 @@ def save_items(request):
                 item_exist = Items.objects.get(id_code = value['id_code'])
             except ObjectDoesNotExist:
                 item_exist = None
-
+            
             if item_exist:
                 item_exist.x = value['x']
                 item_exist.y = value['y']
                 item_exist.zindex = int(value['zindex'])
-                item_exist.width = float(value['width'].replace("px",""))          
+                item_exist.relationship=value['relationship']
+                # item_exist.width = float(value['width'].replace("px",""))          
                 item_exist.save()
             else:
                 dashboard = get_object_or_404(Dasboard, id=int(data['dashboard_id'])) 
                 new_item = Items(id_code=value['id_code'],
                                  x=value['x'],y=value['y'],
-                                 width =float(value['width'].replace("px","")),
+                                #  width =float(value['width'].replace("px","")),
                                  relationship=value['relationship'], 
                                  img=img_obj, dashboard= dashboard)
                 new_item.save()
@@ -268,10 +276,17 @@ def save_items(request):
                 label_exist.zindex = int(label['zindex'])
                 label_exist.width = float(label['width'].replace("px",""))
                 label_exist.height = float(label['height'].replace("px",""))
+                label_exist.relationship=label['relationship']
                 label_exist.save()
             else:
                 dashboard = get_object_or_404(Dasboard, id=int(data['dashboard_id']))                         
-                new_label = Labels(id_code=label['id_code'],value=label['value'],x=label['x'],y=label['y'],width =float(label['width'].replace("px","")),height=float(label['height'].replace("px","")), dashboard= dashboard )
+                new_label = Labels(id_code=label['id_code'],
+                                   value=label['value'],
+                                   x=label['x'],y=label['y'],
+                                   width =float(label['width'].replace("px","")),
+                                   height=float(label['height'].replace("px","")), 
+                                   relationship=label['relationship'],
+                                   dashboard= dashboard )
                 new_label.save()
        
         return JsonResponse({'mensaje': 'Datos guardados con éxito!'})
@@ -365,34 +380,144 @@ def handle_uploaded_file(file, path):
 
 
 def upload_svg(request):
+
     if request.method == 'POST' and request.FILES.getlist('files'):
         folder_name = request.POST.get('folder_name')
         tag = request.POST.get('tag')
-        areproducts = request.POST.get('areproducts')
-        
         files = request.FILES.getlist('files')
-        if areproducts == 'on':
-            for file in files:
-                product = get_object_or_404(Product,model=file.name.split(".")[0])
-                panelitem = PanelItems(img=f'img/{folder_name}/{file.name}', tag=tag, product=product )
-                panelitem.save()
-        else:
-            for file in files:
-                panelitem = PanelItems(img=f'img/{folder_name}/{file.name}', tag=tag )
-                panelitem.save()
 
-        
-        # print(os.path.join(settings.BASE_DIR, 'tsinc','static', 'img', folder_name))        
-        for file in files:
-            # Define la ruta donde quieres guardar los archivos
-            upload_dir = os.path.join(settings.BASE_DIR, 'tsinc','static', 'img', folder_name)
-            os.makedirs(upload_dir, exist_ok=True)  # Crea la carpeta si no existe
-            file_path = os.path.join(upload_dir, file.name)
-            handle_uploaded_file(file, file_path)
+        def validation_panelitem(file):
+            panelitem_exists = PanelItems.objects.filter(name=file.name).exists()
+            return panelitem_exists
             
-        return HttpResponse('Archivos subidos exitosamente')
+       
+        def validation_folder(folder_name):
+            exist = Folders.objects.filter(name= folder_name).exists()
+            return exist
+            
+            
+        panelitem_exist = list(map(validation_panelitem, files))
+
     
-    return render(request, 'uploadsvg.html')
+        if not any(panelitem_exist):
+            
+            exist = validation_folder(folder_name)
+
+            if not exist:
+                folder = Folders.objects.create(
+                        name= folder_name,
+                        path = f'img/{folder_name}'
+                    )
+            else:
+
+                folder = Folders.objects.get(name=folder_name)
+                 
+            def save_panelitem(file):
+                
+                # product = get_object_or_404(Product,model=file.name.split(".")[0])
+                product_exist = Product.objects.filter(model=file.name.split(".")[0]).exists()
+
+                if product_exist:
+                    product = Product.objects.get(model=file.name.split(".")[0])
+                    panelitem = PanelItems(name=file.name,  
+                                        img=f'img/{folder_name}/{file.name}', 
+                                        tag=tag, product=product, folder= folder)
+                    panelitem.save()
+                else:
+                    panelitem = PanelItems(name=file.name,  
+                                        img=f'img/{folder_name}/{file.name}', 
+                                        tag=tag,folder= folder)
+                    panelitem.save()
+                    
+                return panelitem
+                    
+            saved_panelitem = list(map(save_panelitem,files))
+
+            panelitem_names = [ item.name for item in saved_panelitem]
+            
+            def filter_no_porduct(panelitem):
+                if not panelitem.product:
+                    return panelitem
+
+            panelitem_no_product = list(filter(filter_no_porduct,saved_panelitem))
+            panelitem_no_product_str = [ panelitem.name for panelitem in panelitem_no_product]
+                
+        # print(os.path.join(settings.BASE_DIR, 'tsinc','static', 'img', folder_name))        
+            for file in files:
+                # Define la ruta donde quieres guardar los archivos
+                upload_dir = os.path.join(settings.BASE_DIR, 'tsinc','static', 'img', folder_name)
+                os.makedirs(upload_dir, exist_ok=True)  # Crea la carpeta si no existe
+                file_path = os.path.join(upload_dir, file.name)
+                handle_uploaded_file(file, file_path)
+        
+            messages.success(request, f'{', '.join(panelitem_names)} Elementos subidos exitosamente.')
+
+            if len(panelitem_no_product) != 0:
+                messages.info(request, f'{', '.join(panelitem_no_product_str)} Elementos no han sido relacionado con ningun producto.')
+        else:
+
+            panelitems = [ file.name for file in files if PanelItems.objects.filter(name= file.name).exists()]
+
+            messages.error(request, f'Los elementos: {', '.join(panelitems)} ya existen en la base de datos') 
+          
+              
+               
+        return redirect('/uploadsvg')
+
+    folders = Folders.objects.all()
+    return render(request, 'uploadsvg.html', {'folders':folders})
+
+
+def files_folders(request):
+     
+    panelitems = PanelItems.objects.all()
+    folders = Folders.objects.all()
+    
+    return render(request, 'filesfolders.html', {
+        'folders':folders,
+        'panelitems': panelitems
+    } )
+
+def delete_file(request, id):
+
+    try:
+        panelitem = PanelItems.objects.get(id=id)
+    except ObjectDoesNotExist:
+        panelitem = None
+    
+    file_path = os.path.join(settings.BASE_DIR, 'tsinc','static', os.path.normpath(panelitem.img) )
+
+  
+    if panelitem and os.path.exists(file_path):
+        panelitem.delete()
+        os.remove(file_path)
+        messages.success(request,f'El acrchivo {panelitem.name} ha sido eliminado correctamente')
+    else:
+        messages.error(request,'El archivo no se encontró!!')
+        
+    
+
+    return redirect('/filesfolders')
+
+def delete_folder(request, id):
+    
+    try:
+        folder = Folders.objects.get(id=id)
+    except ObjectDoesNotExist:
+        folder = None
+    
+    folder_path = os.path.join(settings.BASE_DIR, 'tsinc','static', os.path.normpath(folder.path) )
+
+  
+    if folder and os.path.exists(folder_path):
+        folder.delete()
+        shutil.rmtree(folder_path)
+        messages.success(request,f'La carpeta {folder.name} ha sido eliminada correctamente')
+    else:
+        messages.error(request,'La carpeta no se encontró!!')
+        
+    return redirect('/filesfolders')
+
 
     
 

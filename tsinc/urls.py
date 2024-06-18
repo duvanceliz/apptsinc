@@ -18,5 +18,9 @@ urlpatterns = [
     path('productsearch/', views.product_search, name='product_search'),
     path('totalproducts/', views.total, name='total'),
     path('downloadproducts/', views.download_products, name='download_products'),
-    path('uploadsvg/', views.upload_svg, name='upload_svg')
+    path('uploadsvg/', views.upload_svg, name='upload_svg'),
+    path('filesfolders/', views.files_folders, name='files_folders'),
+    path('deletefile/<int:id>', views.delete_file, name='delete_file'),
+    path('deletefolder/<int:id>', views.delete_folder, name='delete_folder'),
+    
 ]
