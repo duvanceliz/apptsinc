@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+
 from dotenv import load_dotenv
 
 
@@ -136,4 +137,4 @@ LOGIN_URL = '/login/'
 # OPENAI_API_KEY = config('OPENAI_API_KEY')
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-CSRF_TRUSTED_ORIGINS = ['http://*','https://*']
+CSRF_TRUSTED_ORIGINS = ['http://*','https://web-production-959b.up.railway.app']
