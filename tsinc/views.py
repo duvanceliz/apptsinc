@@ -449,16 +449,20 @@ def upload_svg(request):
                 os.makedirs(upload_dir, exist_ok=True)  # Crea la carpeta si no existe
                 file_path = os.path.join(upload_dir, file.name)
                 handle_uploaded_file(file, file_path)
+           
+           
+           
+            messages.success(request, f"{', '.join(panelitem_names)} Elementos subidos exitosamente.")
+
         
-            messages.success(request, f'{', '.join(panelitem_names)} Elementos subidos exitosamente.')
 
             if len(panelitem_no_product) != 0:
-                messages.info(request, f'{', '.join(panelitem_no_product_str)} Elementos no han sido relacionado con ningun producto.')
+                messages.info(request, f"{', '.join(panelitem_no_product_str)} Elementos no han sido relacionado con ningun producto.")
         else:
 
             panelitems = [ file.name for file in files if PanelItems.objects.filter(name= file.name).exists()]
 
-            messages.error(request, f'Los elementos: {', '.join(panelitems)} ya existen en la base de datos') 
+            messages.error(request, f"Los elementos: {', '.join(panelitems)} ya existen en la base de datos") 
           
               
                
@@ -491,7 +495,7 @@ def delete_file(request, id):
     if panelitem and os.path.exists(file_path):
         panelitem.delete()
         os.remove(file_path)
-        messages.success(request,f'El acrchivo {panelitem.name} ha sido eliminado correctamente')
+        messages.success(request,f"El acrchivo {panelitem.name} ha sido eliminado correctamente")
     else:
         messages.error(request,'El archivo no se encontró!!')
         
@@ -512,7 +516,7 @@ def delete_folder(request, id):
     if folder and os.path.exists(folder_path):
         folder.delete()
         shutil.rmtree(folder_path)
-        messages.success(request,f'La carpeta {folder.name} ha sido eliminada correctamente')
+        messages.success(request,f"La carpeta {folder.name} ha sido eliminada correctamente")
     else:
         messages.error(request,'La carpeta no se encontró!!')
         
