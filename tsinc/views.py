@@ -60,12 +60,15 @@ def product(request):
 def dashboard(request, id):
     dashboard = Dasboard.objects.get(id=id)
     tab = dashboard.tab
+    project = tab.project
+    tabs = project.tabs.all()
+    pages = Dasboard.objects.filter(tab__in=tabs).select_related('tab')
     panelitems = PanelItems.objects.all()
     categorys = Category.objects.all()
     subcategorys = Subcategory.objects.all()
     items = Items.objects.all()
     labels = Labels.objects.all()
-    return render(request, 'dashboard.html',{'tab':tab, 'panelitems':panelitems, 'items': items, 'dashboard':dashboard, 'labels':labels, 'categorys':categorys, 'subcategorys':subcategorys, 'form':SearchForm()})
+    return render(request, 'dashboard.html',{'tab':tab, 'panelitems':panelitems, 'items': items, 'dashboard':dashboard, 'labels':labels, 'categorys':categorys, 'subcategorys':subcategorys, 'pages':pages, 'form':SearchForm()})
 
 @login_required
 def product_search(request):
@@ -190,7 +193,7 @@ def download_offer(request,id):
     data = [ {
             'tab_name': label.dashboard.tab.tab_name,
             'unit_name': label.value,
-            'related_items': [ item for item in items if label.relationship == item.relationship]
+            'related_items': [ item for item in items if label.relationship == item.relationship and item.img.product != None]
         }
         for label in parent_labels
         ]
@@ -237,7 +240,7 @@ def save_items(request):
         return redirect('/')
     else:
         raw_data = request.body
-        print(f"desde save_item: {raw_data}"  )
+        # print(f"desde save_item: {raw_data}"  )
         body_unicode = raw_data.decode('utf-8')
         data = json.loads(body_unicode)
         for value in data['values']:

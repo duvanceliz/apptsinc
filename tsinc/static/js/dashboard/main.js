@@ -9,6 +9,7 @@ const eventState2 = {
 const eventStateTable = {
   target: null,
 };
+
 const btndelete = document.getElementById("delete");
 const form2 = document.getElementById("form2");
 const btnon = document.getElementById("on");
@@ -32,13 +33,118 @@ const inputitem = document.getElementById("inputitem");
 const inputwidth = document.getElementById("inputwidth");
 const inputheight = document.getElementById("inputheight");
 const inputzindex = document.getElementById("inputzindex");
+const selector = document.getElementById("selector");
+const selectedItemsGroup = new Set();
 
-const selectedItems = new Set();
+let startX, startY;
 
-btngroup.addEventListener("click", (e) => {
+document.addEventListener("keydown", function (event) {
+  // Verificar si la tecla Control y la tecla S están presionadas
+  if (event.ctrlKey && event.key === "s") {
+    // Prevenir la acción predeterminada del navegador (guardar página)
+    event.preventDefault();
+    saveitemsAll();
+  }
+});
+
+document.addEventListener("keydown", function (event) {
+  // Verificar si la tecla Control y la tecla S están presionadas
+  if (event.ctrlKey && event.key === "d") {
+    event.preventDefault();
+    cloneItemsall()
+  }
+});
+
+document.addEventListener("keydown", function (event) {
+  // Verificar si la tecla Control y la tecla S están presionadas
+  if (event.key === "Delete") {
+    event.preventDefault();
+  deleteitems()
+  }
+});
+
+document.addEventListener("keydown", function (event) {
+  // Verificar si la tecla Control y la tecla S están presionadas
+  if (event.ctrlKey && event.key === "g") {
+    event.preventDefault();
+    groupItemsAll()
+  }
+});
+
+
+dropzone.addEventListener("mousedown", (e) => {
+  if (e.target === e.currentTarget) {
+    if (e.button !== 0) return; // Solo activar con el botón izquierdo del mouse
+    startX = e.offsetX;
+    startY = e.offsetY;
+
+    selector.style.left = `${startX}px`;
+    selector.style.top = `${startY}px`;
+    selector.style.width = `0px`;
+    selector.style.height = `0px`;
+    selector.style.display = "block";
+
+    document.body.style.userSelect = "none"; // Deshabilita la selección de texto
+
+    function onMouseMove(e) {
+      // const currentX = e.offsetX;
+      // const currentY = e.offsetY;
+
+      const dropzoneRect = dropzone.getBoundingClientRect();
+      // Calcular offsetX y offsetY relativos a la dropzone
+      const offsetX = e.clientX - dropzoneRect.left;
+      const offsetY = e.clientY - dropzoneRect.top;
+      const currentX = offsetX;
+      const currentY = offsetY;
+
+      const width = Math.abs(currentX - startX);
+      const height = Math.abs(currentY - startY);
+
+      selector.style.width = `${width}px`;
+      selector.style.height = `${height}px`;
+
+      selector.style.left = `${Math.min(currentX, startX)}px`;
+      selector.style.top = `${Math.min(currentY, startY)}px`;
+
+      const rect = selector.getBoundingClientRect();
+      const todo = scanItems();
+
+      todo.forEach((item) => {
+        const itemRect = item.getBoundingClientRect();
+        if (
+          rect.left < itemRect.right &&
+          rect.right > itemRect.left &&
+          rect.top < itemRect.bottom &&
+          rect.bottom > itemRect.top
+        ) {
+          item.classList.add("selected-group");
+          item.classList.remove("drag-drop");
+          setItemInSeletedGroup(item);
+          btnActivate();
+        } else {
+          item.classList.remove("selected-group");
+          item.classList.add("drag-drop");
+        }
+      });
+    }
+  }
+
+  function onMouseUp() {
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("mouseup", onMouseUp);
+    selector.style.display = "none";
+    document.body.style.userSelect = ""; // Restablece la selección de texto
+  }
+
+  document.addEventListener("mousemove", onMouseMove);
+  document.addEventListener("mouseup", onMouseUp);
+});
+
+
+function groupItemsAll(){
   const alertdiv2 = document.querySelector(".alert2");
   const todo = scanItems();
-  const id_code = generateCode(2);
+  const id_code = generateCode(4);
   let count = 0;
   todo.forEach((item) => {
     if (item.classList.contains("selected-group")) {
@@ -57,6 +163,13 @@ btngroup.addEventListener("click", (e) => {
   setTimeout(() => {
     alertdiv2.classList.remove("fade-out");
   }, 2000);
+
+}
+
+btngroup.addEventListener("click", (e) => {
+
+  groupItemsAll()
+  
 });
 
 // Función para desactivar los botones
@@ -69,7 +182,11 @@ function btnDisable() {
 
 // funcion para escanear los elementos dentro de la zona
 function scanItems() {
-  const todo = document.querySelectorAll(".drag-drop");
+  // const todo = document.querySelectorAll(".drag-drop");
+  const todo = document.querySelectorAll(
+    "div.dropzone > img,div.dropzone > input"
+  );
+  // Selecciona todos los elementos hijos dentro del elemento padre
 
   return todo;
 }
@@ -80,7 +197,7 @@ function multipleSelection(todo) {
   todo.forEach((item) => {
     item.addEventListener("click", (event) => {
       if (event.ctrlKey) {
-        selectedItems.add(item);
+        selectedItemsGroup.add(item);
         item.classList.add("selected-group");
       }
       // item.classList.toggle('selected');
@@ -161,13 +278,19 @@ function selectionClean(todo, opt) {
 
 // SI LA DROPZONE ES CLICKEADA LIMPIA LA SELECCION
 //DESACTIVA TODOD LOS BOTONES SUPERIORES Y EL PANEL DERECHO
-dropzone.addEventListener("click", (e) => {
-  if (e.target.id == "outer-dropzone") {
+dropzone.addEventListener("mousedown", (e) => {
+  if (e.target === e.currentTarget) {
+    selectedItemsGroup.forEach((item) => {
+      item.classList.remove("selected-group");
+      item.classList.add("drag-drop");
+    });
+    selectedItemsGroup.clear();
+
     const todo = scanItems();
     selectionClean(todo, 1);
     selectionClean(todo, 2);
     btnDisable();
-    selectedItems.clear();
+    // selectedItemsGroup.clear();
     panel2.innerHTML = ``;
     eventState2.target = null;
 
@@ -198,7 +321,6 @@ formSearch.addEventListener("submit", (e) => {
       }
     )
     .then(function (response) {
-      console.log(response.data);
       results.innerHTML = ``;
       response.data.forEach((obj) => {
         results.innerHTML += `
@@ -232,8 +354,8 @@ formSearch.addEventListener("submit", (e) => {
 
 //*************************************************** */
 // ENVIA TODO LOS ITEMS AL SERVIDOR Y LOS GUARDA EN LA BASE DE DATOS
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
+
+function saveitemsAll() {
   const todo = scanItems();
   selectionClean(todo, 1);
   btnsave.disabled = true;
@@ -276,7 +398,13 @@ form.addEventListener("submit", (e) => {
   };
 
   post("/saveitems/", data, csrfToken);
+}
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  saveitemsAll();
 });
+
 //*************************************************** */
 
 //*************************************************** */
@@ -291,7 +419,7 @@ btnlabel.addEventListener("click", (e) => {
   newInput.style.height = "40px";
   newInput.style.textAlign = "center";
   newInput.style.zIndex = "0";
-  newInput.setAttribute("id_code", generateCode(2));
+  newInput.setAttribute("id_code", generateCode(4));
   // newInput.style.color = "white";
   // newInput.style.border = "1px solid white";
   newInput.className = "drag-drop";
@@ -319,51 +447,96 @@ btnunder.addEventListener("click", (e) => {
 });
 
 //*************************************************** */
+function setItemInSeletedGroup(item) {
+  if (!selectedItemsGroup.has(item)) {
+    selectedItemsGroup.add(item);
+  }
+}
+
+function deleteItemInSeletedGroup(item) {
+  if (selectedItemsGroup.has(item)) {
+    selectedItemsGroup.delete(item);
+  }
+}
+
+function removeAndSetAttribute(item, opt) {
+  if (opt === 1) {
+    item.classList.add("drag-drop");
+    item.classList.remove("selected-group");
+  } else if (opt === 2) {
+    item.classList.add("selected-group");
+    item.classList.remove("drag-drop");
+  }
+}
+
+function cloneItemsall() {
+  let list = [];
+  const todo = scanItems();
+  const item = eventState2.target;
+
+  if (item) {
+    const clone = item.cloneNode(true);
+    clone.setAttribute("id_code", generateCode(4));
+    x = Number(clone.getAttribute("data-x")) + 40;
+    y = Number(clone.getAttribute("data-y"));
+
+    clone.style.transform = `translate(${x}px, ${y}px)`;
+    clone.setAttribute("data-x", x);
+    dropzone.appendChild(clone);
+  } else {
+    let cloneItems = [];
+
+    selectedItemsGroup.forEach((item) => {
+      removeAndSetAttribute(item, 1);
+      const clone = item.cloneNode(true);
+      clone.setAttribute("id_code", generateCode(4));
+      x = Number(clone.getAttribute("data-x")) + 40;
+      y = Number(clone.getAttribute("data-y"));
+      clone.style.transform = `translate(${x}px, ${y}px)`;
+      clone.setAttribute("data-x", x);
+      clone.setAttribute("data-y", y);
+      removeAndSetAttribute(clone, 2);
+      cloneItems.push(clone);
+      dropzone.appendChild(clone);
+    });
+    // limpia los items selecionados en grupo
+    selectedItemsGroup.clear();
+    // agrega los items clonados a selectedItemsGroup
+    cloneItems.forEach((item) => {
+      setItemInSeletedGroup(item);
+    });
+  }
+
+  selectionClean(todo, 1);
+  multipleSelection(scanItems());
+}
 
 //*************************************************** */
 //BOTON CLONAR: CLONA UN ITEM SELECCIONADO
 btnclone.addEventListener("click", (e) => {
-  // console.log(eventState2.target)
-  const todo = scanItems();
-  selectionClean(todo, 1);
-  const clone = eventState2.target.cloneNode(true);
-
-  clone.setAttribute("id_code", generateCode(2));
-  x = Number(clone.getAttribute('data-x')) + 40
-  y = Number(clone.getAttribute('data-y')) 
-
-  clone.style.transform = `translate(${x}px, ${y}px)`;
-  clone.setAttribute("data-x", x);
-  clone.setAttribute("data-y", y);
-  // clone.style.backgroundColor = "rgba(0, 0, 0, 0)";
-  dropzone.appendChild(clone);
-  //   // clone.style.width = "auto";
-  //   clone.style.zIndex = "0";
-  //
-  multipleSelection(scanItems());
+  cloneItemsall();
 });
 //*************************************************** */
 
 //*************************************************** */
 
-// BORRA UN ITEM SELECCIONADO DE LA BASE DE DATO
-form2.addEventListener("submit", (e) => {
-  e.preventDefault();
+function deleteitems(){
+
   const csrfToken = document.querySelector("#form2 > input").value;
   const item = eventState2.target;
   const data = [];
 
-  selectedItems.forEach((item) => {
+  selectedItemsGroup.forEach((item) => {
     // Remove the item from the DOM
-    item.parentNode.removeChild(item);
+    item.remove(item);
     data.push(item.getAttribute("id_code"));
   });
-  selectedItems.clear();
+
+  // Clear the Set
+  selectedItemsGroup.clear();
 
   eventState2.target = null;
-  // Clear the Set
 
-  console.log(data);
   if (data.length === 0) {
     post(
       "/deleteitem/",
@@ -376,6 +549,12 @@ form2.addEventListener("submit", (e) => {
   }
 
   btnDisable();
+
+}
+// BORRA UN ITEM SELECCIONADO DE LA BASE DE DATO
+form2.addEventListener("submit", (e) => {
+  e.preventDefault();
+  deleteitems()
 });
 //*************************************************** */
 
@@ -399,11 +578,9 @@ const items = document.querySelectorAll("#item").forEach((item) => {
 // UNA VEZ ARRASTRADO Y SOLTADO DENTRO DE LA ZONA EL ITEM ES CLONADO.
 dropzone.addEventListener("dragover", (e) => {
   e.preventDefault();
-  // console.log('sobre la zona')
 });
 
 dropzone.addEventListener("drop", (e) => {
-  console.log(offsetxy.offsetX, offsetxy.offsetY);
   // if (eventState.target.id == "item") {
   const dropzoneRect = dropzone.getBoundingClientRect();
   // Calcular offsetX y offsetY relativos a la dropzone
@@ -413,13 +590,12 @@ dropzone.addEventListener("drop", (e) => {
     y = 0;
   x = offsetX - offsetxy.offsetX;
   y = offsetY - offsetxy.offsetY;
-  console.log(x, y);
   const clone = eventState.target.cloneNode(true);
   clone.classList.add("drag-drop");
   clone.removeAttribute("id");
   // clone.style.width = "auto";
   clone.style.zIndex = "0";
-  clone.setAttribute("id_code", generateCode(2));
+  clone.setAttribute("id_code", generateCode(4));
 
   clone.style.transform = "translate(" + x + "px, " + y + "px)";
   // update the posiion attributes
@@ -458,30 +634,6 @@ function render() {
   inputzindex.value = proxyState.zindex;
 }
 render();
-//*************************************************** */
-// FUNCION PARA MOVER CADA ITEM DENTRO DE LA ZONA
-function dragMoveListener(event) {
-  var item = event.target;
-
-  // keep the dragged position in the data-x/data-y attributes
-  var x = (parseFloat(item.getAttribute("data-x")) || 0) + event.dx;
-  var y = (parseFloat(item.getAttribute("data-y")) || 0) + event.dy;
-
-  updateState(
-    item.getAttribute("id_code"),
-    item.getAttribute("data-x"),
-    item.getAttribute("data-y"),
-    item.style.width,
-    item.style.height,
-    item.style.zIndex
-  );
-  // translate the element
-  item.style.transform = "translate(" + x + "px, " + y + "px)";
-  // update the posiion attributes
-  item.setAttribute("data-x", x);
-  item.setAttribute("data-y", y);
-}
-//*************************************************** */
 
 //*************************************************** */
 // AGREGA UNA ITERACCION DE CLICK A TODOS LOS ITEMS DENTRO DE LA ZONA
@@ -513,9 +665,12 @@ interact(".drag-drop")
     // console.log("click al objeto");
     const item = event.target;
     const todo = scanItems();
-    selectionClean(todo, 1);
-    btnActivate();
     eventState2.target = item;
+    selectionClean(todo, 1);
+    if (item.classList.contains("selected-group")) {
+      selectionClean(todo, 2);
+    }
+    btnActivate();
     updateState(
       item.getAttribute("id_code"),
       item.getAttribute("data-x"),
@@ -524,9 +679,9 @@ interact(".drag-drop")
       item.style.height,
       item.style.zIndex
     );
-    panel2.innerHTML = `${event.target.getAttribute("description")}`;
+    panel2.innerHTML = `${item.getAttribute("description")}`;
     if (!event.ctrlKey) {
-      event.target.classList.add("selected");
+      item.classList.add("selected");
     }
 
     event.preventDefault();
@@ -581,7 +736,30 @@ interact(".dropzone").dropzone({
   },
 });
 //*************************************************** */
+//*************************************************** */
+// FUNCION PARA MOVER CADA ITEM DENTRO DE LA ZONA
+function dragMoveListener(event) {
+  var item = event.target;
 
+  // keep the dragged position in the data-x/data-y attributes
+  var x = (parseFloat(item.getAttribute("data-x")) || 0) + event.dx;
+  var y = (parseFloat(item.getAttribute("data-y")) || 0) + event.dy;
+
+  updateState(
+    item.getAttribute("id_code"),
+    item.getAttribute("data-x"),
+    item.getAttribute("data-y"),
+    item.style.width,
+    item.style.height,
+    item.style.zIndex
+  );
+  // translate the element
+  item.style.transform = "translate(" + x + "px, " + y + "px)";
+  // update the posiion attributes
+  item.setAttribute("data-x", x);
+  item.setAttribute("data-y", y);
+}
+//*************************************************** */
 //*************************************************** */
 // AGREGA INTERACCION DE ARRASTRE PARA TODOS LOS ITEM DENTRO DE LA ZONA
 // TAMBIEM DE REDIMENSIONAMIENDO PERO ESTAN DESACTIVADO
@@ -635,8 +813,9 @@ interact(".drag-drop")
         const itemId = event.target.getAttribute("id_code");
         const x = event.target.getAttribute("data-x"); // Obtén la nueva posición X
         const y = event.target.getAttribute("data-y"); // Obtén la nueva posición Y
-        savePosition(itemId, x, y);
+        // savePosition(itemId, x, y);
       },
+      start() {},
     },
     inertia: false,
     modifiers: [
@@ -655,21 +834,41 @@ interact(".drag-drop")
 window.dragMoveListener = dragMoveListener;
 //*************************************************** */
 
-function loadPositions() {
-  const positions = JSON.parse(localStorage.getItem("itemPositions")) || {};
+// function loadPositions() {
+//   const positions = JSON.parse(localStorage.getItem("itemPositions")) || {};
 
-  for (const itemId in positions) {
-    const item = document.querySelector(`[id_code="${itemId}"]`);
+//   for (const itemId in positions) {
+//     const item = document.querySelector(`[id_code="${itemId}"]`);
 
-    if (item) {
-      const pos = positions[itemId];
-      item.style.transform = `translate(${pos.x}px,${pos.y}px)`;
-      item.setAttribute("data-x", pos.x);
-      item.setAttribute("data-y", pos.y);
-      // item.style.left = pos.x + 'px';
-      // item.style.top = pos.y + 'px';
-    }
-  }
-}
+//     if (item) {
+//       const pos = positions[itemId];
+//       item.style.transform = `translate(${pos.x}px,${pos.y}px)`;
+//       item.setAttribute("data-x", pos.x);
+//       item.setAttribute("data-y", pos.y);
+//       // item.style.left = pos.x + 'px';
+//       // item.style.top = pos.y + 'px';
+//     }
+//   }
+// }
 
-window.onload = loadPositions;
+// window.onload = loadPositions;
+
+// Inicialización de Interact.js
+interact(".selected-group").draggable({
+  listeners: {
+    start(event) {},
+    move(event) {
+      // Actualizar la posición de todos los elementos seleccionados
+      selectedItemsGroup.forEach((item) => {
+        var x = (parseFloat(item.getAttribute("data-x")) || 0) + event.dx;
+        var y = (parseFloat(item.getAttribute("data-y")) || 0) + event.dy;
+
+        item.style.transform = "translate(" + x + "px, " + y + "px)";
+        // // update the posiion attributes
+        item.setAttribute("data-x", x);
+        item.setAttribute("data-y", y);
+      });
+    },
+    end(event) {},
+  },
+});
