@@ -73,6 +73,7 @@ class PanelItems(models.Model):
         return self.img
 
 class Items(models.Model):
+    tag = models.CharField(max_length=200, null=True) 
     id_code = models.CharField(max_length=50, default=None)
     x = models.FloatField()
     y = models.FloatField()

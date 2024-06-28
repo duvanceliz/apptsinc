@@ -49,10 +49,17 @@ def create_project(request):
     
 @login_required
 def product(request):
-    product = Product.objects.all()
-    paginator = Paginator(product, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    search = request.GET.get('search')
+    if search:
+        page_obj = Product.objects.filter(product_name__icontains= search)
+    else:
+        search = "control"
+        page_obj = Product.objects.filter(product_name__icontains= search)
+
+    # product = Product.objects.all()
+    # paginator = Paginator(product, 10)
+    # page_number = request.GET.get('page')
+    # page_obj = paginator.get_page(page_number)
     return render(request, 'product.html',{'page_obj': page_obj})
 
 
@@ -102,9 +109,10 @@ def upload_products(request):
             excel_file = request.FILES['file']
             df = pd.read_excel(excel_file, engine='openpyxl')
 
-            products = Product.objects.all()
-            products.delete()
+            # products = Product.objects.all()
+            # products.delete()
 
+        
             # print(df.iterrows())
             for _,row in df.iterrows():
                 if pd.notna(row['Nombre del Producto / Servicio (obligatorio)']) and pd.notna( row['Referencia de Fábrica']) and pd.notna(row['Modelo'] ) and pd.notna(row['Marca'] ):
@@ -116,21 +124,44 @@ def upload_products(request):
                     location = row['UBICACIÓN'] if pd.notna(row['UBICACIÓN']) else 'nn'
                     quantity = row['CANTIDAD'] if pd.notna(row['CANTIDAD']) else 0
                     description = row['ORBSERVACION'] if pd.notna(row['ORBSERVACION']) else 'nn'
-                    if description != 'nn':
-                        description_list = description.split(",")
-                        point = description_list[0]
+                    sale_price = row['Precio de venta 12'] if pd.notna(row['ORBSERVACION']) else 0
+                    
+                    
+                    product_exist = Product.objects.filter(product_name=product_name).exists()
+                    if product_exist:
 
-                    product = Product.objects.create(
-                        code=code,
-                        product_name=product_name,
-                        factory_ref=factory_ref,
-                        model=model,
-                        brand=brand,
-                        location=location,
-                        quantity= quantity,
-                        description=description,
-                        point = point
-                    )
+                        product= Product.objects.get(model=model, brand=brand)
+                        product.product_name = product_name
+                        product.factory_ref = factory_ref
+                        product.model = model
+                        product.brand = brand
+                        product.location = location
+                        product.quantity = quantity
+                        product.description =  description
+                        product.sale_price = sale_price
+                        if description != 'nn':
+                            description_list = description.split(",")
+                            product.point = description_list[0]
+
+                        product.save()
+                    
+                    else: 
+                        if description != 'nn':
+                            description_list = description.split(",")
+                            point = description_list[0]
+                        product = Product.objects.create(
+                            code=code,
+                            product_name=product_name,
+                            factory_ref=factory_ref,
+                            model=model,
+                            brand=brand,
+                            location=location,
+                            quantity= quantity,
+                            description=description,
+                            point = point,
+                            sale_price = sale_price
+                        )
+                        
                     
                     
 
@@ -223,7 +254,7 @@ def download_offer(request,id):
 
     sheets = create_sheet(tabs)
     for i in range(0,len(tabs)):
-        print_data(data,tabs,sheets[i],project)
+        print_data(data,tabs[i],sheets[i],project)
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename=Points.xlsx'
@@ -255,6 +286,7 @@ def save_items(request):
                 item_exist.y = value['y']
                 item_exist.zindex = int(value['zindex'])
                 item_exist.relationship=value['relationship']
+                item_exist.tag = value['tag']
                 # item_exist.width = float(value['width'].replace("px",""))          
                 item_exist.save()
             else:
@@ -263,7 +295,7 @@ def save_items(request):
                                  x=value['x'],y=value['y'],
                                 #  width =float(value['width'].replace("px","")),
                                  relationship=value['relationship'], 
-                                 img=img_obj, dashboard= dashboard)
+                                 img=img_obj, tag=value['tag'], dashboard= dashboard)
                 new_item.save()
 
         for label in data['labels']:
@@ -524,6 +556,27 @@ def delete_folder(request, id):
         messages.error(request,'La carpeta no se encontró!!')
         
     return redirect('/filesfolders')
+
+def edit_tab(request):
+    id = int(request.GET.get('id'))
+    tab = get_object_or_404(Tabs,id=id)
+    if request.method == 'POST':
+        tab_name = request.POST.get('tab')
+        option = request.POST.get('option')
+        if option == '1':
+            controller = "LG BECON CONTROLLER"
+        elif option == '2':
+            controller = "JCI FACILITY EXPLORER"
+        elif option == '3':
+            controller = "JCI METASYS"
+        tab.tab_name = tab_name
+        tab.controller = controller
+        tab.project = tab.project
+        tab.save()
+        messages.success(request,f"El tablero {tab.tab_name} ha sido guardado correctamente.")
+        return redirect(f'/edittab/?id={tab.id}')
+    
+    return render(request,'edittab.html',{'tab':tab})
 
 
     

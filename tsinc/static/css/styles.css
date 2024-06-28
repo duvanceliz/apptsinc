@@ -138,9 +138,10 @@ input.selected-group{
 }
 
 #parent-container-dropzone{
-  height: 500px;
+  height: 800px;
   overflow-x: scroll;
   overflow-y: scroll;
+  
 }
 
 

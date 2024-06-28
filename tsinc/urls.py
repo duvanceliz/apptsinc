@@ -22,5 +22,6 @@ urlpatterns = [
     path('filesfolders/', views.files_folders, name='files_folders'),
     path('deletefile/<int:id>', views.delete_file, name='delete_file'),
     path('deletefolder/<int:id>', views.delete_folder, name='delete_folder'),
+    path('edittab/', views.edit_tab, name='edit_tab'),
     
 ]

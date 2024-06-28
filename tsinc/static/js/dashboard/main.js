@@ -33,7 +33,10 @@ const inputitem = document.getElementById("inputitem");
 const inputwidth = document.getElementById("inputwidth");
 const inputheight = document.getElementById("inputheight");
 const inputzindex = document.getElementById("inputzindex");
+const inp_relationship = document.getElementById("input-relationship");
+const inp_tag = document.getElementById("input-tag");
 const selector = document.getElementById("selector");
+
 const selectedItemsGroup = new Set();
 
 let startX, startY;
@@ -70,6 +73,7 @@ document.addEventListener("keydown", function (event) {
     groupItemsAll()
   }
 });
+
 
 
 dropzone.addEventListener("mousedown", (e) => {
@@ -375,6 +379,7 @@ function saveitemsAll() {
     obj.width = todo.style.width;
     obj.height = todo.style.height;
     obj.relationship = todo.getAttribute("relationship");
+    obj.tag = todo.getAttribute("tag")
     listItem.push(obj);
   });
   todoslabel.forEach((todo) => {
@@ -615,6 +620,8 @@ const state = {
   width: 0,
   height: 0,
   zindex: 0,
+  relationship:"",
+  tag: ""
 };
 
 const proxyState = new Proxy(state, {
@@ -632,6 +639,8 @@ function render() {
   inputwidth.value = proxyState.width;
   inputheight.value = proxyState.height;
   inputzindex.value = proxyState.zindex;
+  inp_relationship.value = proxyState.relationship
+  inp_tag.value = proxyState.tag
 }
 render();
 
@@ -650,13 +659,24 @@ function btnActivate() {
   btnsave.disabled = false;
 }
 
-function updateState(id_code, x, y, width, height, zindex) {
+inp_tag.addEventListener("keydown",e=>{
+if (e.key === 'Enter') {
+  const item = eventState2.target
+  item.setAttribute("tag",inp_tag.value) 
+  inp_tag.blur();  
+}
+
+})
+
+function updateState(id_code, x, y, width, height, zindex, relationship, tag) {
   proxyState.item = id_code;
   proxyState.x = x;
   proxyState.y = y;
   proxyState.width = width;
   proxyState.height = height;
   proxyState.zindex = zindex;
+  proxyState.relationship = relationship
+  proxyState.tag = tag
 }
 
 interact(".drag-drop")
@@ -670,6 +690,7 @@ interact(".drag-drop")
     if (item.classList.contains("selected-group")) {
       selectionClean(todo, 2);
     }
+    
     btnActivate();
     updateState(
       item.getAttribute("id_code"),
@@ -677,7 +698,9 @@ interact(".drag-drop")
       item.getAttribute("data-y"),
       item.style.width,
       item.style.height,
-      item.style.zIndex
+      item.style.zIndex,
+      item.getAttribute("relationship"),
+      item.getAttribute("tag")
     );
     panel2.innerHTML = `${item.getAttribute("description")}`;
     if (!event.ctrlKey) {
@@ -856,7 +879,9 @@ window.dragMoveListener = dragMoveListener;
 // Inicialización de Interact.js
 interact(".selected-group").draggable({
   listeners: {
-    start(event) {},
+    start(event) {
+
+    },
     move(event) {
       // Actualizar la posición de todos los elementos seleccionados
       selectedItemsGroup.forEach((item) => {
@@ -871,4 +896,10 @@ interact(".selected-group").draggable({
     },
     end(event) {},
   },
+  modifiers: [
+    interact.modifiers.restrictRect({
+      restriction: "parent",
+      endOnly: false,
+    }),
+  ]
 });

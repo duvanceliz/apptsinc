@@ -58,6 +58,7 @@
               <td>{{tab.controller}}</td>
               <td>
                 <a class="btn btn-primary btn-sm" href="{% url 'create_page' tab.id %}"> <i class="bi bi-box-arrow-right"></i></a>
+                <a class="btn btn-success btn-sm"  href="/edittab/?id={{tab.id}}"><i class="bi bi-pencil-square"></i></a>
                 <a class="btn btn-danger btn-sm" href="{% url 'delete_tab' tab.id %}" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
               </td>
             </tr>

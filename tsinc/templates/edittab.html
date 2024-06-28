@@ -1,0 +1,78 @@
+
+{% extends 'layout.html' %} {% block body %} {% load static %}
+
+<div class="container">
+    <div class="row">
+       
+        <div class="col-4"></div>
+        <div class="col-4">
+             <div class="card">
+                <div class="card-header text-center">
+                    EDITAR TABLERO
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+          
+                        {% for message in messages %}
+
+                            {% if message.tags == 'success' %}
+                            <div class="alert alert-success" role="alert">
+                            {{ message }}
+                            </div>
+                            {% endif %}
+
+                            {% if message.tags == 'info' %}
+                            <div class="alert alert-warning" role="alert">
+                            {{ message }}
+                            </div>
+                            {% endif %}
+                            {% if message.tags == 'error' %}
+                            <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                            </div>
+                            {% endif %}
+
+                        {% endfor %}
+                    
+                    
+                    {% endif %}
+                     <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                          <label for="exampleFormControlInput1" class="form-label">Tablero</label>
+                          <input type="text" class="form-control" id="exampleFormControlInput1" value="{{tab.tab_name}}" name="tab">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput2" class="form-label">Opcion Actual</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput2" value="{{tab.controller}}" disabled>
+                          </div>
+                        <div class="mb-3">
+                          <label for="option" class="form-label">Cambiar a</label>
+                        <select class="form-select" aria-label="Default select example" id="option" name="option">
+                           {%  if tab.controller != "LG BECON CONTROLLER" %} 
+                          <option value="1">LG BECON CONTROLLER</option>
+                            {% endif %}
+                            {%  if tab.controller != "JCI FACILITY EXPLORER" %} 
+                          <option value="2">JCI FACILITY EXPLORER</option>
+                            {% endif %}
+                            {%  if tab.controller != "JCI METASYS" %} 
+                          <option value="3">JCI METASYS</option>
+                            {% endif %}
+                        </select>
+                      </div>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+
+                     </form>
+                    
+                </div>
+             </div>
+
+        </div>
+        <div class="col-4"></div>
+           
+         
+    </div>
+</div>
+<!-- <script src="{% static 'js/getInput.js' %}"></script> -->
+
+{% endblock %}
