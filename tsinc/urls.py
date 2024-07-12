@@ -11,7 +11,7 @@ urlpatterns = [
     path('project/tabs/<int:id>/', views.tabs, name='tabs'),
     path('deletetab/<int:id>/', views.delete_tab, name='delete_tab'),
     path('deletepage/<int:id>/', views.delete_page, name='delete_page'),
-    path('downloadoffer/<int:id>/', views.download_offer, name='download_offer'),
+    path('downloadpoints/<int:id>/', views.download_points, name='download_points'),
     path('saveitems/', views.save_items, name='save_items'),
     path('createpage/<int:id>/', views.create_page, name='create_page'),
     path('deleteitem/', views.delete_item, name='delete_item'),
@@ -23,5 +23,10 @@ urlpatterns = [
     path('deletefile/<int:id>', views.delete_file, name='delete_file'),
     path('deletefolder/<int:id>', views.delete_folder, name='delete_folder'),
     path('edittab/', views.edit_tab, name='edit_tab'),
-    
+    path('modifypoints/<int:id>', views.modify_points_file, name='modify_points'),
+    path('deletecontroller/<int:id>', views.delete_controller, name='delete_controller'),
+    path('downloadpointexcel/<int:id>', views.download_point_excel, name='download_point_excel'),
+    path('modifysuper/<int:id>', views.modify_supervisor, name='modify_super'),
+    path('deletelicense/<int:id>', views.delete_license, name='delete_license'),
+    path('downloadoffer/<int:id>', views.download_offer, name='download_offer'),
 ]

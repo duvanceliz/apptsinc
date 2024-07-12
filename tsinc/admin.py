@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Project, Brand, Location, Product, Tabs, Dasboard, PanelItems, Items,Labels, Category, Subcategory,Folders
+from .models import *
 # Register your models here.
 
 
@@ -15,3 +15,10 @@ admin.site.register(Labels)
 admin.site.register(Category)
 admin.site.register(Subcategory)
 admin.site.register(Folders)
+admin.site.register(Sheet)
+admin.site.register(Points)
+admin.site.register(License)
+admin.site.register(Badge)
+admin.site.register(Divice)
+admin.site.register(Total_points)
+admin.site.register(note)

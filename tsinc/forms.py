@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import formset_factory
-from .models import Brand, Location, Tabs
+from .models import Brand, Location, Tabs, Product
+from django.db.models import Q
 
 
 class CreateProject(forms.Form):
@@ -30,12 +31,19 @@ class UploadProducts(forms.Form):
 
 class CreateTab(forms.Form):
     tab_name = forms.CharField(label="Nombre del tablero", max_length=200)
+    OPCIONS_CHOICES_TAB = [
+        (1, 'TABLERO CONTROLADOR'),
+        (2, 'TABLERO SUPERVISOR'),
+        
+    ]
     OPCIONS_CHOICES_CONTROLLER = [
         ('LG BECON CONTROLLER', 'LG BECON CONTROLLER'),
         ('JCI FACILITY EXPLORER', 'JCI FACILITY EXPLORER'),
         ('JCI METASYS', 'JCI METASYS'),
         
     ]
+
+    chest_type = forms.ChoiceField(label="Tipo de Tablero", choices=OPCIONS_CHOICES_TAB)
 
     controller = forms.ChoiceField(label="Elige el fabricante", choices=OPCIONS_CHOICES_CONTROLLER)
     
@@ -56,3 +64,9 @@ class UploadSVGForm(forms.Form):
 #         ('LG CONTROLLER', 'LG CONTROLLER')
 #     ]
 #     controller = forms.ChoiceField(choices=OPCIONES_CHOICES)
+
+class AddController(forms.Form):
+    controller = forms.ModelChoiceField(label="Elige un modulo",queryset=Product.objects.filter(Q(code__icontains="C-FE") | Q(code__icontains="E-FE") | Q(code__icontains="C-LG") | Q(code__icontains="E-LG") | Q(code__icontains="SV")))
+
+class AddLicense(forms.Form):
+    license = forms.ModelChoiceField(label="licencias",queryset=Product.objects.filter(product_name__icontains="LICENCIA"))

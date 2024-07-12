@@ -1,0 +1,185 @@
+
+{% extends 'layout.html' %} {% block body %} {% load static %}
+
+<div class="container">
+
+    <div class="row mb-2">
+
+        <div class="col-2">
+          
+        </div>
+        <div class="col-6">
+          {% include 'components/addcontroller.html' %}
+          <a class="btn btn-success btn-sm" href="{% url 'download_point_excel' project.id %}">Descargar Excel</a>
+        </div>
+        <div class="col-4"></div>
+
+    </div>
+    <div class="row">
+       <div class="col-2">
+        <div class="card-header bg-primary">
+            Hojas
+         </div>
+         <div class="list-group">
+           
+                {% for sheet in sheets %}
+                 <div class="list-group-item">
+                     <a href="?sheet={{sheet.id}}" class="btn btn-link">
+                     {{sheet.name}}
+                     </a>
+                    </div>
+                    {% endfor %}
+                   
+         
+         </div>
+       </div>
+       <div class="col-6">
+        <table class="table table-hover table-light">
+            <thead>
+              <tr>
+                <th scope="col">MODULO</th>
+                <th scope="col">EU</th>
+                <th scope="col">ED</th>
+                <th scope="col">SA</th>
+                <th scope="col">SD</th>
+                <th scope="col">SC</th>
+                <th scope="col"></th>
+              </tr>
+            
+            </thead>
+            <tbody id="module-points">
+                {% for point in points %}
+
+                {% if point.name != "TOTAL_POINTS" %}
+              <tr>
+
+                <td>{{point.name}}</td>
+                <td>{{point.eu}}</td>
+                <td>{{point.ed}}</td>
+                <td>{{point.sa}}</td>
+                <td>{{point.sd}}</td>
+                <td>{{point.sc}}</td>
+                <td>
+                  <a class="btn btn-danger btn-sm" href="{% url 'delete_controller' point.id %}" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
+                </td>
+              </tr>
+              {% endif %}
+              {%endfor%}
+            </tbody>
+          </table>
+        
+       </div>
+       <div class="col-4">
+        <table class="table table-hover table-light">
+            <thead>
+              
+              
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">EU</th>
+                <th scope="col">ED</th>
+                <th scope="col">SA</th>
+                <th scope="col">SD</th>
+              </tr>
+            
+            </thead>
+            <tbody id="total-point-item">
+                {% for point in points %}
+
+                {% if point.name == "TOTAL_POINTS" %}
+              <tr>
+                <td>{{point.name}}</td>
+                <td>{{point.eu}}</td>
+                <td>{{point.ed}}</td>
+                <td>{{point.sa}}</td>
+                <td>{{point.sd}}</td>
+              </tr>
+              {% endif %}
+              {%endfor%}
+            </tbody>
+          </table>
+
+          <table class="table table-hover table-light">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">EU</th>
+                <th scope="col">ED</th>
+                <th scope="col">SA</th>
+                <th scope="col">SD</th>
+                <th scope="col">SC</th>
+              </tr>
+            
+            </thead>
+            <tbody>
+               
+              <tr>
+                <td>PUNTOS DISPONIBLES</td>
+                <td id="pd-eu"></td>
+                <td id="pd-ed"></td>
+                <td id="pd-sa"></td>
+                <td id="pd-sd"></td>
+                <td id="pd-sc"></td>
+              </tr>
+              <tr>
+                <td>PUNTOS PROYECTADOS</td>
+                <td id="pp-eu"></td>
+                <td id="pp-ed"></td>
+                <td id="pp-sa"></td>
+                <td id="pp-sd"></td>
+                <td id="pp-sc"></td>
+              </tr>
+              <tr>
+                <td>PUNTOS SOBRANTES</td>
+                <td id="ps-eu"></td>
+                <td id="ps-ed"></td>
+                <td id="ps-sa"></td>
+                <td id="ps-sd"></td>
+                <td id="ps-sc"></td>
+              </tr>
+            
+            </tbody>
+          </table>
+
+          {% if sv %}
+          {% include 'components/addlicenses.html' %}
+          
+         
+          <table class="table table-hover table-light">
+            <thead>
+              <tr>
+                <th scope="col">LICENCIA</th>
+                <th scope="col">DESCRIPCIÓN</th>
+                <th></th>
+              </tr>
+            
+            </thead>
+            <tbody>
+               {% for license in licenses %}
+            
+               <tr>
+                <td>{{license.ref}}</td>
+                <td>{{license.description}}</td>
+                <td>
+                  <a class="btn btn-danger btn-sm" href="{% url 'delete_license' license.id %}" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
+                </td>
+              </tr>
+               
+            
+              {% endfor %}
+
+              {% endif %}
+              
+
+
+            </tbody>
+          </table>
+
+
+       </div>
+      
+    </div>
+</div>
+<script src="{% static 'js/calc_points.js' %}"></script>
+
+{% endblock %}

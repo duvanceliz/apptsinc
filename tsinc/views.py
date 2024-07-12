@@ -2,16 +2,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 from django.http import HttpResponse
-from .models import Project, Product, Tabs, Dasboard, PanelItems, Items,Labels, Category, Subcategory, Folders
-from .forms import CreateProject, CreateProduct, UploadProducts, CreateTab, SearchForm, CreatePage, UploadSVGForm
+from .models import *
+from .forms import *
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 import pandas as pd
 import openpyxl
 from django.http import JsonResponse
 import json
-from openpyxl.styles import Font, PatternFill
-from .utils import print_data
+from .utils import print_data, print_calc_supervirsor, sort_list_point, modify_point_file, print_offer, print_notes
 import os, shutil
 from django.conf import settings
 from django.contrib import messages
@@ -105,15 +104,10 @@ def create_product(request):
 def upload_products(request):
     if request.method == 'POST':
         form = UploadProducts(request.POST, request.FILES)
+    
         if form.is_valid():
             excel_file = request.FILES['file']
             df = pd.read_excel(excel_file, engine='openpyxl')
-
-            # products = Product.objects.all()
-            # products.delete()
-
-        
-            # print(df.iterrows())
             for _,row in df.iterrows():
                 if pd.notna(row['Nombre del Producto / Servicio (obligatorio)']) and pd.notna( row['Referencia de Fábrica']) and pd.notna(row['Modelo'] ) and pd.notna(row['Marca'] ):
                     code = row['Código del Producto (obligatorio)'] if pd.notna(row['Código del Producto (obligatorio)']) else 'nn'
@@ -128,8 +122,8 @@ def upload_products(request):
                     
                     
                     product_exist = Product.objects.filter(product_name=product_name).exists()
-                    if product_exist:
 
+                    if product_exist:
                         product= Product.objects.get(model=model, brand=brand)
                         product.product_name = product_name
                         product.factory_ref = factory_ref
@@ -149,7 +143,7 @@ def upload_products(request):
                         if description != 'nn':
                             description_list = description.split(",")
                             point = description_list[0]
-                        product = Product.objects.create(
+                            product = Product.objects.create(
                             code=code,
                             product_name=product_name,
                             factory_ref=factory_ref,
@@ -196,12 +190,13 @@ def tabs(request, id):
         # tabs = offer.tabs.all()
         return render(request,'tabs.html',{'tabs': tabs, 'form': CreateTab(), 'project':project})
     else:
-        print(request.POST)
+        
         project = Project.objects.get(id=id)
-        Tabs.objects.create(tab_name = request.POST['tab_name'], controller= request.POST['controller'], project= project)
+        chest_type = True
+        if request.POST['chest_type'] == "2":
+            chest_type = False 
+        Tabs.objects.create(tab_name = request.POST['tab_name'], chest_type = chest_type, controller= request.POST['controller'], project= project)
         return redirect("/project/tabs/{}/".format(id))
-
-
 
 @login_required
 def delete_tab(request, id):
@@ -211,7 +206,7 @@ def delete_tab(request, id):
     return redirect(f"/project/tabs/{project.id}/")
 
 @login_required
-def download_offer(request,id):
+def download_points(request,id):
     project =Project.objects.get(id=id)
     tabs = project.tabs.all()
     pages = Dasboard.objects.filter(tab__in=tabs).select_related('tab')
@@ -235,31 +230,48 @@ def download_offer(request,id):
     # sheet.cell(row=i+3, column=9, value=controller.point) 
 
     def create_sheet(tabs):
-        sheets = [ workbook.create_sheet(title=tab.tab_name) for tab in tabs ]
+        sheets = [ workbook.create_sheet(title=tab.tab_name) for tab in tabs if tab.chest_type]
         return sheets
     
     workbook = openpyxl.Workbook()
     # # sheet = workbook.active
     # # sheet.title = 'TAB01'
+
     sheet_to_delete = workbook.active
     workbook.remove(sheet_to_delete)
     
-    # # header_font = Font(bold=True, color="FFFFFF")
-    # # header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
-  
-    # units_per_tab =[
-    #     [page for page in pages if tab.id == page.tab.id] for tab in tabs
-    # ]
-
 
     sheets = create_sheet(tabs)
+    
+    
+    sheet = Sheet.objects.filter(project = project).all()
+    
+    sheet.delete()
+   
+    c_quantity = 0
     for i in range(0,len(tabs)):
-        print_data(data,tabs[i],sheets[i],project)
+        if tabs[i].chest_type:
+            c_quantity += 1
+            print_data(data,tabs[i],sheets[i],project)
+
+    
+    try: 
+        sv_tab = [tab for tab in tabs if not tab.chest_type][0]
+    except:
+        sv_tab = None
+    
+    if sv_tab:
+        sheet_supervisor = workbook.create_sheet(title='Supervisor')
+        print_calc_supervirsor(sheet_supervisor,sv_tab,c_quantity,project)
+
+    path = os.path.join(settings.BASE_DIR, 'tsinc','static', 'points','Points.xlsx')
+    workbook.save(path)
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename=Points.xlsx'
 
     workbook.save(response)
+
     # return redirect('/')
     return response
 
@@ -407,13 +419,13 @@ def total(request):
     return render(request, 'total.html', {'dashboard':dashboard,'items':items, 'total_products':total_products, 'subtotal':subtotal, 'total_points_list':total_points_list})
 
 
-
+@login_required
 def handle_uploaded_file(file, path):
     with open(path, 'wb+') as destination:
         for chunk in file.chunks():
             destination.write(chunk)
 
-
+@login_required
 def upload_svg(request):
 
     if request.method == 'POST' and request.FILES.getlist('files'):
@@ -506,7 +518,7 @@ def upload_svg(request):
     folders = Folders.objects.all()
     return render(request, 'uploadsvg.html', {'folders':folders})
 
-
+@login_required
 def files_folders(request):
      
     panelitems = PanelItems.objects.all()
@@ -516,7 +528,7 @@ def files_folders(request):
         'folders':folders,
         'panelitems': panelitems
     } )
-
+@login_required
 def delete_file(request, id):
 
     try:
@@ -537,7 +549,7 @@ def delete_file(request, id):
     
 
     return redirect('/filesfolders')
-
+@login_required
 def delete_folder(request, id):
     
     try:
@@ -556,7 +568,7 @@ def delete_folder(request, id):
         messages.error(request,'La carpeta no se encontró!!')
         
     return redirect('/filesfolders')
-
+@login_required
 def edit_tab(request):
     id = int(request.GET.get('id'))
     tab = get_object_or_404(Tabs,id=id)
@@ -577,6 +589,132 @@ def edit_tab(request):
         return redirect(f'/edittab/?id={tab.id}')
     
     return render(request,'edittab.html',{'tab':tab})
+
+@login_required
+def modify_points_file(request,id):
+    if request.method == "GET":
+        project = Project.objects.get(id=id)
+        sheets = project.sheet.all()
+        sheet_id = request.GET.get("sheet")
+        licenses = License.objects.filter(sheet__in =sheets)
+        sv = False
+        if sheet_id:
+            sheet = Sheet.objects.filter(id=sheet_id).first()
+            points = Points.objects.filter(sheet = sheet).all()
+            if sheet.name == "Supervisor":
+                sv=True 
+        else:
+            sheet = sheets[0]
+            points = Points.objects.filter(sheet = sheet).all()
+        
+        return render(request,"modifypoint.html",{'sheets':sheets, 
+                                                  'points':points, 
+                                                  'addcontroller':AddController(), 
+                                                  'addlicense':AddLicense(), 
+                                                  'sheet_id':sheet.id,
+                                                  'project':project,
+                                                  'licenses':licenses,
+                                                  'sv':sv
+                                                  }
+                                                
+                                                  )
+    else:
+        def is_controller(string):
+            for l in string:
+                if l == "C":
+                    return True 
+            return False
+            
+        sheet = Sheet.objects.filter(id=request.POST.get("sheet_id")).first()
+        try:
+            request_license = request.POST["license"]
+        except:
+            request_license = None
+        if not request_license:
+            controller = Product.objects.filter(id=request.POST["controller"]).first()
+            
+            if not  controller.point == None:
+                points = controller.point.split("-")
+                sort_points = sort_list_point(points)
+
+                Points.objects.create(name = controller.model,
+                                    is_controller = is_controller(controller.code),
+                                    eu=sort_points[0],
+                                    ed=sort_points[1],
+                                    sa=sort_points[2],
+                                    sd=sort_points[3],
+                                    sc=sort_points[4],
+                                    sheet = sheet
+                                    )
+            else:
+                Points.objects.create(name = controller.model,
+                                    is_controller = is_controller(controller.code),
+                                    sheet = sheet
+                                    )
+
+        else:
+            # print(request.POST["license"])
+            license = Product.objects.filter(id=request.POST["license"]).first()
+            License.objects.create(ref=license.model,description=license.description, sheet=sheet)
+
+        return redirect(f"/modifypoints/{id}?sheet={sheet.id}")
+
+def delete_controller(request, id):
+    controller = Points.objects.filter(id=id).first()
+    sheet = controller.sheet
+    print(sheet.project)
+    controller.delete()
+    return redirect(f"/modifypoints/{sheet.project.id}?sheet={sheet.id}")
+
+def download_point_excel(request,id):
+    project = Project.objects.get(id=id)
+    path = os.path.join(settings.BASE_DIR, 'tsinc','static', 'points','Points.xlsx')
+    workbook = openpyxl.load_workbook(path)
+    
+    for sheet_name in workbook.sheetnames:
+        modify_point_file(project,workbook[sheet_name])
+    
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=Points.xlsx'
+
+    workbook.save(response)
+    
+    return response
+
+def modify_supervisor(request, id):
+    return render(request,"modifysuper.html")
+
+def delete_license(request, id):
+    license = License.objects.filter(id=id).first()
+    sheet = license.sheet
+    license.delete()
+    return redirect(f"/modifypoints/{sheet.project.id}?sheet={sheet.id}")
+
+@login_required
+def download_offer(request,id):
+    project =Project.objects.get(id=id)
+    workbook = openpyxl.Workbook()
+    # # sheet = workbook.active
+    # # sheet.title = 'TAB01'
+
+    sheet_to_delete = workbook.active
+    workbook.remove(sheet_to_delete)
+
+    sheet = workbook.create_sheet(title="Oferta")
+    sheet_notes = workbook.create_sheet(title="NOTAS Y ACLARACIONES")
+
+    print_offer(sheet,project)
+    print_notes(sheet_notes,project)
+    # path = os.path.join(settings.BASE_DIR, 'tsinc','static', 'points','Points.xlsx')
+    # workbook.save(path)
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=Oferta.xlsx'
+
+    workbook.save(response)
+
+    # return redirect('/')
+    return response
 
 
     
