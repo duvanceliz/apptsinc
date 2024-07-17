@@ -26,14 +26,15 @@
             
         
             <tr>
-              <th scope="col">#</th>
               <th scope="col">Codigo</th>
               <th scope="col">Producto</th>
               <th scope="col">Modelo</th>
               <th scope="col">Marca</th>
               <th scope="col">Ubicacion</th>
               <th scope="col">Cantidad</th>
-              <th scope="col">Precio de venta</th>
+              <th scope="col">Puntos</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Precio</th>
               <th scope="col">IVA</th>
               <th scope="col"></th>
             </tr>
@@ -42,7 +43,6 @@
           <tbody>
             <tr>
               {% for product in page_obj %}
-              <th scope="row">{{product.id}}</th>
               <td>
                 {{product.code}}
               </td>
@@ -60,6 +60,12 @@
                 {{product.quantity}}
               </td>
               <td>
+                {{product.point}}
+              </td>
+              <td>
+                {{product.description}}
+              </td>
+              <td>
                 {{product.sale_price}}
               </td>
   
@@ -75,11 +81,9 @@
               </td>
               
               <td>
-           
-                <button class="btn btn-success btn-sm"> 
-                  <i class="bi bi-pencil-square"></i>
-                </button>
-                <a class="btn btn-danger btn-sm" href="" onclick="return verificar()"> 
+                <a class="btn btn-success btn-sm"   href="/editproduct/?id={{product.id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar parametros del tablero"><i class="bi bi-pencil-square"></i></a>
+
+                <a class="btn btn-danger btn-sm" href="{% url 'delete_product' product.id %}" onclick="return verificar()"> 
                   <i class="bi bi-trash"></i>
                 </a>
               </td>

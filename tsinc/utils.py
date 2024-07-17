@@ -186,7 +186,7 @@ def calc_controllers(item_points, type_controller):
         return new_points
     
     def filter_expansions(total_points,expansions):
-        prom = 15
+        prom = 10
         total_points = clean_points(total_points)
         reduce_points = functools.reduce(lambda x,y:x+y,total_points)
         if reduce_points <= prom:
@@ -241,7 +241,7 @@ def calc_controllers(item_points, type_controller):
             controllers = Product.objects.filter(code="C-M")
             expansions = Product.objects.filter(code='E-M')
         # print(expansions)
-
+       
         controllers_js = [{
             'is_controller':True,
             'model':controller.model,
@@ -289,7 +289,6 @@ def calc_controllers(item_points, type_controller):
     
     elif type_controller == 'JCI FACILITY EXPLORER' or type_controller == 'JCI METASYS':
       
-
         controllers_js, expansions_js = find_cllers_exp(type_controller)
         
         if len(controllers_js) > 0 and len(expansions_js) > 0:
@@ -297,7 +296,7 @@ def calc_controllers(item_points, type_controller):
             point_quantity = functools.reduce(lambda x,y: x+y,item_points)
         
             if point_quantity > 0 and point_quantity < 18:
-                controller = [controller for controller in controllers_js if controller['model']=="CGM04060"][0]  
+                controller = [controller for controller in controllers_js if controller['model']=="F4-CGM04060" or controller['model']=="M4-CGM04060"][0]  
                 new_controller_point = closest_match(controller['points'],item_points)
                 
                 #print(f'puntos controlador:{new_controller_point}')
@@ -308,7 +307,7 @@ def calc_controllers(item_points, type_controller):
                     # new_points = subtract_points(item_points, new_controller_point)
                     add_expansion_js(item_points,expansions_js)
             else:
-                controller = [controller for controller in controllers_js if controller['model']=="CGM09090"][0]  
+                controller = [controller for controller in controllers_js if controller['model']=="F4-CGM09090" or controller['model']=="M4-CGM04060"][0]  
                 new_controller_point = closest_match(controller['points'],item_points)
                 
                 # print(f'puntos controlador:{new_controller_point}')
@@ -474,8 +473,8 @@ def print_data(data,tab,sheet,project):
                 cell_product_name = sheet.cell(row=i, column=2, value=item.img.product.product_name)
             cell_description = sheet.cell(row=i, column=8, value= f'{item.img.product.model} - {item.img.product.brand}')
             
-            
-            Divice.objects.create(tag=item.tag, model = item.img.product.model, brand = item.img.product.model, tab = tab, project = project)
+            if item.img.product.model != "AI" and item.img.product.model != "BI" and item.img.product.model != "AO" and item.img.product.model != "BO":
+                Divice.objects.create(tag=item.tag, model = item.img.product.model, brand = item.img.product.model, tab = tab, project = project)
             
             points = item.img.product.point.split("-")
             for c,point in enumerate(sort_list_point(points)[0:4], start=3):
@@ -662,22 +661,38 @@ def print_points_cller_exp_trf(sheet,points,cllers,sheet_model,project,modify=Fa
     result2 = 0
     result3 = 0
     
+    # for i in range(1,4):
+    #     if points[i] == 0:
+    #         pp[i] = 0
+    #         pp[i-1] = points[i-1]
+    #     elif points_cller_exp[i] >= points[i]:
+    #         pp[i] = points[i]
+    #     else:
+    #         pp[i] = points_cller_exp[i]
+    #         result = abs(points[i] - points_cller_exp[i])
+    #         if i == 1:
+    #             pp[0] = points[0] + result
+    #         elif i == 2:
+    #             result2 = result
+    #         elif i == 3:
+    #             result3 = result + result2
+    #             pp[i+1] = result3 
     for i in range(1,4):
-        if points[i] == 0:
-            pp[i] = 0
-            pp[i-1] = points[i-1]
-        elif points_cller_exp[i] >= points[i]:
-            pp[i] = points[i]
-        else:
+        re = 0
+        if points[i] > points_cller_exp[i]:
             pp[i] = points_cller_exp[i]
-            result = abs(points[i] - points_cller_exp[i])
-            if i == 1:
-                pp[0] = points[0] + result
-            elif i == 2:
-                result2 = result
-            elif i == 3:
-                result3 = result + result2
-                pp[i+1] = result3 
+            re = points[i] - points_cller_exp[i]
+        else:
+            pp[i] = points[i]
+        if i == 1:
+            result = re
+        elif i == 2:
+            result2 = re
+        elif i == 3:
+            result3 = re
+    
+    pp[0] = points[0] + result
+    pp[4] = result2 + result3
 
 
     print_column(sheet,pp,row2,13,config_style_titles2)
@@ -1146,11 +1161,21 @@ def print_offer(sheet,project):
                    "NIT",
                    "Fecha"
                    ]
+    code = OfferCode.objects.first()
     
+    code_splited = code.code.split("-")
+
+    new_code = int(code_splited[-1]) + 1
+
+    code.code = f"{code_splited[0]}-{code_splited[1]}-{new_code}"
+
+    code.save()
+
     client_info_values = [
-                    None,
+                    f"{code_splited[0]}-{code_splited[1]}-{new_code}",
+                    # None,
                    project.company_name,
-                   None,
+                   project.nit,
                    f"{date.today()}",
                    ]
     
@@ -1247,8 +1272,6 @@ def print_offer(sheet,project):
      for tab in tabs 
     ]
 
-
-    usd_to_cop = Badge.objects.filter(name = "COP").first()
  
     sheet.column_dimensions["E"].width = 60
     sheet.column_dimensions["C"].width = 5
@@ -1388,11 +1411,9 @@ def print_offer(sheet,project):
 
     subtotal_usd_offer = subtotal_usd_modules + subtotal_usd_inst
 
-    subtotal_usd_25 = subtotal_usd_offer * 0.25 
-
-    engi_pro_price_usd = subtotal_usd_25 * 0.1
+    engi_pro_price_usd = subtotal_usd_offer * 0.1
     
-    startup_price_usd = subtotal_usd_25 * 0.15
+    startup_price_usd = subtotal_usd_offer * 0.15
     
 
     for i,item in enumerate(engi_pro_startup,start=13+len_item_two):
@@ -1441,7 +1462,7 @@ def print_offer(sheet,project):
     
     subtotal = subtotal_usd_modules+subtotal_usd_inst+subtotal_usd_ipp
 
-    discount = round(subtotal * 0.1,2)
+    discount = round(subtotal * 0,2)
     subtotal_d = subtotal - discount 
     admi = round(subtotal_d*0.07,2)
     unexpected = round(subtotal_d*0.03,2)
@@ -1458,7 +1479,7 @@ def print_offer(sheet,project):
     {
         'title':"DESCUENTO",
         'value':discount,
-        'porcen':"10%"
+        'porcen':"0%"
     },
     {
         'title':"SUBTOTAL MENOS (-) DESCUENTO",
@@ -1523,10 +1544,10 @@ def print_notes(sheet,project):
     sheet.column_dimensions['C'].width = 120
     # sheet.row_dimensions[6].height = 200
     # sheet.row_dimensions[10].height = 200
-    alcances = note.objects.filter(tag="ALCANCES").first()
-    no_incluye = note.objects.filter(tag="NO INCLUYE").first()
-    condiciones_comerciales = note.objects.filter(tag="CONDICIONES COMERCIALES").first()
-    notas_aclaraciones = note.objects.filter(tag="NOTAS Y ACLARACIONES").first()
+    alcances = Note.objects.filter(tag="ALCANCES").first()
+    no_incluye = Note.objects.filter(tag="NO INCLUYE").first()
+    condiciones_comerciales = Note.objects.filter(tag="CONDICIONES COMERCIALES").first()
+    notas_aclaraciones = Note.objects.filter(tag="NOTAS Y ACLARACIONES").first()
 
     config_style_titles1 = {
                 'font': True,

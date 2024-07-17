@@ -14,6 +14,7 @@ from .utils import print_data, print_calc_supervirsor, sort_list_point, modify_p
 import os, shutil
 from django.conf import settings
 from django.contrib import messages
+from django.db.models import Q
 
 # Create your views here.
 
@@ -43,14 +44,15 @@ def create_project(request):
        return render(request, 'createproject.html',{'form': CreateProject()})
     else:
         print(request.POST)
-        project = Project.objects.create(name = request.POST['name'], company_name = request.POST['company_name'], asesor = request.POST['asesor'], usersesion=request.user )
+        project = Project.objects.create(name = request.POST['name'], company_name = request.POST['company_name'],nit=request.POST['nit'], asesor = request.POST['asesor'], usersesion=request.user )
         return redirect('/')
     
 @login_required
 def product(request):
     search = request.GET.get('search')
+    print(search)
     if search:
-        page_obj = Product.objects.filter(product_name__icontains= search)
+        page_obj = Product.objects.filter(Q(product_name__icontains= search) | Q(model__icontains= search))
     else:
         search = "control"
         page_obj = Product.objects.filter(product_name__icontains= search)
@@ -99,7 +101,25 @@ def create_product(request):
 
         project = Product.objects.create(code = request.POST['code'], product_name = request.POST['product_name'], factory_ref= request.POST['ref'], model= request.POST['model'], sale_price= request.POST['price'],iva=iva)
         return redirect('/product')
+
+
+def verify_code_point_des(description):
+    code = "NA"
+    point = "NA"
+    descrip = "NA"
     
+    if pd.notna(description):
+        description_list = description.split(",")
+        code = description_list[0]
+        point = description_list[1]
+        descrip =  description_list[2]
+    
+    return code,point,descrip
+        
+    
+
+
+
 @login_required   
 def upload_products(request):
     if request.method == 'POST':
@@ -107,59 +127,112 @@ def upload_products(request):
     
         if form.is_valid():
             excel_file = request.FILES['file']
+            try:
+                original = request.POST['original']
+            except:
+                original = None
+
             df = pd.read_excel(excel_file, engine='openpyxl')
-            for _,row in df.iterrows():
-                if pd.notna(row['Nombre del Producto / Servicio (obligatorio)']) and pd.notna( row['Referencia de Fábrica']) and pd.notna(row['Modelo'] ) and pd.notna(row['Marca'] ):
-                    code = row['Código del Producto (obligatorio)'] if pd.notna(row['Código del Producto (obligatorio)']) else 'nn'
-                    product_name = row['Nombre del Producto / Servicio (obligatorio)'] 
-                    factory_ref = row['Referencia de Fábrica'] 
-                    model = row['Modelo'] 
-                    brand = row['Marca'] 
-                    location = row['UBICACIÓN'] if pd.notna(row['UBICACIÓN']) else 'nn'
-                    quantity = row['CANTIDAD'] if pd.notna(row['CANTIDAD']) else 0
-                    description = row['ORBSERVACION'] if pd.notna(row['ORBSERVACION']) else 'nn'
-                    sale_price = row['Precio de venta 12'] if pd.notna(row['ORBSERVACION']) else 0
-                    
-                    
-                    product_exist = Product.objects.filter(product_name=product_name).exists()
 
-                    if product_exist:
-                        product= Product.objects.get(model=model, brand=brand)
-                        product.product_name = product_name
-                        product.factory_ref = factory_ref
-                        product.model = model
-                        product.brand = brand
-                        product.location = location
-                        product.quantity = quantity
-                        product.description =  description
-                        product.sale_price = sale_price
-                        if description != 'nn':
-                            description_list = description.split(",")
-                            product.point = description_list[0]
+            if not original:
 
-                        product.save()
-                    
-                    else: 
-                        if description != 'nn':
-                            description_list = description.split(",")
-                            point = description_list[0]
+                for _,row in df.iterrows():
+                    if  pd.notna(row['Nombre del Producto / Servicio (obligatorio)']) and pd.notna( row['Referencia de Fábrica']) and pd.notna(row['Modelo'] ) and pd.notna(row['Marca'] ):
+                        product_name = row['Nombre del Producto / Servicio (obligatorio)'] 
+                        factory_ref = row['Referencia de Fábrica'] 
+                        model = row['Modelo'] 
+                        brand = row['Marca'] 
+                        location = row['UBICACIÓN'] if pd.notna(row['UBICACIÓN']) else 'NA'
+                        quantity = row['CANTIDAD'] if pd.notna(row['CANTIDAD']) else 0
+                        description = row['ORBSERVACION']
+                        sale_price = row['Precio de venta 12'] if pd.notna(row['Precio de venta 12']) else 0
+                        
+                        
+                        product_exist = Product.objects.filter(model = model, brand = brand).exists()
+                         
+                        code,point,descrip = verify_code_point_des(description)
+                            
+                        if product_exist:
+                            product= Product.objects.filter(model=model, brand=brand).first()
+                            product.product_name = product_name
+                            product.factory_ref = factory_ref
+                            product.model = model
+                            product.brand = brand
+                            product.location = location
+                            product.quantity = quantity
+                            product.sale_price = sale_price
+                            product.code = code
+                            product.point = point
+                            product.description = descrip
+                            product.save()
+                        
+                        else:
+                                                        
                             product = Product.objects.create(
-                            code=code,
                             product_name=product_name,
                             factory_ref=factory_ref,
                             model=model,
                             brand=brand,
                             location=location,
                             quantity= quantity,
-                            description=description,
+                            sale_price = sale_price,
+                            code = code,
                             point = point,
-                            sale_price = sale_price
-                        )
-                        
-                    
-                    
+                            description=descrip,
+                            )
+                messages.success(request, 'Productos subidos y creados exitosamente.')
+            else:
+                for _,row in df.iterrows():
+                    code = row['code'] if pd.notna(row['code']) else 'NA'
+                    product_name = row['product_name']
+                    factory_ref = row['factory_ref']
+                    model = row['model']
+                    sale_price = row['sale_price']
+                    brand = row['brand']
+                    location = row['location'] if pd.notna(row['location']) else 'NA'
+                    quantity = row['quantity']
+                    point = row['point'] if pd.notna(row['point']) else 'NA'
+                    description = row['description'] if pd.notna(row['description']) else 'NA'
+                    iva = row['iva']
 
-            messages.success(request, 'Productos subidos y creados exitosamente.')
+                    product_exist = Product.objects.filter(model = model, brand = brand ).exists()
+
+                    if product_exist:
+                        product= Product.objects.get(model=model, brand=brand)
+                        product.code = code
+                        product.product_name = product_name
+                        product.factory_ref = factory_ref
+                        product.model = model
+                        product.brand = brand
+                        product.location = location
+                        product.quantity = quantity
+                        product.sale_price = sale_price
+                        product.description = description
+                        product.point = point
+                        product.iva = iva
+                        product.save()
+                    else:
+                         product = Product.objects.create(
+                                code = code,
+                                product_name = product_name,
+                                factory_ref = factory_ref,
+                                model = model,
+                                brand = brand,
+                                location = location,
+                                quantity = quantity,
+                                sale_price = sale_price,
+                                description = description,
+                                point = point,
+                                iva = iva,
+                         )
+
+
+                messages.success(request, 'Productos subidos y creados exitosamente.')
+
+                
+            # messages.error(request, 'No se pudieron subir los productos a la base de datos, porfavor verifica que tu tabla tenga todos los parametros esten llenos')
+
+            
             return redirect('/uploadproducts')
     else:
         form = UploadProducts()
@@ -232,48 +305,53 @@ def download_points(request,id):
     def create_sheet(tabs):
         sheets = [ workbook.create_sheet(title=tab.tab_name) for tab in tabs if tab.chest_type]
         return sheets
-    
-    workbook = openpyxl.Workbook()
-    # # sheet = workbook.active
-    # # sheet.title = 'TAB01'
+    try:
+        workbook = openpyxl.Workbook()
+        # # sheet = workbook.active
+        # # sheet.title = 'TAB01'
 
-    sheet_to_delete = workbook.active
-    workbook.remove(sheet_to_delete)
+        sheet_to_delete = workbook.active
+        workbook.remove(sheet_to_delete)
     
-
-    sheets = create_sheet(tabs)
-    
-    
-    sheet = Sheet.objects.filter(project = project).all()
-    
-    sheet.delete()
    
-    c_quantity = 0
-    for i in range(0,len(tabs)):
-        if tabs[i].chest_type:
-            c_quantity += 1
-            print_data(data,tabs[i],sheets[i],project)
-
     
-    try: 
-        sv_tab = [tab for tab in tabs if not tab.chest_type][0]
+        sheets = create_sheet(tabs)
+        
+        
+        sheet = Sheet.objects.filter(project = project).all()
+        
+        sheet.delete()
+    
+        c_quantity = 0
+
+   
+
+        for i in range(0,len(tabs)):
+            if tabs[i].chest_type:
+                c_quantity += 1
+                print_data(data,tabs[i],sheets[i],project)
+
+        
+        try: 
+            sv_tab = [tab for tab in tabs if not tab.chest_type][0]
+        except:
+            sv_tab = None
+        
+        if sv_tab:
+            sheet_supervisor = workbook.create_sheet(title='Supervisor')
+            print_calc_supervirsor(sheet_supervisor,sv_tab,c_quantity,project)
+        path = os.path.join(settings.BASE_DIR, 'tsinc','static', 'points','Points.xlsx')
+        workbook.save(path)
+
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=Points.xlsx'
+
+        workbook.save(response)
+        return response
     except:
-        sv_tab = None
+        messages.error(request,"¡Ha ocurrido un error al momento de generar el archivo!, asegurese de haber creado tableros, paginas y equipos en la dashboard. si el problema persiste contacte a la empresa.")
+        return redirect('/')
     
-    if sv_tab:
-        sheet_supervisor = workbook.create_sheet(title='Supervisor')
-        print_calc_supervirsor(sheet_supervisor,sv_tab,c_quantity,project)
-
-    path = os.path.join(settings.BASE_DIR, 'tsinc','static', 'points','Points.xlsx')
-    workbook.save(path)
-
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=Points.xlsx'
-
-    workbook.save(response)
-
-    # return redirect('/')
-    return response
 
     
 @login_required
@@ -381,19 +459,27 @@ def delete_item(request):
 
 @login_required
 def total(request):
-    dashboard_products = []
     total_points_list = []
-    items = Items.objects.all()
     dashboard = Dasboard.objects.get(id=request.GET['id'])
-    for item in items:
-        if dashboard.id == item.dashboard.id:
-            if item.img.product != None:
-                dashboard_products.append(item.img.product)
-    total_set = set(dashboard_products)
-    total = list(total_set)
+    items = Items.objects.filter(dashboard = dashboard).all()
+   
+    dashboard_products = [ item.img.product for item in items if item.img.product != None]
+
+    total = list(set(dashboard_products))
+ 
     total_products = []
+
     points = ['BI','BO','AI','AO']
+
     subtotal = 0
+    
+    def clean_point(point):
+        point_cleaned = ""
+        for i in point:
+            if not i.isnumeric():
+                point_cleaned += i
+        return point_cleaned
+
     for p in total:
         count = 0
         for product in dashboard_products:
@@ -401,25 +487,26 @@ def total(request):
                 count += 1
         total_product = {}
         total_product['product']  = p
+        total_product['pointtype'] = clean_point(p.point)
         total_product['quantity'] = count
         total_product['total_price'] = p.sale_price * count
         subtotal += p.sale_price * count
         total_products.append(total_product)
+    
     for point in points:
         total = 0
-        for total_product in total_products:
-            if total_product['product'].point == point:
-                total += total_product['quantity']
+        for product in total_products:
+            if product['pointtype'] == point:
+                total += product['quantity']
         total_points={}
         total_points['pointtype'] = point
         total_points['quantity'] = total
         total_points_list.append(total_points)
-    print(total_points_list)
 
     return render(request, 'total.html', {'dashboard':dashboard,'items':items, 'total_products':total_products, 'subtotal':subtotal, 'total_points_list':total_points_list})
 
 
-@login_required
+
 def handle_uploaded_file(file, path):
     with open(path, 'wb+') as destination:
         for chunk in file.chunks():
@@ -592,72 +679,77 @@ def edit_tab(request):
 
 @login_required
 def modify_points_file(request,id):
-    if request.method == "GET":
-        project = Project.objects.get(id=id)
-        sheets = project.sheet.all()
-        sheet_id = request.GET.get("sheet")
-        licenses = License.objects.filter(sheet__in =sheets)
-        sv = False
-        if sheet_id:
-            sheet = Sheet.objects.filter(id=sheet_id).first()
-            points = Points.objects.filter(sheet = sheet).all()
-            if sheet.name == "Supervisor":
-                sv=True 
-        else:
-            sheet = sheets[0]
-            points = Points.objects.filter(sheet = sheet).all()
-        
-        return render(request,"modifypoint.html",{'sheets':sheets, 
-                                                  'points':points, 
-                                                  'addcontroller':AddController(), 
-                                                  'addlicense':AddLicense(), 
-                                                  'sheet_id':sheet.id,
-                                                  'project':project,
-                                                  'licenses':licenses,
-                                                  'sv':sv
-                                                  }
-                                                
-                                                  )
-    else:
-        def is_controller(string):
-            for l in string:
-                if l == "C":
-                    return True 
-            return False
-            
-        sheet = Sheet.objects.filter(id=request.POST.get("sheet_id")).first()
-        try:
-            request_license = request.POST["license"]
-        except:
-            request_license = None
-        if not request_license:
-            controller = Product.objects.filter(id=request.POST["controller"]).first()
-            
-            if not  controller.point == None:
-                points = controller.point.split("-")
-                sort_points = sort_list_point(points)
-
-                Points.objects.create(name = controller.model,
-                                    is_controller = is_controller(controller.code),
-                                    eu=sort_points[0],
-                                    ed=sort_points[1],
-                                    sa=sort_points[2],
-                                    sd=sort_points[3],
-                                    sc=sort_points[4],
-                                    sheet = sheet
-                                    )
+    try:
+        if request.method == "GET":
+            project = Project.objects.get(id=id)
+            sheets = project.sheet.all()
+            sheet_id = request.GET.get("sheet")
+            licenses = License.objects.filter(sheet__in =sheets)
+            sv = False
+            if sheet_id:
+                sheet = Sheet.objects.filter(id=sheet_id).first()
+                points = Points.objects.filter(sheet = sheet).all()
+                if sheet.name == "Supervisor":
+                    sv=True 
             else:
-                Points.objects.create(name = controller.model,
-                                    is_controller = is_controller(controller.code),
-                                    sheet = sheet
-                                    )
-
+                sheet = sheets[0]
+                points = Points.objects.filter(sheet = sheet).all()
+            
+            return render(request,"modifypoint.html",{'sheets':sheets, 
+                                                    'points':points, 
+                                                    'addcontroller':AddController(), 
+                                                    'addlicense':AddLicense(), 
+                                                    'sheet_id':sheet.id,
+                                                    'project':project,
+                                                    'licenses':licenses,
+                                                    'sv':sv
+                                                    }
+                                                    
+                                                    )
         else:
-            # print(request.POST["license"])
-            license = Product.objects.filter(id=request.POST["license"]).first()
-            License.objects.create(ref=license.model,description=license.description, sheet=sheet)
+            def is_controller(string):
+                for l in string:
+                    if l == "C":
+                        return True 
+                return False
+                
+            sheet = Sheet.objects.filter(id=request.POST.get("sheet_id")).first()
+            try:
+                request_license = request.POST["license"]
+            except:
+                request_license = None
+            if not request_license:
+                controller = Product.objects.filter(id=request.POST["controller"]).first()
+                
+                if not  controller.point == None:
+                    points = controller.point.split("-")
+                    sort_points = sort_list_point(points)
 
-        return redirect(f"/modifypoints/{id}?sheet={sheet.id}")
+                    Points.objects.create(name = controller.model,
+                                        is_controller = is_controller(controller.code),
+                                        eu=sort_points[0],
+                                        ed=sort_points[1],
+                                        sa=sort_points[2],
+                                        sd=sort_points[3],
+                                        sc=sort_points[4],
+                                        sheet = sheet
+                                        )
+                else:
+                    Points.objects.create(name = controller.model,
+                                        is_controller = is_controller(controller.code),
+                                        sheet = sheet
+                                        )
+
+            else:
+                # print(request.POST["license"])
+                license = Product.objects.filter(id=request.POST["license"]).first()
+                License.objects.create(name=license.model,description=license.description, sheet=sheet)
+
+            return redirect(f"/modifypoints/{id}?sheet={sheet.id}")
+    except:
+        messages.error(request,"¡Ha ocurrido un error para generar la información!, asegurese de haber descargado el archivo de puntos previamente. si el problema persiste contacte a la empresa.")
+        return redirect('/')
+
 
 def delete_controller(request, id):
     controller = Points.objects.filter(id=id).first()
@@ -692,33 +784,100 @@ def delete_license(request, id):
 
 @login_required
 def download_offer(request,id):
-    project =Project.objects.get(id=id)
-    workbook = openpyxl.Workbook()
-    # # sheet = workbook.active
-    # # sheet.title = 'TAB01'
 
-    sheet_to_delete = workbook.active
-    workbook.remove(sheet_to_delete)
+    try:
+        project =Project.objects.get(id=id)
+        workbook = openpyxl.Workbook()
+        # # sheet = workbook.active
+        # # sheet.title = 'TAB01'
 
-    sheet = workbook.create_sheet(title="Oferta")
-    sheet_notes = workbook.create_sheet(title="NOTAS Y ACLARACIONES")
+        sheet_to_delete = workbook.active
+        workbook.remove(sheet_to_delete)
 
-    print_offer(sheet,project)
-    print_notes(sheet_notes,project)
-    # path = os.path.join(settings.BASE_DIR, 'tsinc','static', 'points','Points.xlsx')
-    # workbook.save(path)
+        sheet = workbook.create_sheet(title="Oferta")
+        sheet_notes = workbook.create_sheet(title="NOTAS Y ACLARACIONES")
 
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=Oferta.xlsx'
+        print_offer(sheet,project)
+        print_notes(sheet_notes,project)
+        # path = os.path.join(settings.BASE_DIR, 'tsinc','static', 'points','Points.xlsx')
+        # workbook.save(path)
 
-    workbook.save(response)
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=Oferta.xlsx'
 
-    # return redirect('/')
-    return response
+        workbook.save(response)
+
+        return response
+    except:
+        messages.error(request,"¡Ha ocurrido un error al momento de generar el archivo!, asegurese de haber creado tableros, paginas y equipos en la dashboard. si el problema persiste contacte a la empresa.")
+        return redirect('/')
 
 
+
+@login_required
+def edit_page(request):
+    id = int(request.GET.get('id'))
+    page = get_object_or_404(Dasboard,id=id)
+    if request.method == 'POST':
+        page_name = request.POST.get('page_name')
+        page.name = page_name
+        page.save()
+        messages.success(request,f"Cambios realizados correctamente a {page.name}")
+        return redirect(f'/editpage/?id={page.id}')
     
+    return render(request,'editpage.html',{'page':page})
 
+@login_required
+def edit_project(request):
+    id = int(request.GET.get('id'))
+    project = get_object_or_404(Project,id=id)
+    if request.method == 'POST':
+        project_name = request.POST.get('project_name')
+        company_name = request.POST.get('company_name')
+        nit = request.POST.get('nit')
+        project.name = project_name
+        project.company_name = company_name
+        project.nit = nit
+        project.save()
+        messages.success(request,f"Cambios realizados correctamente")
+        return redirect(f'/editproject/?id={project.id}')
+    
+    return render(request,'editproject.html',{'project':project})
 
+@login_required
+def delete_product(request, id):
+    product = Product.objects.filter(id=id).first()
+    product.delete()
+    return redirect(f"/product/")
 
+@login_required
+def edit_product(request):
+    id = int(request.GET.get('id'))
+    product = get_object_or_404(Product,id=id)
+    if request.method == 'POST':
+        code = request.POST.get('code')
+        product_name = request.POST.get('product_name')
+        factory_ref = request.POST.get('factory_ref')
+        model = request.POST.get('model')
+        sale_price = request.POST.get('sale_price')
+        brand = request.POST.get('brand')
+        location = request.POST.get('location')
+        quantity = request.POST.get('quantity')
+        point = request.POST.get('point')
+        description = request.POST.get('description')
+        product.code = code
+        product.product_name = product_name
+        product.factory_ref = factory_ref
+        product.model = model
+        product.sale_price = sale_price
+        product.brand = brand
+        product.location = location
+        product.quantity = quantity
+        product.point = point
+        product.description = description
+        product.save()
+        messages.success(request,f"Cambios realizados correctamente")
+        return redirect(f'/editproduct/?id={product.id}')
+    
+    return render(request,'editproduct.html',{'product':product})
 

@@ -7,8 +7,8 @@ from django.core.validators import MaxLengthValidator
 class Project(models.Model):
     name = models.CharField(max_length=200, default=None)
     company_name = models.CharField(max_length=200, default=None)
+    nit = models.CharField(max_length=200,null=True)
     asesor = models.CharField(max_length=200, default=None)
-    controller = models.CharField(max_length=100, null=True, blank=True)
     verified = models.BooleanField(default=False)
     progress = models.IntegerField(default=0)
     date = models.DateField(default=datetime.date.today)
@@ -36,7 +36,7 @@ class Product(models.Model):
     location = models.CharField(max_length=200, default=None)
     quantity = models.IntegerField()
     point = models.CharField(max_length=100,null=True,blank=True)
-    description = models.CharField(max_length=200,null=True,blank=True)
+    description = models.TextField(validators=[MaxLengthValidator(500)], null=True) 
     iva = models.BooleanField(default=False)
     date = models.DateField(default=datetime.date.today)
     def __str__(self):
@@ -141,12 +141,6 @@ class License(models.Model):
     def __str__(self):
         return self.ref
 
-class Badge(models.Model):
-    name = models.CharField(max_length=100,default=None)
-    rate = models.FloatField(default=0)
-    def __str__(self):
-        return self.name
-
 
 class Divice(models.Model):
     tag = models.CharField(max_length=100, default=None, null=True) 
@@ -162,10 +156,15 @@ class Total_points(models.Model):
     total = models.IntegerField(default=0)
     project = models.ForeignKey(Project,on_delete=models.CASCADE)
 
-class note(models.Model):
+class Note(models.Model):
     tag = models.CharField(max_length=200)
     description = models.TextField(validators=[MaxLengthValidator(5000)]) 
     def __str__(self):
         return self.tag
     
+
+class OfferCode(models.Model):
+    code = models.CharField(max_length=100)
+    def __str__(self):
+        return self.code
     

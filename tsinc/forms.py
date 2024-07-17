@@ -7,10 +7,11 @@ from django.db.models import Q
 class CreateProject(forms.Form):
     name = forms.CharField(label="Nombre del proyecto", max_length=200)
     company_name = forms.CharField(label="Nombre de la empresa",max_length=200)
+    nit = forms.CharField(label="NIT",max_length=200)
     OPCIONES_CHOICES = [
         ('Roberto Bravo', 'Roberto Bravo'),
-        ('Andres Montoya', 'Andres Montoya'),
-        ('Julian Alvarado', 'Julian Alvarado'),
+        ('Edwin Serrano', 'Edwin Serrano'),
+        ('Angela Ramirez', 'Angela Ramirez'),
     ]
     asesor = forms.ChoiceField(label="Asesor",choices=OPCIONES_CHOICES)
   
@@ -28,6 +29,7 @@ class CreateProduct(forms.Form):
 
 class UploadProducts(forms.Form):
     file = forms.FileField()
+    original = forms.BooleanField(required=False)
 
 class CreateTab(forms.Form):
     tab_name = forms.CharField(label="Nombre del tablero", max_length=200)
@@ -49,7 +51,7 @@ class CreateTab(forms.Form):
     
 
 class CreatePage(forms.Form):
-    name = forms.CharField(label="Nombre de pagina", max_length=100)
+    name = forms.CharField(label="Nombre de página", max_length=100)
 
 class SearchForm(forms.Form):
     search = forms.CharField(label='Buscar', max_length=100)

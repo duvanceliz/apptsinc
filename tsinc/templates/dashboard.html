@@ -5,7 +5,7 @@
 
   <div class="row mb-4 ">
   
-  <div class="col-2">
+  <div class="col-md-2">
     
       <span class="fs-6 fw_light">
        {{tab.project.name}} -
@@ -21,37 +21,37 @@
  
   
    
-    <div class="col-8 d-flex justify-content-center gap-2 p-2">
+    <div class="col-md-8 d-flex justify-content-center gap-2 p-2">
 
       <input id="dashboard_id" type="text" value="{{dashboard.id}}" hidden >
       <form action="" id="form">
         {% csrf_token %}
-        <button id="save" class="btn btn-success btn-sm" type="submit" disabled>
+        <button id="save"  class="btn btn-success btn-sm" type="submit" disabled data-bs-toggle="tooltip" data-bs-placement="top" title="Guardar">
           <i class="bi bi-floppy"></i>
         </button>
       </form>
       
       <form action="" id="form2">
         {% csrf_token %}
-        <button id="delete" type="submit" class="btn btn-danger btn-sm" disabled><i class="bi bi-trash"></i> </button>
+        <button id="delete" type="submit" class="btn btn-danger btn-sm" disabled data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar"><i class="bi bi-trash"></i> </button>
       </form>
-      <button id="clone" class="btn btn-primary btn-sm" disabled><i class="bi bi-copy"></i></button>
+      <button id="clone" class="btn btn-primary btn-sm" disabled data-bs-toggle="tooltip" data-bs-placement="top" title="Clonar elemento"><i class="bi bi-copy"></i></button>
       
-       <button id="btnlabel" class="btn btn-primary btn-sm"><i class="bi bi-bookmark-plus"></i></button>
-       <button id="btnInventory" type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+       <button id="btnlabel" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Crear una etiqueta"><i class="bi bi-bookmark-plus"></i></button>
+       <button id="btnInventory" type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-toggle="tooltip" data-bs-placement="top" title="Inventario">
         <i class="bi bi-search"></i>
       </button>
-      <button id="on" class="btn btn-primary btn-sm " disabled><i class="bi bi-box-arrow-in-up"></i></button>
-       <button id="under" class="btn btn-primary btn-sm" disabled><i class="bi bi-box-arrow-in-down"></i></button>
-       <button id="btntotal" class="btn btn-warning btn-sm"><i class="bi bi-cart"></i></button>
-       <button class="btn btn-success btn-sm" id="btngroup"><i class="bi bi-link"></i></button>
+      <button id="on" class="btn btn-primary btn-sm " disabled data-bs-toggle="tooltip" data-bs-placement="top" title="Posicionar elemento por encima"><i class="bi bi-box-arrow-in-up"></i></button>
+       <button id="under" class="btn btn-primary btn-sm" disabled data-bs-toggle="tooltip" data-bs-placement="top" title="Posicionar elemento por debajo"><i class="bi bi-box-arrow-in-down"></i></button>
+       <button id="btntotal" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Resumen de productos en la dashboard"><i class="bi bi-cart"></i></button>
+       <button class="btn btn-success btn-sm" id="btngroup" data-bs-toggle="tooltip" data-bs-placement="top" title="Agrupar elementos"><i class="bi bi-link"></i></button>
        <!-- <button onclick="printDropzoneContent()">Imprimir</button> -->
   
       {% include 'components/dashboardModal.html' %}
     </div>
 
 
-    <div class="col-2 d-flex justify-content-center gap-4 p-2">
+    <div class="col-md-2 d-flex justify-content-center gap-4 p-2">
        <a href="{% url 'home' %}" class="btn btn-primary btn-sm">Inicio</a>
        <a href="{% url 'create_page' tab.id %}" class="btn btn-primary btn-sm">Volver</a>
     </div>
@@ -62,8 +62,8 @@
 
    <div class="row">
 
-     <div class="col-3"></div>
-     <div class="col-7">
+     <div class="col-md-2"></div>
+     <div class="col-md-8">
       <input id="dashboard-id" type="text" value="{{dashboard.id}}" hidden>
       <div id="notification-box">
         <div id="alert" hidden >
@@ -73,7 +73,7 @@
   
         </div>
      </div>
-     <div class="col-1"></div>
+     <div class="col-md-2"></div>
   
      </div>
 

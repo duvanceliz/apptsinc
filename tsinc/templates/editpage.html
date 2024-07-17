@@ -1,0 +1,62 @@
+
+{% extends 'layout.html' %} {% block body %} {% load static %}
+
+<div class="container">
+    <div class="row">
+       
+        <div class="col-4"></div>
+        <div class="col-4">
+             <div class="card">
+                <div class="card-header text-center">
+                    EDITAR PÁGINA
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+          
+                        {% for message in messages %}
+
+                            {% if message.tags == 'success' %}
+                            <div class="alert alert-success" role="alert">
+                            {{ message }}
+                            </div>
+                            {% endif %}
+
+                            {% if message.tags == 'info' %}
+                            <div class="alert alert-warning" role="alert">
+                            {{ message }}
+                            </div>
+                            {% endif %}
+                            {% if message.tags == 'error' %}
+                            <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                            </div>
+                            {% endif %}
+
+                        {% endfor %}
+                    
+                    
+                    {% endif %}
+                     <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                          <label for="exampleFormControlInput1" class="form-label">NOMBRE DE PÁGINA</label>
+                          <input type="text" class="form-control" id="exampleFormControlInput1" value="{{page.name}}" name="page_name">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+
+                     </form>
+                    
+                </div>
+             </div>
+
+        </div>
+        <div class="col-4">
+            <a href="/createpage/{{page.tab.id}}" class=" btn btn-primary btn-sm">Volver</a>
+        </div>
+           
+         
+    </div>
+</div>
+<!-- <script src="{% static 'js/getInput.js' %}"></script> -->
+
+{% endblock %}

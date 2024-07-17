@@ -6,20 +6,46 @@
 <div class="container">
   <div class="row mb-2">
 
-     <div class="col-2"></div>
-    <div class="col-10"><a class="btn btn-primary" href="{% url 'create_project' %}"> Nuevo Proyecto</a></div>
+     <div class="col-md-2"></div>
+    <div class="col-md-10"><a class="btn btn-primary" href="{% url 'create_project' %}"> Nuevo Proyecto</a></div>
     
   
   </div>
   <div class="row">
-    <div class="col-2">
+    <div class="col-md-2 mb-2">
      
       {% include 'components/sidebar.html' %}
 
     </div>
     
-    <div class="col-10">
+    <div class="col-md-10">
+      {% if messages %}
+          
+      {% for message in messages %}
 
+          {% if message.tags == 'success' %}
+          <div class="alert alert-success" role="alert">
+          {{ message }}
+          </div>
+          {% endif %}
+
+          {% if message.tags == 'info' %}
+          <div class="alert alert-warning" role="alert">
+          {{ message }}
+          </div>
+          {% endif %}
+          {% if message.tags == 'error' %}
+          <div class="alert alert-danger" role="alert">
+          {{ message }}
+          </div>
+          {% endif %}
+
+      {% endfor %}
+  
+  
+  {% endif %}
+      
+     <div class="table-responsive">
       <table class="table table-hover table-light">
         <thead>
           
@@ -81,13 +107,15 @@
               {{project.date}}
             </td>
             <td>
-              <a class="btn btn-primary btn-sm" href="{% url 'tabs' project.id %}"> <i class="bi bi-box-arrow-right"></i></a>
+              <a class="btn btn-primary btn-sm" href="{% url 'tabs' project.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Entrar a los Tableros"> <i class="bi bi-box-arrow-right"></i></a>
               
-              <a href="{% url 'download_points' project.id %}" class="btn btn-primary btn-sm"><i class="bi bi-arrow-down-circle"></i></a>
-              <a href="{% url 'download_offer' project.id %}" class="btn btn-primary btn-sm"><i class="bi bi-cart-check"></i></a>
-              <a href="{% url 'modify_points' project.id %}" class="btn btn-success btn-sm"><i class="bi bi-exposure"></i></a>
-              <button class="btn btn-success btn-sm"><i class="bi bi-pencil-square"></i></button>
-              <a class="btn btn-danger btn-sm" href="{% url 'delete_obj' project.id %}" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
+              <a href="{% url 'download_points' project.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar archivo de Puntos"><i class="bi bi-arrow-down-circle"></i></a>
+           
+              
+              <a href="{% url 'download_offer' project.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar archivo de Oferta"><i class="bi bi-cart-check"></i></a>
+              <a href="{% url 'modify_points' project.id %}" class="btn btn-success btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Modificar los Controladores, Expansiones, Supervisores"><i class="bi bi-exposure"></i></a>
+              <a class="btn btn-success btn-sm" href="/editproject/?id={{project.id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Cambiar información de proyecto"><i class="bi bi-pencil-square"></i></a>
+              <a class="btn btn-danger btn-sm" href="{% url 'delete_obj' project.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar el proyecto" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
             </td>
           </tr>
 
@@ -96,7 +124,7 @@
           {%endfor%}
         </tbody>
       </table>
-    
+    </div>
       <div class="pagination">
         <span class="step-links">
             {% if page_obj.has_previous %}

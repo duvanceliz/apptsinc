@@ -29,4 +29,8 @@ urlpatterns = [
     path('modifysuper/<int:id>', views.modify_supervisor, name='modify_super'),
     path('deletelicense/<int:id>', views.delete_license, name='delete_license'),
     path('downloadoffer/<int:id>', views.download_offer, name='download_offer'),
+    path('editpage/', views.edit_page, name='edit_page'),
+    path('editproject/', views.edit_project, name='edit_project'),
+    path('deleteproduct/<int:id>', views.delete_product, name='delete_product'),
+     path('editproduct/', views.edit_product, name='edit_product'),
 ]

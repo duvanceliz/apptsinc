@@ -14,7 +14,7 @@ function verificar() {
 
 function confirm_delete_folder() {
 
-    let resultado = window.confirm('Estas seguro de borrar la carpeta, esta accción eliminará todo los archivos que contenga');
+    let resultado = window.confirm('Estás seguro de borrar la carpeta?, esta accción eliminará todo los archivos que contenga');
     if (resultado === true) {
         return true
     } else {
@@ -25,7 +25,7 @@ function confirm_delete_folder() {
 
 function confirm_delete_file() {
 
-    let resultado = window.confirm('Estas seguro de borrar el archivo?');
+    let resultado = window.confirm('¿Estás seguro de borrar el proyecto?');
     if (resultado === true) {
         return true
     } else {

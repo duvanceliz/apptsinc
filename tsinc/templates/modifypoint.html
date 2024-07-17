@@ -10,7 +10,9 @@
         </div>
         <div class="col-6">
           {% include 'components/addcontroller.html' %}
-          <a class="btn btn-success btn-sm" href="{% url 'download_point_excel' project.id %}">Descargar Excel</a>
+          <a class="btn btn-success btn-sm" href="{% url 'download_point_excel' project.id %}">Descargar Puntos</a>
+          <a href="{% url 'download_offer' project.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar archivo de Oferta">Descargar Oferta</a>
+
         </div>
         <div class="col-4"></div>
 

@@ -15,7 +15,7 @@
 
 
     <div class="row">      
-        <div class="col-3">
+        <div class="col-md-3 mb-2">
           <div class="card">
 
             <div class="card-header text-white" style="background: #005bc5;">
@@ -35,8 +35,8 @@
           </div>
 
         </div>
-      <div class="col-6">
-  
+      <div class="col-md-6">
+        <div class="table-responsive">
         <table class="table table-hover table-light">
           <thead>
             
@@ -64,9 +64,9 @@
 
               <td>{{tab.controller}}</td>
               <td>
-                <a class="btn btn-primary btn-sm" href="{% url 'create_page' tab.id %}"> <i class="bi bi-box-arrow-right"></i></a>
-                <a class="btn btn-success btn-sm"  href="/edittab/?id={{tab.id}}"><i class="bi bi-pencil-square"></i></a>
-                <a class="btn btn-danger btn-sm" href="{% url 'delete_tab' tab.id %}" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
+                <a class="btn btn-primary btn-sm" href="{% url 'create_page' tab.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Entrar a las página"> <i class="bi bi-box-arrow-right"></i></a>
+                <a class="btn btn-success btn-sm"  href="/edittab/?id={{tab.id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar parametros del tablero"><i class="bi bi-pencil-square"></i></a>
+                <a class="btn btn-danger btn-sm" href="{% url 'delete_tab' tab.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borra el tablero" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
               </td>
             </tr>
   
@@ -76,7 +76,8 @@
           </tbody>
         </table>
       </div>
-      <div class="col-3">
+      </div>
+      <div class="col-md-3">
         <a href="{% url 'home'  %}" class=" btn btn-primary btn-sm">Volver</a>
       </div>
       

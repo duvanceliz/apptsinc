@@ -69,29 +69,33 @@ pp = new Array(5).fill(0);
 
 const t_point_i = total_point_i[0];
 
+
+console.log(t_point_i)
+
 let result = 0,
   result2 = 0,
   result3 = 0;
 
 for (let i = 1; i < 4; i++) {
-  if (t_point_i[i] === 0) {
-    pp[i] = 0;
-    pp[i - 1] = t_point_i[i - 1];
-  } else if (pd[i] >= t_point_i[i]) {
-    pp[i] = t_point_i[i];
-  } else {
-    pp[i] = pd[i];
-    result = Math.abs(t_point_i[i] - pd[i]);
-    if (i === 1) {
-      pp[0] = t_point_i[0] + result;
-    } else if (i === 2) {
-      result2 = result;
-    } else if (i === 3) {
-      result3 = result + result2;
-      pp[i + 1] = result3;
-    }
+  let re = 0
+  if(t_point_i[i] > pd[i]){
+    pp[i] = pd[i]
+    re = t_point_i[i] - pd[i]
+  }else{
+    pp[i] = t_point_i[i]
   }
+  if(i===1){
+    result = re
+  }else if (i===2){
+    result2 = re
+  }else if (i===3){
+    result3 = re
+  } 
 }
+
+pp[0] = t_point_i[0] + result
+pp[4] = result2 + result3
+
 
 print_p(pp_array, pp);
 

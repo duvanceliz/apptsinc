@@ -1,0 +1,99 @@
+
+{% extends 'layout.html' %} {% block body %} {% load static %}
+
+<div class="container">
+    <div class="row">
+       
+        <div class="col-4"></div>
+        <div class="col-4">
+             <div class="card">
+                <div class="card-header text-center">
+                    EDITAR PRODUCTO
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+          
+                        {% for message in messages %}
+
+                            {% if message.tags == 'success' %}
+                            <div class="alert alert-success" role="alert">
+                            {{ message }}
+                            </div>
+                            {% endif %}
+
+                            {% if message.tags == 'info' %}
+                            <div class="alert alert-warning" role="alert">
+                            {{ message }}
+                            </div>
+                            {% endif %}
+                            {% if message.tags == 'error' %}
+                            <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                            </div>
+                            {% endif %}
+
+                        {% endfor %}
+                    
+                    
+                    {% endif %}
+                     <form method="post">
+                        {% csrf_token %}
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">CODE</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput1" value="{{product.code}}" name="code">
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput2" class="form-label">NOMBRE DEL PRODUCTO</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput2" value="{{product.product_name}}" name="product_name">
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput3" class="form-label">REFERENCIA DE FABRICA</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput3" value="{{product.factory_ref}}" name="factory_ref">
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput4" class="form-label">MODELO</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput4" value="{{product.model}}" name="model">
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput5" class="form-label">PRECIO DE VENTA</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput5" value="{{product.sale_price}}" name="sale_price">
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput6" class="form-label">MARCA</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput6" value="{{product.brand}}" name="brand">
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput7" class="form-label">UBICACIÓN</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput7" value="{{product.location}}" name="location">
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput7" class="form-label">CANTIDAD</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput7" value="{{product.quantity}}" name="quantity">
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput8" class="form-label">PUNTOS</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput8" value="{{product.point}}" name="point">
+                          </div>
+                          <div class="mb-3">
+                            <div class="form-floating">
+                              <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" style="height: 100px" name="description">{{product.description}}</textarea>
+                              <label for="floatingTextarea">DESCRIPCIÓN</label>
+                            </div>
+                          </div>
+                          <button type="submit" class="btn btn-primary">Guardar</button>
+                     </form>
+                    
+                </div>
+             </div>
+
+        </div>
+        <div class="col-4">
+            <a href="{% url 'product' %}" class=" btn btn-primary btn-sm">Volver</a>
+        </div>
+           
+         
+    </div>
+</div>
+<!-- <script src="{% static 'js/getInput.js' %}"></script> -->
+
+{% endblock %}
