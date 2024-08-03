@@ -5,9 +5,9 @@
     <div class="col-2"><a class="btn btn-primary" href="{% url 'create_product' %}">Nuevo Producto</a></div>
     <div class="col-2"><a class="btn btn-success" href="{% url 'uploadproducts' %}">Importar Tabla</a></div>
     <div class="col-2"><a class="btn btn-success" href="{% url 'download_products' %}">Exportar Tabla</a></div>
+    <div class="col-2"><a class="btn btn-primary" href="{% url 'product_statictics' %}">Ver Estadísticas</a></div>
 
-    
-    <div class="col-6">
+    <div class="col-4">
       <form id="form-search">
         <input id="input-search" type="text" name="search"/>
         <button id="btn-search" class="btn btn-primary m-2" type="submit">
@@ -20,6 +20,32 @@
       
       
       <div class="col-12">
+
+        {% if messages %}
+          
+        {% for message in messages %}
+  
+            {% if message.tags == 'success' %}
+            <div class="alert alert-success" role="alert">
+            {{ message }} <a href="{% url 'remission' %}">Ir a generar una remisón</a>
+            </div>
+            {% endif %}
+  
+            {% if message.tags == 'info' %}
+            <div class="alert alert-warning" role="alert">
+            {{ message }}
+            </div>
+            {% endif %}
+            {% if message.tags == 'error' %}
+            <div class="alert alert-danger" role="alert">
+            {{ message }}
+            </div>
+            {% endif %}
+  
+        {% endfor %}
+    
+    
+    {% endif %}
   
         <table class="table table-hover table-light">
           <thead>
@@ -30,13 +56,14 @@
               <th scope="col">Producto</th>
               <th scope="col">Modelo</th>
               <th scope="col">Marca</th>
-              <th scope="col">Ubicacion</th>
+           
               <th scope="col">Cantidad</th>
-              <th scope="col">Puntos</th>
-              <th scope="col">Descripción</th>
+              
+         
               <th scope="col">Precio</th>
-              <th scope="col">IVA</th>
+              <th scope="col">Bandera</th>
               <th scope="col"></th>
+              
             </tr>
           
           </thead>
@@ -53,39 +80,50 @@
               <td>
                 {{product.brand}}
               </td>
-              <td>
-                {{product.location}}
-              </td>
+            
               <td>
                 {{product.quantity}}
               </td>
-              <td>
-                {{product.point}}
-              </td>
-              <td>
-                {{product.description}}
-              </td>
+              
               <td>
                 {{product.sale_price}}
               </td>
-  
+
               <td>
-                {% if product.iva == False%}
-  
-                Iva no incluido
-      
-                {%else%}
-                Iva incluido
-      
+                {% for flag in flags %}
+                {% if flag.id == product.id %}
+                {% if flag.value >= 3 %}
+                <span class="bg-success">
+                  <i class="bi bi-flag"></i>
+                </span>
+                {% elif flag.value > 2  and flag.value < 3 %}
+                <span class="bg-warning">
+                  <i class="bi bi-flag"></i>
+                 
+                  </span>
+
+                {% elif flag.value >= 0  and flag.value < 2 %}
+                <span class="bg-danger">
+                  <i class="bi bi-flag"></i>
+                  </span>
                 {% endif %}
+                {% endif %}
+                {% endfor %}
+                
               </td>
+ 
               
               <td>
+                <a class="btn btn-primary btn-sm" href="{% url 'product_info' product.id  %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Entrar a los Tableros"> <i class="bi bi-box-arrow-right"></i></a>
+
                 <a class="btn btn-success btn-sm"   href="/editproduct/?id={{product.id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar parametros del tablero"><i class="bi bi-pencil-square"></i></a>
 
                 <a class="btn btn-danger btn-sm" href="{% url 'delete_product' product.id %}" onclick="return verificar()"> 
                   <i class="bi bi-trash"></i>
                 </a>
+
+                <a class="btn btn-success btn-sm"   href="{% url 'add_product_to_box' product.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar a la remisión"><i class="bi bi-plus-circle"></i></a>
+
               </td>
             </tr>
             {%endfor%}

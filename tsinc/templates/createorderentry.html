@@ -1,0 +1,131 @@
+
+{% extends 'layout.html' %} {% block body %} {% load static %}{% load humanize %}
+
+<div class="container">
+    <div class="row">
+       
+
+        <div class="col-4">
+             <div class="card">
+                <div class="card-header text-center">
+                    GENERAR UNA ENTRADA
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+          
+                        {% for message in messages %}
+
+                            {% if message.tags == 'success' %}
+                            <div class="alert alert-success" role="alert">
+                            {{ message }}
+                            </div>
+                            {% endif %}
+
+                            {% if message.tags == 'info' %}
+                            <div class="alert alert-warning" role="alert">
+                            {{ message }}
+                            </div>
+                            {% endif %}
+                            {% if message.tags == 'error' %}
+                            <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                            </div>
+                            {% endif %}
+
+                        {% endfor %}
+                    
+                    
+                    {% endif %}
+                     <form method="post">
+                        {% csrf_token %}
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Orden de compra</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput1" value="{{order.code}}" name="code">
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput2" class="form-label">Elige un produto</label>
+                            <select class="form-select" aria-label="Default select example" name="product_id">
+                                {% for product in orderproducts %}
+                                {% for info in info_per_product %}
+                                {% if product.id == info.id %}
+                                {% if info.leftover != 0 %}
+                                <option value="{{ product.id }}">{{ product.product.model }} -- Restante: {{info.leftover}}</option>
+                                {% else %}
+
+                                <option value="None">!Entraga Completada!</option>
+                            
+
+                                {% endif %}
+                                {% endif %}
+                                {% endfor %}
+                                {% endfor %}
+                    
+                              </select>
+                          </div>
+
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput3" class="form-label">Tracking</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput3" value="" name="tracking">
+                          </div> 
+                        
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput3" class="form-label">Cuantos llegaron?</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput3" value="" name="quantity">
+                          </div> 
+                          <button type="submit" class="btn btn-primary">Guardar</button>
+                     </form>
+                    
+                </div>
+             </div>
+
+        </div>
+        <div class="col-md-8">
+            <a href="{% url 'purcharse_order' %}" class=" btn btn-primary btn-sm">Volver</a>
+            <a href="{% url 'order_product_info' order.id %}" class=" btn btn-primary btn-sm">Ver Resumen</a>
+
+            <div class="table-responsive">
+                <table class="table table-hover table-light">
+                  <thead>
+                    
+                
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Generada por:</th>
+                      <th scope="col">Producto</th>
+                      <th scope="col">Orden de Compra</th>
+                      <th scope="col">Cantidad entregada</th>
+                      <th scope="col">Fecha</th>
+                      <th></th>
+      
+                    </tr>
+                  
+                  </thead>
+                  <tbody>
+                    <tr>
+                      {% for entry in orderentry %}
+          
+                      <th scope="row">{{entry.id}}</th>
+                      <td>{{entry.order.usersession}}</td>
+                      <td>{{entry.product.product.model}}</td>
+                      <td>{{entry.order.code}}</td>
+                      <td>{{entry.quantity}}</td>
+                      <td>{{entry.date|naturaltime}}</td>
+                      
+                      <td>
+                       
+                        <a class="btn btn-danger btn-sm" href="{% url 'delete_order_entry' entry.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
+                      </td>
+                    </tr>
+          
+                    {%endfor%}
+                  </tbody>
+                </table>
+              </div>
+        </div>
+           
+         
+    </div>
+</div>
+<!-- <script src="{% static 'js/getInput.js' %}"></script> -->
+
+{% endblock %}

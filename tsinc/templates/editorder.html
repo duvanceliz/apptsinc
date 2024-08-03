@@ -1,0 +1,139 @@
+
+{% extends 'layout.html' %} {% block body %} {% load static %}{% load humanize %}
+
+<div class="container">
+    <div class="row">
+       
+        
+        <div class="col-md-4">
+             <div class="card">
+                <div class="card-header text-center">
+                    EDITAR ORDEN DE COMPRA
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+          
+                        {% for message in messages %}
+
+                            {% if message.tags == 'success' %}
+                            <div class="alert alert-success" role="alert">
+                            {{ message }}
+                            </div>
+                            {% endif %}
+
+                            {% if message.tags == 'info' %}
+                            <div class="alert alert-warning" role="alert">
+                            {{ message }}
+                            </div>
+                            {% endif %}
+                            {% if message.tags == 'error' %}
+                            <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                            </div>
+                            {% endif %}
+
+                        {% endfor %}
+                    
+                    
+                    {% endif %}
+                     <form method="post">
+                        {% csrf_token %}
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">OP Code</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput1" value="{{order.code}}" name="code">
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput2" class="form-label">Proveedor/Contratista</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput2" value="{{order.supplier}}" name="supplier">
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput3" class="form-label">NIT</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput3" value="{{order.nit}}" name="nit">
+      
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput2" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput2" value="{{order.address}}" name="address">
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput2" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput2" value="{{order.phone}}" name="phone">
+                          </div>
+
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput2" class="form-label">Cliente</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput2" value="{{order.customer}}" name="customer">
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput2" class="form-label">Centro de costo</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput2" value="{{order.cost_center}}" name="cost_center">
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput2" class="form-label">Interventor</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput2" value="{{order.inspector}}" name="inspector">
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput2" class="form-label">Supervisor</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput2" value="{{order.supervisor}}" name="supervisor">
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput2" class="form-label">TRM</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput2" value="{{order.trm}}" name="trm">
+                          </div>
+    
+                          <button type="submit" class="btn btn-primary">Guardar</button>
+                     </form>
+                    
+                </div>
+             </div>
+
+        </div>
+        <div class="col-md-8">
+            <a href="{% url 'purcharse_order' %}" class=" btn btn-primary btn-sm">Volver</a>
+
+            <div class="table-responsive">
+                <table class="table table-hover table-light">
+                  <thead>
+                    
+                
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Nombre</th>
+                      <th scope="col">Modelo</th>
+                      <th scope="col">Cantidad</th>
+                      <th scope="col">Precio Unitario</th>
+                      <th scope="col">Description</th>
+                      <th></th>
+      
+                    </tr>
+                  
+                  </thead>
+                  <tbody>
+                    <tr>
+                      {% for product in orderproducts %}
+          
+                      <th scope="row">{{product.product.id}}</th>
+                      <td>{{product.product.product_name}}</td>
+                      <td>{{product.product.model}}</td>
+                      <td>{{product.quantity}}</td>
+                      <td>{{product.price|intcomma}}</td>
+                      <td>{{product.description}}</td>
+                      
+                      <td>
+                      
+                        <a class="btn btn-danger btn-sm" href="{% url 'delete_order_product' product.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
+                      </td>
+                    </tr>
+          
+                    {%endfor%}
+                  </tbody>
+                </table>
+              </div>
+        </div>
+           
+         
+    </div>
+</div>
+<!-- <script src="{% static 'js/getInput.js' %}"></script> -->
+
+{% endblock %}

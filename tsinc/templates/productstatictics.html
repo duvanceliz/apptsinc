@@ -1,0 +1,138 @@
+{% extends 'layout3.html' %} {% block body %}{% load humanize %}
+
+
+<div class="container">
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card" style="height: 16rem;">
+                <div class="card-body text-center p-4">
+
+                    <p class="fs-4 fw-bold m-0">
+                          TOTAL EN INVENTARIO
+                    </p>
+                    
+                    <p class="display-6">
+                          ${{total_inventory|intcomma}}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6"></div>
+    </div>
+
+   <div class="row mb-4">
+    <div class="col-md-6">
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+
+                <h5 class="fs-5">Productos por agotarse:</h5>
+                <a href="{% url 'purcharse_order' %}">--</a>
+            </div>
+            <div class="card-body">
+
+                <ul class="list-group d-flex justify-content-between">
+                    {% for prod_s in prod_out_stock %}
+
+                    <li class="list-group-item d-flex justify-content-between">
+                    <span class="fw-bold">Model:</span> {{prod_s.product.model}} 
+                    <span class="fw-bold">quantity:</span> {{prod_s.product.quantity}}
+                    
+                    <a href="{% url 'product_info' prod_s.product.id %}">Ver</a>
+                    </li>
+
+                    {% endfor %}
+
+                  </ul>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+
+                <h5 class="fs-5">Productos que mas rotaron:</h5>
+                <a href="{% url 'purcharse_order' %}">--</a>
+            </div>
+            <div class="card-body">
+
+                <ul class="list-group d-flex justify-content-between">
+                    {% for prod_r in prod_rotations %}
+
+                    <li class="list-group-item d-flex justify-content-between">
+                    <span class="fw-bold">Model:</span> {{prod_r.product.model}} 
+                    <span class="fw-bold">Rataciones:</span> {{prod_r.rotations}}  
+                    <a href="{% url 'product_info' prod_r.product.id %}">Ver</a>
+                    </li>
+
+                    {% endfor %}
+
+                  </ul>
+            </div>
+        </div>
+    </div>
+   </div>
+
+
+
+   <div class="row">
+    <div class="col-md-6">
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+
+                <h5 class="fs-5">Productos mas caros:</h5>
+                <a href="{% url 'purcharse_order' %}">--</a>
+            </div>
+            <div class="card-body">
+
+                <ul class="list-group d-flex justify-content-between">
+                    {% for prod in exp_prod %}
+
+                    <li class="list-group-item d-flex justify-content-between">
+                    <span class="fw-bold">Model:</span> {{prod.model}} 
+                    <span class="fw-bold">quantity:</span> {{prod.sale_price}}
+                    
+                    <a href="{% url 'product_info' prod.id %}">Ver</a>
+                    </li>
+
+                    {% endfor %}
+
+                  </ul>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+
+                <h5 class="fs-5">Productos mas baratos:</h5>
+                <a href="{% url 'purcharse_order' %}">--</a>
+            </div>
+            <div class="card-body">
+
+                <ul class="list-group d-flex justify-content-between">
+                    {% for prod in cheaper_prod %}
+
+                    <li class="list-group-item d-flex justify-content-between">
+                    <span class="fw-bold">Model:</span> {{prod.model}} 
+                    <span class="fw-bold">Precio:</span> {{prod.sale_price}}  
+                    <a href="{% url 'product_info' prod.id %}">Ver</a>
+                    </li>
+
+                    {% endfor %}
+
+                  </ul>
+            </div>
+        </div>
+    </div>
+   </div>
+    
+
+</div>
+
+
+{% endblock %}

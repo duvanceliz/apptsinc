@@ -1,0 +1,68 @@
+<div class="card">
+
+    <div class="card-body p-4 d-flex justify-content-evenly align-items-center">
+      {% if  order.trm == 0  %}
+      <span class="fs-6 ">Total(USD): </span>
+      <span class="fs-5 fw-light">{{total_info.t_price}}</span>
+      
+      <span class="fs-6 ">Entregado(USD): </span>
+      <span class="fs-5 fw-light">{{total_info.d_price}}</span>
+      {% if total_info.leftover != 0  %}
+       <span class="fs-6 ">Restante(USD):</span>
+       <span class="fs-5 fw-light bg-danger px-2 rounded text-light">${{total_info.r_price}}</span>
+      {% else %}
+
+      <span class="fs-6 ">Restante(USD):</span>
+       <span class="fs-5 fw-light bg-success px-2 rounded text-light">${{total_info.r_price}}</span>
+
+      {% endif %}
+
+
+      {% else %}
+
+      <span class="fs-6 ">Total(USD): </span>
+      <span class="fs-5 fw-light">{{total_info.t_price}}</span>
+      
+      <span class="fs-6 ">Entregado(USD): </span>
+      <span class="fs-5 fw-light">{{total_info.d_price}}</span>
+      {% if total_info.leftover != 0  %}
+       <span class="fs-6 ">Restante(USD):</span>
+       <span class="fs-5 fw-light bg-danger px-2 rounded text-light">${{total_info.r_price}}</span>
+      {% else %}
+
+      <span class="fs-6 ">Restante(USD):</span>
+       <span class="fs-5 fw-light bg-success px-2 rounded text-light">${{total_info.r_price}}</span>
+
+      {% endif %}
+      
+   
+
+
+      {% endif %}
+
+    </div>
+  </div>
+
+
+  <div class="col-md-6 text-center">
+    <div class="card">
+
+   <div class="card-body p-4 d-flex justify-content-evenly align-items-center">
+     
+    <span class="fs-6 fw-bold">Cantidad Total: </span>
+    <span class="fs-3 fw-light">{{total_info.t_quantity}}</span>
+    
+    <span class="fs-6 fw-bold">Entregado: </span>
+    <span class="fs-3 fw-light">{{total_info.arrived}}</span>
+    {% if total_info.leftover != 0  %}
+     <span class="fs-6 fw-bold">Restante:</span>
+     <span class="fs-3 fw-light bg-danger px-2 rounded text-light">{{total_info.leftover}}</span>
+     {% else %}
+     <span class="fs-6 fw-bold">Restante:</span>
+     <span class="fs-3 fw-light bg-success px-2 rounded text-light">{{total_info.leftover}}</span>
+    {% endif %}
+   </div>
+ 
+  
+</div>
+</div>

@@ -1,0 +1,109 @@
+
+{% extends 'layout.html' %} {% block body %} {% load humanize %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-4">
+      
+    </div>
+    <div class="col-md-4">
+      <form id="form-search">
+        <input id="input-search" type="text" name="search"/>
+        <button id="btn-search" class="btn btn-primary m-2" type="submit">
+          Buscar
+        </button>
+      </form>
+    </div>
+  </div>
+    <div class="row">
+   
+       <div class="col-md-12">
+        {% if messages %}
+          
+        {% for message in messages %}
+  
+            {% if message.tags == 'success' %}
+            <div class="alert alert-success" role="alert">
+            {{ message }} <a href="{% url 'remission' %}">Ir a generar una remisón</a>
+            </div>
+            {% endif %}
+  
+            {% if message.tags == 'info' %}
+            <div class="alert alert-warning" role="alert">
+            {{ message }}
+            </div>
+            {% endif %}
+            {% if message.tags == 'error' %}
+            <div class="alert alert-danger" role="alert">
+            {{ message }}
+            </div>
+            {% endif %}
+  
+        {% endfor %}
+    
+    
+    {% endif %}
+        <a href="{% url 'order_statictics' %}" class="btn btn-primary btn-sm mb-2"> Ver Estadísticas</a>
+        <div class="table-responsive">
+          <table class="table table-hover table-light">
+            <thead>
+              
+          
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Generada por:</th>
+                <th scope="col">OP Code</th>
+                <th scope="col">Proveedor</th>
+                <th scope="col">Fecha</th>
+                <th></th>
+                <th></th>
+              </tr>
+            
+            </thead>
+            <tbody>
+              <tr>
+                {% for order in orders %}
+    
+                <th scope="row">{{order.id}}</th>
+                <th>{{order.usersession}}</th>
+                <th>{{order.code}}</th>
+                <td>{{order.supplier}}</td>
+                <td>{{order.date|naturaltime}}</td>
+                <td>
+                  {% if order.progress == 100 %}
+                  <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{order.progress}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{order.progress}}%</div>
+                  </div>
+                  {% elif order.progress >= 50 and order.progress < 100 %}
+                  <div class="progress">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: {{order.progress}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{order.progress}}%</div>
+                  </div>
+                  {% else %}
+                  <div class="progress">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: {{order.progress}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{order.progress}}%</div>
+                  </div>
+                  {% endif %}
+                </td>
+                <td>
+                  <a class="btn btn-primary btn-sm" href="{% url 'order_product_info' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Productos"> <i class="bi bi-box-arrow-right"></i></a>
+                  <a href="{% url 'create_order_entry' order.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar archivo de Puntos"><i class="bi bi-envelope-arrow-up"></i></a>
+                  <a href="{% url 'download_order' order.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar archivo de Puntos"><i class="bi bi-arrow-down-circle"></i></a>
+                  <a class="btn btn-success btn-sm" href="{% url 'edit_order' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Cambiar información de remisión"><i class="bi bi-pencil-square"></i></a>
+                  <a class="btn btn-danger btn-sm" href="{% url 'delete_order' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
+                </td>
+              </tr>
+    
+              {%endfor%}
+            </tbody>
+          </table>
+        </div>
+       </div>
+
+      
+    </div>
+  </div>
+
+{% endblock %}

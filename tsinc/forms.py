@@ -5,15 +5,28 @@ from django.db.models import Q
 
 
 class CreateProject(forms.Form):
-    name = forms.CharField(label="Nombre del proyecto", max_length=200)
-    company_name = forms.CharField(label="Nombre de la empresa",max_length=200)
-    nit = forms.CharField(label="NIT",max_length=200)
+    name = forms.CharField(label="Nombre del proyecto", 
+                           max_length=200,
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
+                           
+                           )
+    company_name = forms.CharField(label="Nombre de la empresa",
+                                   max_length=200,
+                                   widget=forms.TextInput(attrs={'class': 'form-control'})
+                                   )
+    nit = forms.CharField(label="NIT",
+                          max_length=200,
+                          widget=forms.TextInput(attrs={'class': 'form-control'})
+                          )
     OPCIONES_CHOICES = [
         ('Roberto Bravo', 'Roberto Bravo'),
         ('Edwin Serrano', 'Edwin Serrano'),
         ('Angela Ramirez', 'Angela Ramirez'),
     ]
-    asesor = forms.ChoiceField(label="Asesor",choices=OPCIONES_CHOICES)
+    asesor = forms.ChoiceField(label="Asesor",
+                               choices=OPCIONES_CHOICES,
+                              widget=forms.Select(attrs={'class': 'form-select'})
+                               )
   
 
 class CreateProduct(forms.Form):
@@ -32,7 +45,11 @@ class UploadProducts(forms.Form):
     original = forms.BooleanField(required=False)
 
 class CreateTab(forms.Form):
-    tab_name = forms.CharField(label="Nombre del tablero", max_length=200)
+    tab_name = forms.CharField(label="Nombre del tablero", 
+                               max_length=200,
+                               widget=forms.TextInput(attrs={'class': 'form-control'})
+
+                               )
     OPCIONS_CHOICES_TAB = [
         (1, 'TABLERO CONTROLADOR'),
         (2, 'TABLERO SUPERVISOR'),
@@ -45,13 +62,23 @@ class CreateTab(forms.Form):
         
     ]
 
-    chest_type = forms.ChoiceField(label="Tipo de Tablero", choices=OPCIONS_CHOICES_TAB)
+    chest_type = forms.ChoiceField(label="Tipo de Tablero", 
+                                   choices=OPCIONS_CHOICES_TAB,
+                                     widget=forms.Select(attrs={'class': 'form-select'})
+                                   )
 
-    controller = forms.ChoiceField(label="Elige el fabricante", choices=OPCIONS_CHOICES_CONTROLLER)
+    controller = forms.ChoiceField(label="Elige el fabricante", 
+                                   choices=OPCIONS_CHOICES_CONTROLLER,
+                                     widget=forms.Select(attrs={'class': 'form-select'})
+                                   )
     
 
 class CreatePage(forms.Form):
-    name = forms.CharField(label="Nombre de página", max_length=100)
+    name = forms.CharField(label="Nombre de página", 
+                           max_length=100,
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
+
+                           )
 
 class SearchForm(forms.Form):
     search = forms.CharField(label='Buscar', max_length=100)
@@ -72,3 +99,77 @@ class AddController(forms.Form):
 
 class AddLicense(forms.Form):
     license = forms.ModelChoiceField(label="licencias",queryset=Product.objects.filter(product_name__icontains="LICENCIA"))
+
+class CreateRemission(forms.Form):
+    city = forms.CharField(label="Ciudad", 
+                           max_length=100,
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
+                           
+                           )
+    company = forms.CharField(label="Razon Social", 
+                              max_length=100,
+                              widget=forms.TextInput(attrs={'class': 'form-control'})
+                              )
+    nit = forms.CharField(label="NIT", 
+                          max_length=100,
+                          widget=forms.TextInput(attrs={'class': 'form-control'})
+                          )
+    location = forms.CharField(label="Lugar de entrega", 
+                               max_length=100,
+                               widget=forms.TextInput(attrs={'class': 'form-control'})
+                               )
+    project = forms.CharField(label="Obra",
+                               max_length=100,
+                                widget=forms.TextInput(attrs={'class': 'form-control'})
+                               )
+    responsible = forms.CharField(label="Ingeniero responsable", 
+                                  max_length=100,
+                                   widget=forms.TextInput(attrs={'class': 'form-control'})
+                                  
+                                  )
+
+class CreateOrder(forms.Form):
+
+    supplier = forms.CharField(label="Proveedor/contratista", 
+                           max_length=100,
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    nit = forms.CharField(label="NIT", 
+                           max_length=100,
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    address = forms.CharField(label="Dirección", 
+                           max_length=100,
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    phone = forms.CharField(label="Telefono", 
+                           max_length=100,
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    customer = forms.CharField(label="Cliente", 
+                           max_length=100,
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    cost_center = forms.CharField(label="Centro de costo", 
+                           max_length=100,
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    inspector = forms.CharField(label="Interventor", 
+                           max_length=100,
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    supervisor = forms.CharField(label="Supervisor", 
+                           max_length=100,
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    
+    trm = forms.FloatField(label="Cual es el TRM?", 
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    
+    
+
+
+
+
+

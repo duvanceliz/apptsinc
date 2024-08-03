@@ -1,0 +1,39 @@
+<a href="{% url 'clean_productbox' %}" class="btn btn-primary btn-sm mb-2">Limpiar carrito</a>
+        <a href="{% url 'product' %}" class="btn btn-primary btn-sm mb-2">Agregar productos</a>
+         <button class="btn btn-success btn-sm mb-2" id="btn-save">Guardar</button>
+        <div class="table-responsive">
+          <table class="table table-hover table-light">
+            <thead>
+              
+          
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Producto</th>
+                <th scope="col">Model</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Price(und)</th>
+                <th scope="col">Descripción</th>
+                <th></th>
+
+              </tr>
+            
+            </thead>
+            <tbody id="car">
+              <tr>
+                {% for product in productbox %}
+                 
+                <th scope="row">{{product.id}}</th>
+                <td>{{product.product.product_name}}</td>
+                <td>{{product.product.model}}</td>
+              
+                <td><input type="number" value="{{product.quantity}}" style="width: 100px;" id="quantity{{product.id}}"></td>
+                <td><input type="number" value="{{product.price}}" style="width: 100px;" id="price{{product.id}}"></td>
+                <td>{{product.product.description}}</td>
+                <td>
+                  <a href="{% url 'subtract_product' product.id %}" class="btn btn-danger bnt-sm"><i class="bi bi-trash"></i></a>
+                </td>
+              </tr>
+              {%endfor%}
+            </tbody>
+          </table>
+        </div>

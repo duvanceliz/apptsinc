@@ -1,0 +1,31 @@
+
+{% extends 'layout.html' %} {% block body %}
+
+<div class="container">
+
+ 
+ <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <ul class="list-group">
+               
+            <li class="list-group-item"><strong>Orden de Compra: </strong><a href="{% url 'order_product_info' entry.order.id %}">{{entry.order.code}}</a></li>
+            <li class="list-group-item"><strong>Tracking: </strong>{{entry.tracking}}</li>
+            <li class="list-group-item"><strong>Fecha de llegada: </strong>{{entry.date}}</li>
+            <li class="list-group-item"><strong>Nombre de Poducto: </strong>{{entry.product.product.product_name}}</li>
+            <li class="list-group-item"><strong>Poducto: </strong>{{entry.product.product.model}}</li>
+            <li class="list-group-item"><strong>Precio(und): </strong>{{entry.price}}</li>
+            <li class="list-group-item"><strong>Descripcion: </strong>{{entry.product.product.description}}</li>
+            <li class="list-group-item"><strong>Cantidad Entregada: </strong>{{entry.quantity}}</li>
+            
+         
+          </ul>
+    </div>
+    <div class="col-md-4"></div>
+ </div>
+ 
+    
+  </div>
+
+{% endblock %}
+

@@ -62,11 +62,11 @@
         <form method="post" enctype="multipart/form-data" class="d-flex flex-column p-4">
           {% csrf_token %}
           <label for="folder_name">Nombre de la carpeta:</label>
-          <input type="text" id="folder_name" name="folder_name" placeholder="Por ejemplo: ductos">
+          <input class="form-control" type="text" id="folder_name" name="folder_name" placeholder="Por ejemplo: ductos">
           <label for="tag">Etiqueta</label>
-          <input type="text" id="tag" name="tag" >
+          <input class="form-control" type="text" id="tag" name="tag" >
           <br><br>
-          <input type="file" name="files" multiple>
+          <input class="form-control" type="file" name="files" multiple>
           <br><br>
           <button type="submit" class="btn btn-primary">Subir</button>
       </form>

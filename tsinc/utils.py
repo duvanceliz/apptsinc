@@ -8,7 +8,9 @@ import openpyxl
 from collections import Counter
 import random
 from datetime import date
-
+from openpyxl.drawing.image import Image
+import os
+from django.conf import settings
 
 
 
@@ -1161,7 +1163,7 @@ def print_offer(sheet,project):
                    "NIT",
                    "Fecha"
                    ]
-    code = OfferCode.objects.first()
+    code = OfferCode.objects.filter(name = "offer").first()
     
     code_splited = code.code.split("-")
 
@@ -1592,11 +1594,403 @@ def print_notes(sheet,project):
     print_row(sheet,[notas_aclaraciones.description],89,3,config_style_titles2)
     sheet.merge_cells("C89:C110")
 
+def merge_col(sheet,col1,col2,start,end):
+    for i in range(start,end + 1):
+        sheet.merge_cells(f"{col1}{i}:{col2}{i}")
+    
+def print_remission(sheet,remission):
+    config_style_titles1 = {
+                'font': True,
+                'bold': True,
+                'font_color': "000000",
+                'border': True,
+                'alig': True,
+                'wrap': True,
+                'h':"center",
+                'v':"center", 
+                'fill': False,
+                'fill_color': "FFFFFF",
+            }
+    config_style_titles2 = {
+                'font': False,
+                'bold': True,
+                'font_color': "000000",
+                'border': True,
+                'alig': True,
+                'wrap': True,
+                'h':"center",
+                'v':"center", 
+                'fill': False,
+                'fill_color': "FFFFFF",
+            }
+    config_style_titles3 = {
+                'font': False,
+                'bold': True,
+                'font_color': "000000",
+                'border': False,
+                'alig': True,
+                'wrap': True,
+                'h':"center",
+                'v':"center", 
+                'fill': False,
+                'fill_color': "FFFFFF",
+            }
+    sheet.column_dimensions['I'].width = 20
+    sheet.column_dimensions['J'].width = 20
+    sheet.row_dimensions[1].height = 20
+    sheet.row_dimensions[2].height = 20
+    sheet.row_dimensions[3].height = 20
+    print_row(sheet,["REMISIÓN DE MATERIALES"],1,5,config_style_titles1)
+    sheet.merge_cells("E1:H3")
+    sheet.merge_cells("B1:D3")
+
+    print_row(sheet,["CODIGO","VERSIÓN","FECHA"],1,9,config_style_titles1)
+
+    print_row(sheet,["SGC-FO-004","VERSIÓN 02","01/11/2018"],1,10,config_style_titles1)
+    sheet.merge_cells("E1:H3")
+    title1 =[
+        "Ciudad",
+        "Razon Social",
+        "NIT",
+        "Lugar de entrega del material"
+    ]
+
+    title1_values =[
+        remission.city,
+        remission.company,
+        remission.nit,
+        remission.location
+    ]
+
+    title2 =[
+        "Remision No:",
+        "Proveedor:",
+        "Fecha",
+        "Pedido No:",
+        "Obra:",
+        "Ingeniero responsable de la obra:"
+    ]
+    title2_values =[
+        remission.number,
+        remission.company,
+        remission.date.strftime("%d-%m-%Y"),
+        remission.order_number,
+        remission.project,
+        remission.responsible
+    ]
+
+    title3 =[
+        "Cantidad Entregado",
+        "Referencia",
+        None,
+        "Descripción",
+        None,
+        None,
+        None,
+        None,
+        "Observación",
+    ]
+    print_row(sheet,title1,7,2,config_style_titles1)
+    
+    merge_col(sheet,"B","D",7,10)    
+    print_row(sheet,title1_values,7,5,config_style_titles1)
+    merge_col(sheet,"E","H",7,10) 
+    print_row(sheet,title2,5,9,config_style_titles1)
+    print_row(sheet,title2_values,5,10,config_style_titles2)
+    
+    print_column(sheet,title3,13,2,config_style_titles1)
+    sheet.merge_cells("C13:D13")
+    sheet.merge_cells("E13:I13")
+    
+    remission_product = ProductSent.objects.filter(remission = remission).all()
+    
+    for  i,product in enumerate(remission_product,start=14):
+        index_cell = sheet.cell(row=i, column=2, value=product.quantity)
+        cell_model = sheet.cell(row=i, column=3, value=product.product.model)
+        cell_description = sheet.cell(row=i, column=5, value=product.product.description)
+        cell_observation = sheet.cell(row=i, column=10, value=None)
+        style_cells([index_cell],config_style_titles1)
+        style_cells([cell_model,cell_description,cell_observation],config_style_titles2)      
+        sheet.merge_cells(f"E{i}:I{i}")
+        sheet.merge_cells(f"C{i}:D{i}")
+    
+    row1 = 13 + len(remission_product) + 4
+    sheet.merge_cells(f"C{row1}:D{row1}")
+    print_column(sheet,["Entrega","________________"],row1,2,config_style_titles3)
+    
+    print_column(sheet,["Aceptado","________________"],row1,9,config_style_titles3)
+    
+    sheet.column_dimensions['D'].width = 10
+    path = os.path.join(settings.BASE_DIR, 'tsinc','static', 'img','logo2.png')
+
+    logo = Image(path)
+    sheet.add_image(logo,"B1")
+
+
+def row_dimen_height(sheet,tam,start,end):
+        for i in range(start,end + 1):
+            sheet.row_dimensions[i].height = tam
+
+def print_order(sheet,order):
+    config_style_titles1 = {
+                'font': True,
+                'bold': True,
+                'font_color': "000000",
+                'border': True,
+                'alig': True,
+                'wrap': True,
+                'h':"center",
+                'v':"center", 
+                'fill': False,
+                'fill_color': "FFFFFF",
+            }
+    config_style_titles2 = {
+                'font': True,
+                'bold': True,
+                'font_color': "000000",
+                'border': True,
+                'alig': True,
+                'wrap': True,
+                'h':"center",
+                'v':"center", 
+                'fill': True,
+                'fill_color': "F1F1F1",
+            }
+    config_style_titles3 = {
+                'font': False,
+                'bold': True,
+                'font_color': "000000",
+                'border': True,
+                'alig': True,
+                'wrap': True,
+                'h':"center",
+                'v':"center", 
+                'fill': False,
+                'fill_color': "DAD7D7",
+            }
+    config_style_titles3 = {
+                'font': False,
+                'bold': True,
+                'font_color': "000000",
+                'border': True,
+                'alig': True,
+                'wrap': True,
+                'h':"left",
+                'v':"center", 
+                'fill': False,
+                'fill_color': "DAD7D7",
+            }
+    # sheet.column_dimensions['J'].width = 20
+    sheet.row_dimensions[1].height = 50
+    print_column(sheet,["ORDEN DE COMPRA Y/O SERVICIOS"],1,6,config_style_titles1)
+    sheet.merge_cells("F1:K1")
+    sheet.merge_cells("A1:E1")
+    title1 = [
+        "PROVEEDOR / CONTRATISTA",
+        "NIT/C.C.",
+        "DIRECCIÓN",
+        "TELEFONO",
+        "CLIENTE"
+    ]
+    title2 = [
+        "ORDEN DE COMPRA No.",
+        "FECHA",
+        "CENTRO DE COSTO",
+        "INTERVENTOR",
+        "SUPERVISOR"
+    ]
+
+    title3 = [
+        "ITEM",
+        "UNIDAD",
+        "DESCRIPCION",
+        None,
+        None,
+        None,
+        None,
+        "CANTIDAD",
+        None,
+        "V.UNITARIO",
+        None,
+        "V.TOTAL",
+        None
+    ]
+    title1_values = [
+        order.supplier,
+        order.nit,
+        order.address,
+        order.phone,
+        order.customer
+    ]
+    title2_values = [
+        order.code,
+        order.date.strftime("%d-%m-%Y"),
+        order.cost_center,
+        order.inspector,
+        order.supervisor
+    ]
+    print_row(sheet,title1,3,1,config_style_titles2)
+    merge_col(sheet,"A","E",2,8) 
+    print_row(sheet,title1_values,3,6,config_style_titles3)
+    merge_col(sheet,"F","H",3,7) 
+    print_row(sheet,title2,3,10,config_style_titles2)
+    merge_col(sheet,"J","K",3,7) 
+    print_row(sheet,title2_values,3,12,config_style_titles3)
+    merge_col(sheet,"L","M",3,7)
+    print_row(sheet,["SGC-F0-011"],1,12,config_style_titles1)
+    merge_col(sheet,"L","M",1,12)
+
+    sheet.merge_cells("C9:G9")
+    sheet.merge_cells("H9:I9")
+    sheet.merge_cells("J9:K9")
+    sheet.merge_cells("L9:M9")
+    print_column(sheet,title3,9,1,config_style_titles2)
+
+
+
+    order_product = OrderProduct.objects.filter(order = order).all()
+    
+    count = 0
+    subtotal_value = 0
+    for  i,product in enumerate(order_product,start=10):
+        count += 1
+        index_cell = sheet.cell(row=i, column=1, value=count)
+        cell_model = sheet.cell(row=i, column=3, value=product.product.model)
+        cell_quantity = sheet.cell(row=i, column=8, value=product.quantity)
+        cell_price = sheet.cell(row=i, column=10, value=product.price)
+        total_value = product.quantity * product.price
+        cell_total_value = sheet.cell(row=i, column=12, value=total_value)
+        subtotal_value += total_value
+        cell_unit = sheet.cell(row=i, column=2, value="UND")
+        # cell_description = sheet.cell(row=i, column=5, value=product.product.description)
+        # cell_observation = sheet.cell(row=i, column=10, value=None)
+        # style_cells([index_cell],config_style_titles1)
+        style_cells([index_cell,cell_model,cell_quantity,cell_price,cell_total_value,cell_unit],config_style_titles1)      
+        sheet.merge_cells(f"C{i}:G{i}")
+        sheet.merge_cells(f"H{i}:I{i}")
+        sheet.merge_cells(f"J{i}:K{i}")
+        sheet.merge_cells(f"L{i}:M{i}")
+    
+    row1 = 9 + len(order_product) + 1
+
+    print_column(sheet,["SUBTOTAL",None,subtotal_value],row1,10,config_style_titles2)
+    sheet.merge_cells(f"J{row1}:K{row1}")
+    sheet.merge_cells(f"L{row1}:M{row1}")
+
+    conditions = Note.objects.filter(tag="CONDICIONES OC").first()
+
+    print_row(sheet,[conditions.description],row1+1,1,config_style_titles3)
+
+    row2 = row1 + 25
+    sheet.merge_cells(f"A{row1+1}:M{row2}")
+
+    title4 = ["PÓLIZAS",
+              None,
+              None,
+              None,
+              None,
+              "SI",
+              "NO",
+              "CONDICIONES"]
+
+    poliza = ["Buen Manejo Anticipo",
+              "Cumplimiento y tiempo de entrega",
+              "Salarios y prestaciones sociales",
+              "Seguro de Responsabilidad Civil Extracontractual",
+              "Garantia, Calidad y Estabilidad de Obra"
+              ]
+    condiciones = [
+        "Por valor igual al 100% del monto del anticipo y una vigencia mínima a la duración del contrato y tres meses más",
+        "Por un valor asegurado equivalente al 30% del valor total del contrato IVA incluido, vuya vigencia será igual a la duración del Contrato y tres meses más",
+        "Por un valor asegurado equivalente al 30% del valor total del contrato IVA incluido, vuya vigencia será igual a la duración del Contrato y tres meses más",
+        "Por un valor asegurado equivalente al 30% del valor total del contrato IVA incluido, vuya vigencia será igual a la duración del Contrato y tres meses más",
+        "Por un valor asegurado equivalente al 30% del valor total del contrato IVA incluido, vuya vigencia será igual a un año más tres meses más"
+    ]
+    row3 = row2 + 1
+    print_column(sheet,title4, row3 ,1,config_style_titles2)
+    row4 = row3 + 1
+
+    print_row(sheet,poliza,row4,1,config_style_titles3)
+    print_row(sheet,condiciones,row4,8,config_style_titles3)
+    merge_col(sheet,"A","E",row3,row3 + len(poliza))
+    merge_col(sheet,"H","M",row3,row3 + len(poliza))
+
+    row_dimen_height(sheet,55,row4,row4 + len(poliza)-1)
+    row5 = row4 + len(poliza)
+    print_row(sheet,["CONDICIONES DE LA PRESENTE ORDEN DE COMPRA"],row5,1,config_style_titles2)
+    sheet.merge_cells(f"A{row5}:M{row5}")
+
+    order_conditions = ["Fecha Inicio Contrato - Orden:",
+                        "Fecha Final Contrato - Orden:",
+                        "Fecha de Cumplimiento y Entrega:",
+                        "Lugar de Entrega:",
+                        "Interventor Contrato T&S INC",
+                        "Bogotá D.C.",
+                        "Aplican Entregas Parciales:"
+                        ]
+    order_conditions_values = [None,
+                               None,
+                               None,
+                               None,
+                               None,
+                               None,
+                               "SI__ NO__ El proveedor podrá entregar entregas parciales"
+                        ]
+    row6 = row5 + 1
+    print_row(sheet,order_conditions,row6,1,config_style_titles3)
+    print_row(sheet,order_conditions_values,row6,7,config_style_titles3)
+    merge_col(sheet,"A","F",row6,row6 + len(order_conditions))
+    merge_col(sheet,"G","M",row6,row6 + len(order_conditions))
+
+    delivery_conditions = ["1. El proveedor debe cumplir con lo solicitado en la presente orden de compra",
+                           "2. Para dar cumplimiento a la forma de pago, el contratista deberá remitir adjunto a la factura, acta de entrega firmada de recibida a satisfacción por T&S INC.",
+                           "3. El Proveedor deberá anexar, el respectivo pago de parafiscales del personal que empleó para el desarrollo del objeto del contrato",
+                           "4. El Provedor sera responsable de suministrar todas las herramientas de trabajo requeridas para el ensamble de los tableros de control",
+                           "5. El Provedor sera responsable del pago de la seguridad social tanto de el como del personal que tenga a su cargo.",
+                           "6. El Provedor sera responsable de suministrar todos los elementos de seguridad (EPP) requeridos tanto por el como por el personal a su cargo para el ENSAMBLE DE LOS TABLEROS DE CONTROL"
+    ]
+    row7 = row6 + len(order_conditions)
+
+    print_row(sheet,delivery_conditions,row7,7,config_style_titles3)
+    merge_col(sheet,"G","M",row7,row7+len(delivery_conditions))
+    row_dimen_height(sheet,55,row7,row7+len(delivery_conditions)-1)
+
+    note = ["El incumplimiento por parte del proveedor- contratista de cualquiera de las obligaciones derivadas de la presente orden de compra, dara lugar a la imposicion de sancion penal pecunaria  a favor TECHNOLOGY AND SYSTEMS INDUSTRIES SAS por el valor de la presente orden  y la devolucion del anticipo si lo hubere y o la indemnizacion de los perjuicios que ocasione."]
+    row8 = row7+len(delivery_conditions) + 2
+    print_row(sheet,note,row8,1,config_style_titles3)
+    merge_col(sheet,"A","M",row8,row8)
+    row_dimen_height(sheet,55,row8,row8)
+
+    signature1 = [
+        "AUTORIZADO POR",
+    ]
+    signature2 = [
+        "CONTRATISTA",
+    ]
+
+    print_column(sheet,signature1,row8+3,1,config_style_titles3)
+    print_column(sheet,signature2,row8+3,8,config_style_titles3)
+    merge_col(sheet,"A","F",row8+3,row8+3)
+    merge_col(sheet,"H","M",row8+3,row8+3)
+    row_dimen_height(sheet,30,row8+3,row8+3)
+
+    path = os.path.join(settings.BASE_DIR, 'tsinc','static', 'img','logo2.png')
+
+    logo = Image(path)
+    sheet.add_image(logo,"A1")
+
+
+
     
 
 
 
 
+
+
+
+
+    
 
 
     

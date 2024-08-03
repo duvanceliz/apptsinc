@@ -1,0 +1,97 @@
+
+{% extends 'layout.html' %} {% block body %} {% load humanize%}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-4">
+      
+    </div>
+    <div class="col-md-4">
+      <form id="form-search">
+        <input id="input-search" type="text" name="search"/>
+        <button id="btn-search" class="btn btn-primary m-2" type="submit">
+          Buscar
+        </button>
+      </form>
+    </div>
+  </div>
+    <div class="row">
+   
+       <div class="col-md-12">
+
+        {% if messages %}
+          
+        {% for message in messages %}
+  
+            {% if message.tags == 'success' %}
+            <div class="alert alert-success" role="alert">
+            {{ message }} <a href="{% url 'remission' %}">Ir a generar una remisón</a>
+            </div>
+            {% endif %}
+  
+            {% if message.tags == 'info' %}
+            <div class="alert alert-warning" role="alert">
+            {{ message }}
+            </div>
+            {% endif %}
+            {% if message.tags == 'error' %}
+            <div class="alert alert-danger" role="alert">
+            {{ message }}
+            </div>
+            {% endif %}
+  
+        {% endfor %}
+    
+    
+    {% endif %}
+       
+        <div class="table-responsive">
+          <table class="table table-hover table-light">
+            <thead>
+              
+          
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Generada por:</th>
+                <th scope="col">Empresa</th>
+                <th scope="col">Ciudad</th>
+                <th scope="col">Proyecto/Obra</th>
+                <th scope="col">Fecha</th>
+                <th ></th>
+              </tr>
+            
+            </thead>
+            <tbody>
+              <tr>
+                {% for remission in remissions %}
+    
+                <th scope="row">{{remission.id}}</th>
+                <th>{{remission.usersession}}</th>
+                <th>{{remission.company}}</th>
+                <td>{{remission.city}}</td>
+                <td>{{remission.project}}</td>
+                <td>{{remission.date|naturaltime}}</td>
+                <td>
+                  <a class="btn btn-primary btn-sm" href="{% url 'product_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Productos"> <i class="bi bi-box-arrow-right"></i></a>
+                  <a href="{% url 'download_remission' remission.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar archivo de Puntos"><i class="bi bi-arrow-down-circle"></i></a>
+                    <a class="btn btn-success btn-sm" href="{% url 'edit_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Cambiar información de remisión"><i class="bi bi-pencil-square"></i></a>
+                    <a class="btn btn-danger btn-sm" href="{% url 'delete_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
+                </td>
+              </tr>
+    
+            
+                
+              {%endfor%}
+            </tbody>
+          </table>
+        </div>
+       </div>
+
+      
+    </div>
+  </div>
+
+{% endblock %}

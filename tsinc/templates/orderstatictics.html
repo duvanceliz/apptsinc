@@ -1,0 +1,203 @@
+{% extends 'layout3.html' %} {% block body %}{% load humanize %}
+
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-3">
+
+            <div class="card" style="height: 16rem;">
+                <div class="card-body text-center p-4">
+
+                    <p class="fs-4 fw-bold m-0">
+                          Total en Ordenes
+                    </p>
+                    <span>(Sin completar)</span>
+                    <p class="display-6">
+                          ${{total_info.total_orders|intcomma}}
+                    </p>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-3">
+
+            <div class="card" style="height: 16rem;">
+                <div class="card-body text-center p-4">
+
+                    <p class="fs-4 fw-bold">
+                          Total Entregado
+                    </p>
+                    <p class="display-6">
+                          ${{total_info.total_delivered|intcomma}}
+                    </p>
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-md-3">
+            
+            <div class="card" style="height: 16rem;" >
+                <div class="card-body text-center p-4">
+
+                    <p class="fs-4 fw-bold">
+                          Total Faltante
+                    </p>
+                    <p class="display-6">
+                          ${{total_info.total_remaining|intcomma}}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            
+            <div class="card" style="width: 16rem;">
+                <div class="card-body text-center p-4">
+
+                    <canvas id="myChart" width="100" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+
+                    <h5 class="fs-5">Ordenes Pendientes:</h5>
+                    <a href="{% url 'purcharse_order' %}"> Ver ordenes</a>
+                </div>
+                <div class="card-body">
+
+                    <ul class="list-group ">
+                        {% for order in pending_orders %}
+                     
+                        <li class="list-group-item">
+                       
+                          
+                            <span class="fw-bold">OPC:</span> {{order.order.code}} 
+                            <span class="fw-bold">Fecha:</span> {{order.ago|naturaltime}}
+                        
+                        
+                            {% if order.order.progress >= 75 %}
+                            <div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: {{order.order.progress}}%;" aria-valuenow="{{order.order.progress}}" aria-valuemin="0" aria-valuemax="100">{{order.order.progress}}%</div>
+                            </div>
+                            {% elif order.order.progress >= 50 and order.order.progress < 75 %}
+                            <div class="progress">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: {{order.order.progress}}%;" aria-valuenow="{{order.order.progress}}" aria-valuemin="0" aria-valuemax="100">{{order.order.progress}}%</div>
+                            </div>
+                            {% else %}
+                            <div class="progress">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: {{order.order.progress}}%;" aria-valuenow="{{order.order.progress}}" aria-valuemin="0" aria-valuemax="100">{{order.order.progress}}%</div>
+                            </div>
+                            {% endif %}
+                        <!-- <span class="fw-bold">Date:</span> {{order.order.date}}  -->
+                        <a href="{% url 'order_product_info' order.order.id %}">Ver</a>
+                        </li>
+                      
+                        {% endfor %}
+
+                      </ul>
+                </div>
+            </div>
+
+        </div>
+      
+        <div class="col-md-6">
+            <div class="card" >
+
+                <div class="card-header">
+                       <h5 class="fs-5">Entradas recientes:</h5>
+                </div>
+                <div class="card-body">
+                 
+                    <ul class="list-group">
+                        {% for entry in recent_entrys %}
+
+                        <li class="list-group-item d-flex justify-content-between">
+                       
+                        <span class="fw-bold">Producto:</span> {{entry.product.product.model}} 
+        
+                        <span class="fw-bold">#</span> {{entry.quantity}} 
+                        <span class="fw-bold">Date:</span> {{entry.date|naturaltime}} 
+                        <a href="{% url 'entry_info' entry.id %}">Ver</a>
+                        </li>
+
+                        {% endfor %}
+                      </ul>
+                </div>
+            </div>
+            
+        </div>
+       
+        </div>
+
+     <div class="row">
+        <div class="col-md-6">
+
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+
+                    <h5 class="fs-5">Ordenes recientes:</h5>
+                    <a href="{% url 'purcharse_order' %}"> Ver ordenes</a>
+                </div>
+                <div class="card-body">
+
+                    <ul class="list-group d-flex justify-content-between">
+                        {% for order in recent_orders %}
+
+                        <li class="list-group-item d-flex justify-content-between">
+                        <span class="fw-bold">OPC:</span> {{order.code}} 
+                        <span class="fw-bold">Date:</span> {{order.date|naturaltime}} 
+                        <a href="{% url 'order_product_info' order.id %}">Ver</a>
+                        </li>
+
+                        {% endfor %}
+
+                      </ul>
+                </div>
+            </div>
+
+        </div>
+      
+        <div class="col-md-6">
+            
+            
+        </div>
+       
+        </div>
+    </div>
+</div>
+
+{% load static %}
+<!-- <script src="{% static 'js/confirm.js' %}"></script> -->
+
+<script>
+const ctx = document.getElementById('myChart').getContext('2d');
+const data = {
+  labels: [
+    'Total Entregado',
+    'Total Faltante'
+  ],
+  datasets: [{
+    label: 'Entregado vs Restante',
+    data: [{{total_info.total_delivered}}, {{total_info.total_remaining}}],
+    backgroundColor: [
+      'rgb(54, 125, 61)',
+      'rgb(144, 12, 63)'
+    ],
+    hoverOffset: 4
+  }]
+};
+
+const config = {
+  type: 'doughnut',
+  data: data,
+};
+ 
+new Chart(ctx, config);
+</script>
+
+{% endblock %}

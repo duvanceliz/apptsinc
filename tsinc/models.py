@@ -3,6 +3,7 @@ import datetime
 from django.contrib.auth.models import User 
 import os
 from django.core.validators import MaxLengthValidator
+from django.utils import timezone
 
 class Project(models.Model):
     name = models.CharField(max_length=200, default=None)
@@ -36,7 +37,8 @@ class Product(models.Model):
     location = models.CharField(max_length=200, default=None)
     quantity = models.IntegerField()
     point = models.CharField(max_length=100,null=True,blank=True)
-    description = models.TextField(validators=[MaxLengthValidator(500)], null=True) 
+    description = models.TextField(validators=[MaxLengthValidator(500)], null=True)
+    min_stock = models.IntegerField(default=0)
     iva = models.BooleanField(default=False)
     date = models.DateField(default=datetime.date.today)
     def __str__(self):
@@ -164,7 +166,83 @@ class Note(models.Model):
     
 
 class OfferCode(models.Model):
+    name = models.CharField(max_length=100,null=True)
     code = models.CharField(max_length=100)
     def __str__(self):
         return self.code
+
+class Remission(models.Model):
+    number = models.CharField(max_length=200, null= True)
+    order_number = models.CharField(max_length=200, null= True)
+    city = models.CharField(max_length=200)
+    company = models.CharField(max_length=200)
+    nit = models.CharField(max_length=200)
+    location = models.CharField(max_length=200)
+    project = models.CharField(max_length=250)
+    responsible = models.CharField(max_length=200)
+    date = models.DateTimeField(default=timezone.now)
+    usersession = models.ForeignKey(User,on_delete=models.CASCADE)
+
+class ProductSent(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=0)
+    price = models.FloatField(default=0)
+    remission = models.ForeignKey(Remission,on_delete=models.CASCADE,null=True)
+    discounted = models.BooleanField(default=False)
+    def __str__(self):
+        return self.product.product_name
     
+class ProductBox(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=0)
+    price = models.FloatField(default=0)
+    usersession = models.ForeignKey(User,on_delete=models.CASCADE)
+    def __str__(self):
+        return self.product.product_name
+
+class PurcharseOrder(models.Model):
+    code =  models.CharField(max_length=200)
+    supplier = models.CharField(max_length=200, null=True)
+    nit = models.CharField(max_length=100, null=True)
+    address = models.CharField(max_length=100, null=True)
+    phone = models.CharField(max_length=100, null=True)
+    customer = models.CharField(max_length=200, null=True)
+    cost_center = models.CharField(max_length=200, null=True)
+    inspector = models.CharField(max_length=200, null=True)
+    supervisor = models.CharField(max_length=200, null=True)
+    trm = models.FloatField(default=0)
+    total_price = models.FloatField(default=0)
+    total_quantity = models.IntegerField(default=0)
+    usersession = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
+    progress = models.IntegerField(default=0)
+    date = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return self.code
+
+class OrderProduct(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=0)
+    price = models.FloatField(default=0)
+    order = models.ForeignKey(PurcharseOrder,on_delete=models.CASCADE,null=True)
+    def __str__(self):
+        return self.product.product_name
+
+class OrderEntry(models.Model):
+    order = models.ForeignKey(PurcharseOrder,on_delete=models.CASCADE)
+    tracking = models.CharField(max_length=200, null=True)
+    product = models.ForeignKey(OrderProduct,on_delete=models.CASCADE)
+    price = models.FloatField(default=0)
+    quantity = models.IntegerField(default=0)
+    added = models.BooleanField(default=False)
+    date = models.DateTimeField(default=timezone.now)
+
+class ProductStatictics(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    rotations = models.IntegerField(default=0)
+    out_stock = models.FloatField(default=0)
+
+
+
+    
+
+

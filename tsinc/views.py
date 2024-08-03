@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 from django.http import HttpResponse
+from django.db.models import Max
 from .models import *
 from .forms import *
 from django.core.paginator import Paginator
@@ -10,11 +11,14 @@ import pandas as pd
 import openpyxl
 from django.http import JsonResponse
 import json
-from .utils import print_data, print_calc_supervirsor, sort_list_point, modify_point_file, print_offer, print_notes
+from .utils import print_data, print_calc_supervirsor, sort_list_point, modify_point_file, print_offer, print_notes, print_remission, print_order
 import os, shutil
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, F
+import math
+from django.utils import timezone
+from django.db.models import Case, When, Value, IntegerField, F
 
 # Create your views here.
 
@@ -46,7 +50,44 @@ def create_project(request):
         print(request.POST)
         project = Project.objects.create(name = request.POST['name'], company_name = request.POST['company_name'],nit=request.POST['nit'], asesor = request.POST['asesor'], usersesion=request.user )
         return redirect('/')
+
+def replace_cero(value):
+    if value == 0:
+        value = 1
+    return value
+
+def seve_stat_prod():
+    products = Product.objects.all()
     
+    for product in products:
+        
+        orderproduct = OrderProduct.objects.filter(product=product).all()
+        total_entrys = OrderEntry.objects.filter(product__in= orderproduct).count()
+        total_shippeds = ProductSent.objects.filter(product = product).count() 
+             
+        if total_entrys < total_shippeds:
+            rotations = total_entrys
+        elif total_shippeds < total_entrys:
+            rotations = total_shippeds
+        else:
+            rotations = total_shippeds
+        
+        out_stock = product.quantity/replace_cero(product.min_stock)
+        rotations = rotations
+
+        # print(f"producto:{product.model}--Rotaciones:{rotations}--Fuera stock:{out_stock}")
+        prod_stat_exist = ProductStatictics.objects.filter(product = product).exists()
+        if prod_stat_exist:
+            prod_stat = ProductStatictics.objects.filter(product = product).first()
+            prod_stat.rotations = rotations
+            prod_stat.out_stock = out_stock
+            prod_stat.save()
+        else:   
+            ProductStatictics.objects.create(product=product, rotations = rotations, out_stock = out_stock)
+   
+
+
+
 @login_required
 def product(request):
     search = request.GET.get('search')
@@ -57,11 +98,20 @@ def product(request):
         search = "control"
         page_obj = Product.objects.filter(product_name__icontains= search)
 
-    # product = Product.objects.all()
+    products = Product.objects.all()
+    flags = [
+        {
+        'id':product.id,
+        'value':product.quantity/replace_cero(product.min_stock)
+    }
+    for product in products 
+    ]
+    
+    
     # paginator = Paginator(product, 10)
     # page_number = request.GET.get('page')
     # page_obj = paginator.get_page(page_number)
-    return render(request, 'product.html',{'page_obj': page_obj})
+    return render(request, 'product.html',{'page_obj': page_obj, 'flags':flags})
 
 
 @login_required
@@ -117,9 +167,6 @@ def verify_code_point_des(description):
     return code,point,descrip
         
     
-
-
-
 @login_required   
 def upload_products(request):
     if request.method == 'POST':
@@ -865,6 +912,7 @@ def edit_product(request):
         quantity = request.POST.get('quantity')
         point = request.POST.get('point')
         description = request.POST.get('description')
+        min_stock = request.POST.get('min_stock')
         product.code = code
         product.product_name = product_name
         product.factory_ref = factory_ref
@@ -875,9 +923,684 @@ def edit_product(request):
         product.quantity = quantity
         product.point = point
         product.description = description
+        product.min_stock = min_stock
         product.save()
         messages.success(request,f"Cambios realizados correctamente")
         return redirect(f'/editproduct/?id={product.id}')
     
     return render(request,'editproduct.html',{'product':product})
+
+
+@login_required
+def add_product_to_box(request,id): 
+    product = Product.objects.filter(id=id).first()
+    user = request.user
+    if ProductBox.objects.filter(product = product, usersession = request.user).exists():
+        productbox = ProductBox.objects.filter(product = product).first()
+        productbox.quantity +=1
+        productbox.save() 
+        messages.success(request,f"El producto {product.model} ya se encontraba en el carrito ahora tienes {productbox.quantity}.")
+    else:
+        ProductBox.objects.create(product = product, quantity = 1, price =product.sale_price, usersession = user) 
+        messages.success(request,f"El producto {product.model} ha sido agregado al carrito.")
+    return redirect('/product/')
+
+@login_required
+def add_product(request,id):
+    if request.method == "POST":
+        print(request.POST.get(f"quantity{id}"))
+    # print(request.GET.get(f"quantity{id}"))
+    # productbox = ProductBox.objects.filter(id = id).first()
+    # productbox.quantity +=1
+    # productbox.save() 
+        # messages.success(request,f"El producto {product.model} ya se encontraba en el carrito ahora tienes {productbox.quantity}.")
+    return redirect('/createremission/')
+
+@login_required
+def subtract_product(request,id):  
+
+    productbox = ProductBox.objects.filter(id = id).first()
+    productbox.delete()
+        # messages.success(request,f"El producto {product.model} ya se encontraba en el carrito ahora tienes {productbox.quantity}.")
+    return redirect('/createremission/')
+
+
+@login_required
+def create_remission(request): 
+    if request.method == 'GET':
+
+        productbox = ProductBox.objects.filter(usersession = request.user).all()
+        return render(request,'createremission.html',{'productbox':productbox,'form_re':CreateRemission,'form_or':CreateOrder })
+    else:
+        productbox = ProductBox.objects.filter(usersession = request.user).all()
+
+        
+        for productb in productbox:
+            if productb.quantity > productb.product.quantity:
+                messages.error(request,f"No hay sufiente cantidad del producto {productb.product.model} en el inventario")
+                return redirect("/createremission/")
+
+        remission_code = OfferCode.objects.filter(name = "remission").first()
+
+        new_code = int(remission_code.code) + 1
+
+        remission_code.code = new_code
+
+        remission_code.save()
+
+        remission = Remission.objects.create(city = request.POST['city'],
+                                            number = remission_code.code,
+                                            order_number = "PC-0029353-2",
+                                            company = request.POST['company'],
+                                            nit = request.POST['nit'],
+                                            location = request.POST['location'],
+                                            project = request.POST['project'],
+                                            responsible = request.POST['responsible'],
+                                            usersession = request.user
+                                            )
+        for productb in productbox:
+            productsent = ProductSent.objects.create(
+                product = productb.product,
+                quantity = productb.quantity,
+                price = productb.price,
+                remission = remission
+            )
+            product = Product.objects.filter(id= productsent.product.id).first()
+            
+            product.quantity -= productsent.quantity
+            product.save()
+        
+        seve_stat_prod()
+        messages.success(request,f"La remisión ha sido generada correctamente.")
+
+        return redirect("/createremission/")
+
+@login_required
+def clean_productbox(request):  
+    productbox = ProductBox.objects.all()
+    productbox.delete()
+    return redirect('/createremission/')
+
+
+@login_required
+def remissions(request):  
+    remissions = Remission.objects.filter().order_by('-date').all()[:10]
+    search = request.GET.get('search')
+    if search:
+        remissions = Remission.objects.filter(Q(company__icontains= search) | Q(project__icontains= search))
+    
+    return render(request,'remissions.html',{'remissions':remissions})
+
+
+@login_required
+def delete_remission(request,id):  
+    remission = Remission.objects.filter(id = id).first()
+    remission.delete()
+    return redirect("/remissions/")
+
+@login_required
+def product_remission(request,id):  
+    remission = Remission.objects.filter(id=id).first()
+    products = ProductSent.objects.filter(remission= remission).all()
+    return render(request,'productremission.html',{'products':products, 'remission':remission})
+
+
+@login_required
+def product_shipped(request):  
+    products_shipped = ProductSent.objects.all()[:10]
+    search = request.GET.get('search')
+    if search:
+        products = Product.objects.filter(Q(product_name__icontains= search) | Q(model__icontains= search))
+        products_shipped = ProductSent.objects.filter(product__in = products)
+        
+    return render(request,'productshipped.html',{'products':products_shipped})
+
+def calc_t_quantity_price(order):
+    
+    orderproducts = OrderProduct.objects.filter(order = order).all()
+    t_quantity = 0
+    t_price = 0
+
+    for product in orderproducts:
+        t_quantity += product.quantity 
+        t_price += product.price * product.quantity
+
+    order.total_quantity = t_quantity
+    order.total_price = t_price
+
+    order.save()
+
+def calc_progress(order):
+
+    order_entrys = OrderEntry.objects.filter(order = order).all()
+    arrived = 0
+   
+    for entry in order_entrys:
+        arrived += entry.quantity
+    
+    if order.total_quantity > 0:
+        progress = math.ceil((arrived * 100) / order.total_quantity)
+    else:
+        progress = 0
+
+    order.progress = progress
+    order.save()
+
+@login_required
+def create_order(request): 
+    if request.method == 'POST':
+        productbox = ProductBox.objects.filter(usersession = request.user).all()
+        
+        code = OfferCode.objects.filter(name = "order").first()
+
+        code_splited = code.code.split("-")
+
+        new_code = int(code_splited[-1]) + 1
+
+        code.code = f"{code_splited[0]}-{new_code}"
+
+        code.save()
+
+        supplier = request.POST['supplier']
+        nit = request.POST['nit']
+        address = request.POST['address']
+        phone = request.POST['phone']
+        customer = request.POST['customer']
+        cost_center = request.POST['cost_center']
+        inspector = request.POST['inspector']
+        supervisor = request.POST['supervisor']
+        trm = request.POST['trm']
+
+        order = PurcharseOrder.objects.create(code = code.code,
+                                              supplier = supplier,
+                                              nit = nit,
+                                              address = address,
+                                              phone = phone,
+                                              customer = customer,
+                                              cost_center = cost_center,
+                                              inspector = inspector,
+                                              supervisor = supervisor,
+                                              trm = trm,
+                                              usersession = request.user
+                                             )
+        for product in productbox:
+
+            OrderProduct.objects.create(
+                product = product.product,
+                quantity = product.quantity,
+                price = product.price,
+                order = order
+            )
+        
+        calc_t_quantity_price(order)
+
+        messages.success(request,f"La orden de compra ha sido generada correctamente.")
+            
+        return redirect("/createremission/")
+    
+@login_required
+def save_car(request):
+    if request.method == "POST":
+        raw_data = request.body
+        # print(f"desde save_item: {raw_data}"  )
+        body_unicode = raw_data.decode('utf-8')
+        data = json.loads(body_unicode)
+        for product in data['values']:
+            productbox = ProductBox.objects.filter(id= product['id']).first()
+            productbox.quantity = product['quantity']
+            productbox.price = product['price']
+            productbox.save()
+        return JsonResponse({'mensaje': 'Datos guardados con éxito!'})
+
+
+@login_required
+def purcharse_order(request):  
+    orders = PurcharseOrder.objects.filter().order_by('progress').all()[:20]
+    search = request.GET.get('search')
+    if search:
+        orders = PurcharseOrder.objects.filter(Q(code__icontains= search) | Q(supplier__icontains= search))
+    return render(request,'purcharseorders.html',{'orders':orders})
+
+@login_required
+def purcharse_order_products(request):  
+    purcharse_order_products = OrderProduct.objects.all()[:10]
+    search = request.GET.get('search')
+    if search:
+        products = Product.objects.filter(Q(product_name__icontains= search) | Q(model__icontains= search))
+        purcharse_order_products = OrderProduct.objects.filter(product__in = products)     
+    return render(request,'purcharseorderproducts.html',{'products':purcharse_order_products})
+
+
+def calc_info_order_product(orderproducts,orderentry):
+    info_per_product = []
+    for product in orderproducts:
+        t_quantity = 0
+        t_price = 0
+        p={}
+        for entry in orderentry:
+            if product.id == entry.product.id:
+                t_quantity += entry.quantity
+
+        p['id'] = product.id
+        p['t_quantity'] = t_quantity
+        p['leftover'] = product.quantity - t_quantity      
+        info_per_product.append(p)
+    return info_per_product
+
+
+@login_required
+def order_product_info(request,id):  
+    order = PurcharseOrder.objects.filter(id=id).first()
+    products = OrderProduct.objects.filter(order= order).all()
+    orderentry = OrderEntry.objects.filter(order = order).all()
+    
+    
+    most_recent_entry = OrderEntry.objects.filter(order = order).order_by("-date").first()
+    
+    intial_date = order.date
+
+    if most_recent_entry:
+        final_date = most_recent_entry.date
+        
+        # intial_date = datetime.date(2023, 6, 1)
+        # final_date = datetime.datetime(2023, 7, 25)
+        difference = final_date - intial_date
+        delivery_time = difference.days
+    else:
+        delivery_time = 0
+
+    arrived = 0
+    d_price = 0
+
+    for entry in orderentry:
+        arrived += entry.quantity 
+        d_price += entry.product.price * entry.quantity
+    
+    
+    
+    total_info = {
+        't_price':round(order.total_price,2),
+        'd_price':round(d_price,2),
+        'r_price':round(order.total_price - d_price,2),
+        't_quantity':order.total_quantity,
+        'arrived':arrived,
+        'leftover':round(order.total_quantity - arrived,2)
+    }
+
+    badge = ""
+
+    if order.trm != 0:
+        badge = "COP"
+    else:
+        badge = "USD"
+    
+    info_per_product = calc_info_order_product(products,orderentry)
+
+    return render(request,'orderproductinfo.html',{'products':products, 
+                                                   'order':order, 
+                                                   'orderentry':orderentry,
+                                                   'total_info':total_info,
+                                                   'info_per_product':info_per_product,
+                                                   'delivery_time':delivery_time,
+                                                   'badge':badge
+                                                   
+                                                   })
+
+@login_required
+def download_remission(request,id):
+
+    try:
+        remission =Remission.objects.get(id=id)
+        workbook = openpyxl.Workbook()
+        # # sheet = workbook.active
+        # # sheet.title = 'TAB01'
+
+        sheet_to_delete = workbook.active
+        workbook.remove(sheet_to_delete)
+
+        sheet = workbook.create_sheet(title="Remision")
+
+        print_remission(sheet,remission)
+        # path = os.path.join(settings.BASE_DIR, 'tsinc','static', 'points','Points.xlsx')
+        # workbook.save(path)
+
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=Remision.xlsx'
+
+        workbook.save(response)
+
+        return response
+    except TypeError as e:
+        messages.error(request,f"¡Ha ocurrido un error al momento de generar el archivo!.{e}")
+        return redirect('/remissions/')
+
+@login_required
+def download_order(request,id):
+
+    try:
+        order =PurcharseOrder.objects.get(id=id)
+        workbook = openpyxl.Workbook()
+        # # sheet = workbook.active
+        # # sheet.title = 'TAB01'
+
+        sheet_to_delete = workbook.active
+        workbook.remove(sheet_to_delete)
+
+        sheet = workbook.create_sheet(title="Orden de compra")
+
+        print_order(sheet,order)
+        # path = os.path.join(settings.BASE_DIR, 'tsinc','static', 'points','Points.xlsx')
+        # workbook.save(path)
+
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=Orden_de_compra.xlsx'
+
+        workbook.save(response)
+
+        return response
+    except TypeError as e:
+        messages.error(request,f"¡Ha ocurrido un error al momento de generar el archivo!.{e}")
+        return redirect('/purcharseorder/')
+
+
+
+@login_required
+def edit_remission(request,id):
+    remission = get_object_or_404(Remission,id=id)
+    products = ProductSent.objects.filter(remission = remission).all()
+    if request.method == 'POST':
+        city = request.POST.get('city')
+        company = request.POST.get('company')
+        nit = request.POST.get('nit')
+        location = request.POST.get('location')
+        project = request.POST.get('project')
+        responsible = request.POST.get('responsible')
+        remission.city = city
+        remission.company = company
+        remission.nit = nit
+        remission.location = location
+        remission.project = project
+        remission.responsible = responsible
+        remission.save()
+        messages.success(request,f"Cambios realizados correctamente")
+        return redirect(f'/editremission/{id}')
+    
+    return render(request,'editremission.html',{'remission':remission, 'products':products})
+
+    
+@login_required
+def edit_order(request,id):
+    order = get_object_or_404(PurcharseOrder,id=id)
+    orderproducts = OrderProduct.objects.filter(order = order).all()
+    if request.method == 'POST':
+        code = request.POST.get('code')
+        supplier = request.POST.get('supplier')
+        nit = request.POST.get('nit')
+        address = request.POST.get('address')
+        phone = request.POST.get('phone')
+        customer = request.POST.get('customer')
+        cost_center = request.POST.get('cost_center')
+        inspector = request.POST.get('inspector')
+        supervisor = request.POST.get('supervisor')
+        trm = request.POST.get('trm')
+        order.code = code
+        order.supplier = supplier
+        order.nit = nit 
+        order.address = address
+        order.phone = phone
+        order.customer = customer
+        order.cost_center = cost_center
+        order.inspector = inspector
+        order.supervisor = supervisor
+        order.trm = trm
+        order.save()
+        messages.success(request,f"Cambios realizados correctamente")
+        return redirect(f'/editorder/{id}')
+    
+    return render(request,'editorder.html',{'order':order,'orderproducts':orderproducts})
+
+
+
+
+    
+      
+
+@login_required
+def create_order_entry(request,id):
+
+    order = get_object_or_404(PurcharseOrder,id=id)
+    orderproducts = OrderProduct.objects.filter(order = order).all()
+    orderentry = OrderEntry.objects.filter(order=order).order_by("-date").all()
+
+    info_per_product = calc_info_order_product(orderproducts,orderentry)
+
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        quantity = request.POST.get('quantity')
+        tracking = request.POST.get('tracking')
+        if not product_id == 'None':
+            orderproduct = OrderProduct.objects.filter(id=product_id).first()
+            if orderproduct.order.trm != 0:
+                price_dollar = round(orderproduct.price / orderproduct.order.trm,2)
+                orderentry = OrderEntry.objects.create(order = order, 
+                                      product = orderproduct, 
+                                      quantity=quantity,
+                                      price = price_dollar,
+                                      tracking=tracking,
+                                      )
+            else:
+                orderentry = OrderEntry.objects.create(order = order, 
+                                      product = orderproduct, 
+                                      quantity=quantity,
+                                      price = orderproduct.price,
+                                      tracking=tracking,
+                                      )
+            
+            entries = OrderEntry.objects.filter(product__product__id = orderproduct.product.id).all()
+
+            prices = [ entry.price for entry in entries ]  
+            
+            highest_price =  max(prices)
+            product = Product.objects.filter(id = orderproduct.product.id).first()
+            product.sale_price = highest_price
+            product.quantity += int(orderentry.quantity)
+            product.save()
+            calc_progress(order)
+            seve_stat_prod()
+            messages.success(request,f"La entrada ha sido creada correctamente")
+
+        else:
+
+            messages.error(request,f"No puedes generar mas entradas, Todos los productos han sido entregados!")
+        return redirect(f'/createorderentry/{id}')
+    
+    return render(request,'createorderentry.html',{'order':order,
+                                                   'orderproducts':orderproducts, 
+                                                   'orderentry':orderentry,
+                                                   'info_per_product':info_per_product
+                                                   })
+
+
+@login_required
+def delete_order(request,id):  
+    order = PurcharseOrder.objects.filter(id = id).first()
+    order.delete()
+    return redirect("/purcharseorder/")
+
+
+@login_required
+def delete_order_product(request,id):  
+    orderproduct = OrderProduct.objects.filter(id = id).first()
+    order = PurcharseOrder.objects.filter(id = orderproduct.order.id).first()
+    orderproducts = OrderProduct.objects.filter(order = order).all()
+    orderproduct.delete()
+    calc_t_quantity_price(order)
+    calc_progress(order)
+    return redirect(f"/editorder/{orderproduct.order.id}")
+
+@login_required
+def delete_order_product(request,id):  
+    orderproduct = OrderProduct.objects.filter(id = id).first()
+    order = PurcharseOrder.objects.filter(id = orderproduct.order.id).first()
+    orderproduct.delete()
+    calc_t_quantity_price(order)
+    calc_progress(order)
+    return redirect(f"/editorder/{order.id}")
+
+@login_required
+def delete_order_entry(request,id):  
+    orderentry = OrderEntry.objects.filter(id = id).first()
+    order = PurcharseOrder.objects.filter(id = orderentry.order.id).first()
+    product = Product.objects.filter(id = orderentry.product.product.id).first()
+    product.quantity -= orderentry.quantity
+    product.save()
+    orderentry.delete()
+    calc_t_quantity_price(order)
+    calc_progress(order)
+    return redirect(f"/createorderentry/{order.id}")
+
+
+@login_required
+def entry_info(request,id): 
+    entry = OrderEntry.objects.filter(id=id).first()
+    return render(request,"entryinfo.html",{'entry':entry})
+
+@login_required
+def order_statictics(request): 
+    # data = {
+    #     'labels': ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
+    #     'values': [10, 20, 30, 40, 50]
+    # }
+    most_recent_entry = OrderEntry.objects.all().order_by("-date")[:5]
+    most_recent_order = PurcharseOrder.objects.all().order_by("-date")[:5]
+    purcharseorders = PurcharseOrder.objects.all()
+    entrys = OrderEntry.objects.all()
+
+    total_price = 0
+    total_delivered = 0
+
+
+    for order in purcharseorders:
+        if order.progress != 100:
+            if order.trm != 0:
+                total_price += round(order.total_price / order.trm,2)
+            else:
+                total_price += order.total_price
+
+            for entry in entrys:
+                if order.id == entry.order.id:
+                    if order.trm != 0:
+                        total_delivered += (entry.product.price/order.trm) * entry.quantity
+                    else:
+                        total_delivered += entry.product.price * entry.quantity
+    
+    total_delivered = round(total_delivered,2)
+    # difference = final_date - intial_date
+    # delivery_time = difference.days
+
+
+
+    # pending_orders = [ order for order in purcharseorders if order.progress != 100]
+
+    pending_orders = [{
+        'order':order,
+        'ago':order.date
+    }
+    for order in purcharseorders if order.progress != 100
+    ][:5]
+
+   
+    total_info ={
+        'total_orders': total_price,
+        'total_delivered':total_delivered,
+        'total_remaining': round(total_price - total_delivered,2)
+
+    }
+    return render(request,"orderstatictics.html",{
+                                                  'recent_entrys':most_recent_entry,
+                                                  'recent_orders':most_recent_order,
+                                                  'total_info':total_info,
+                                                  'pending_orders':pending_orders,
+                                        
+                                                    })
+
+@login_required
+def product_info(request,id): 
+    product = Product.objects.filter(id=id).first()
+    products = Product.objects.all()
+    orderproduct = OrderProduct.objects.filter(product = product).all()
+    orderentry = OrderEntry.objects.filter(product__in= orderproduct ).order_by("-date")[:5]
+    products_shipped = ProductSent.objects.filter(product = product).order_by('-remission__date')[:5]
+    total_entrys = OrderEntry.objects.filter(product__in= orderproduct).count()
+    total_shippeds = ProductSent.objects.filter(product = product).count() 
+    rotations = 0
+    if total_entrys < total_shippeds:
+        rotations = total_entrys
+    elif total_shippeds < total_entrys:
+        rotations = total_shippeds
+    else:
+        rotations = total_shippeds
+
+  
+
+ 
+    
+    return render(request,"productinfo.html",{'product':product, 
+                                              'orderentry':orderentry, 
+                                              'products_shipped':products_shipped, 
+                                              'total_entrys':total_entrys,
+                                              'total_shippeds':total_shippeds,
+                                              'rotations':rotations,
+                                            
+
+                                              })
+
+@login_required
+def add_entry_inventory(request,id):
+    entry = OrderEntry.objects.filter(id = id).first()
+    product = Product.objects.filter(id = entry.product.product.id).first()
+    if not entry.added:
+        entry.added = True
+        entry.save()
+        product.quantity += entry.quantity
+        product.save()
+    return redirect(f"/createorderentry/{entry.order.id}")
+
+
+
+@login_required
+def delete_remission_product(request,id):  
+    remissionproduct = ProductSent.objects.filter(id = id).first()
+    product = Product.objects.filter(id = remissionproduct.product.id).first()
+
+    product.quantity += remissionproduct.quantity
+
+    product.save()
+    
+    remissionproduct.delete()
+
+    return redirect(f"/editremission/{remissionproduct.remission.id}")
+
+def product_statictics(request):
+    products = Product.objects.all()
+    prod_out_stock = ProductStatictics.objects.order_by("out_stock")[:10]
+    prod_rotations = ProductStatictics.objects.order_by("-rotations")[:10]
+    expensive_prod = Product.objects.order_by("-sale_price")[:10]
+    cheaper_prod = Product.objects.order_by("sale_price")[:10]
+
+    total_inventory = 0
+
+    for product in products:
+        total_inventory += product.sale_price
+
+    
+    return render(request,"productstatictics.html",{'prod_out_stock':prod_out_stock,
+                                                    'prod_rotations':prod_rotations,
+                                                    'total_inventory':total_inventory,
+                                                    'exp_prod':expensive_prod,
+                                                    'cheaper_prod':cheaper_prod
+                                                    
+                                                    })
+
+
 

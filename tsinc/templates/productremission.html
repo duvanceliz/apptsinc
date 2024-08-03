@@ -1,0 +1,59 @@
+
+{% extends 'layout.html' %} {% block body %}
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-6">
+            <ul class="list-group">
+
+                <li class="list-group-item"><strong>Numero de remisión: </strong>{{remission.number}}</li> 
+                <li class="list-group-item"><strong>Numero de pedido: </strong>{{remission.order_number}}</li> 
+                <li class="list-group-item"><strong>Razón Social: </strong>{{remission.company}}</li>
+                <li class="list-group-item"><strong>Ciudad: </strong>{{remission.city}}</li>
+                <li class="list-group-item"><strong>NIT: </strong>{{remission.nit}}</li>
+                <li class="list-group-item"><strong>Dirección: </strong>{{remission.location}}</li>
+                <li class="list-group-item"><strong>Obra: </strong>{{remission.project}}</li>
+                <li class="list-group-item"><strong>Responsable: </strong>{{remission.responsible}}</li>
+                <li class="list-group-item"><strong>Fecha: </strong>{{remission.date}}</li>
+              </ul>
+
+        </div>
+   
+       <div class="col-md-6">
+       
+        <div class="table-responsive">
+          <table class="table table-hover table-light">
+            <thead>
+              
+          
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Modelo</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Descripción</th>
+              </tr>
+            
+            </thead>
+            <tbody>
+              <tr>
+                {% for product in products %}
+    
+                <th scope="row">{{product.id}}</th>
+                <td>{{product.product.product_name}}</td>
+                <th>{{product.product.model}}</th>
+                <td>{{product.quantity}}</td>
+                <td>{{product.product.description}}</td>
+              </tr>
+              {%endfor%}
+            </tbody>
+          </table>
+        </div>
+       </div>
+
+      
+    </div>
+  </div>
+
+{% endblock %}

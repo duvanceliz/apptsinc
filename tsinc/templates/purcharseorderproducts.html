@@ -1,0 +1,74 @@
+
+{% extends 'layout.html' %} {% block body %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-4">
+      
+    </div>
+    <div class="col-md-4">
+      <form id="form-search">
+        <input id="input-search" type="text" name="search"/>
+        <button id="btn-search" class="btn btn-primary m-2" type="submit">
+          Buscar
+        </button>
+      </form>
+    </div>
+  </div>
+    <div class="row">
+   
+       <div class="col-md-12">
+       
+        <div class="table-responsive">
+          <table class="table table-hover table-light">
+            <thead>
+              
+          
+              <tr>
+                <th scope="col">#</th>
+                
+                
+                <th scope="col">Nombre del producto</th>
+                <th scope="col">Modelo</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Descripción</th>
+                <th scope="col"></th>
+                <th scope="col">Orden de compra:</th>
+                <th scope="col">Fecha del pedido:</th>
+                <th></th>
+              </tr>
+            
+            </thead>
+            <tbody>
+              <tr>
+                {% for product in products %}
+    
+                <th scope="row">{{product.id}}</th>
+                
+                <td>{{product.product.product_name}}</td>
+                <th>{{product.product.model}}</th>
+                <td>{{product.quantity}}</td>
+                <td>{{product.price}}</td>
+                <td>{{product.product.description}}</td>
+                <td> ==> </td>
+                <td>{{product.order.code}}</td>
+                <td>{{product.order.date}}</td>
+                <td>
+                    <a class="btn btn-primary btn-sm" href="{% url 'order_product_info' product.order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Entrar a los Tableros"> <i class="bi bi-box-arrow-right"></i></a>
+                </td>
+              </tr>
+              {%endfor%}
+            </tbody>
+          </table>
+        </div>
+       </div>
+
+      
+    </div>
+  </div>
+
+{% endblock %}

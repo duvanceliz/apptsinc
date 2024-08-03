@@ -1,0 +1,134 @@
+
+{% extends 'layout.html' %} {% block body %} {% load humanize %}
+
+<div class="container">
+
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body d-flex flex-column text-center">
+          <span class="fs-6 fw-bold">Rotaciones: </span>
+          <span class="fs-3 fw-light">{{rotations}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body d-flex flex-column text-center">
+          <span class="fs-6 fw-bold">Entradas Totales: </span>
+          <span class="fs-3 fw-light">{{total_entrys}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body d-flex flex-column text-center">
+          <span class="fs-6 fw-bold">Salidas Totales: </span>
+          <span class="fs-3 fw-light">{{total_shippeds}}</span>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+ <div class="row">
+    
+    <div class="col-md-4">
+        <ul class="list-group">
+               
+            <li class="list-group-item"><strong>Codigo: </strong>{{product.code}}</li>
+            <li class="list-group-item"><strong>Nombre: </strong>{{product.product_name}}</li>
+            <li class="list-group-item"><strong>Modelo: </strong>{{product.model}}</li>
+            <li class="list-group-item"><strong>Marca: </strong>{{product.brand}}</li>
+            <li class="list-group-item"><strong>Ubicación: </strong>{{product.location}}</li>
+            <li class="list-group-item"><strong>Cantidad: </strong>{{product.quantity}}</li>
+            <li class="list-group-item"><strong>Puntos: </strong>{{product.point}}</li>
+            <li class="list-group-item"><strong>Descripción: </strong>{{product.description}}</li>
+            <li class="list-group-item"><strong>Precio: </strong>{{product.sale_price}}</li>
+            <li class="list-group-item"><strong>IVA: </strong>{{product.iva}}</li>
+         
+          </ul>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="header text-center">
+          <span class="fs-5">Entradas recientes</span>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover table-light">
+          <thead>
+            
+        
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Orden</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Precio(und)</th>
+              <th scope="col">Fecha</th>
+              
+
+            </tr>
+          
+          </thead>
+          <tbody>
+            <tr>
+              {% for entry in orderentry %}
+  
+              <td class="bg-success"></td>
+              <td>{{entry.order.code}}</td>
+              <td>{{entry.quantity}}</td>
+              <td>{{entry.price}}</td>
+              <td>{{entry.date|naturaltime}}</td>
+              
+             
+            </tr>
+  
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="header text-center">
+          <span class="fs-5">Salidas recientes</span>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover table-light">
+          <thead>
+          
+            <tr>
+              <th scope="col"></th>
+           
+              <th scope="col">Remisión</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Precio(und)</th>
+              <th scope="col">Fecha</th>
+            </tr>
+          
+          </thead>
+          <tbody>
+            <tr>
+              {% for product in products_shipped %}
+  
+              <th class="bg-danger"></th>
+              
+              <th>{{product.remission.number}}</th>
+              <td>{{product.quantity}}</td>
+              <td>{{product.price}}</td>
+              <td>{{product.remission.date|naturaltime}}</td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+    </div>
+ </div>
+ 
+    
+  </div>
+
+{% endblock %}
+

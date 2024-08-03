@@ -1,0 +1,21 @@
+<div class="card" id="remission-form">
+
+    <div class="card-header text-white" style="background: #005bc5;">
+      <span class="fs-6 fw_light">
+         REMISIÓN   
+    </div>
+  
+  
+    <div class="card-body p-4">
+     
+      <form action="" method="POST" id="form">
+        {% csrf_token %}
+        {{form_re.as_p}}
+    
+        <button class="btn btn-primary mb-2">Guardar</button>
+    
+    </form>
+    <a href=" {% url 'remissions' %}" class="btn btn-link">Ver remisiones generadas</a>
+    </div>
+
+  </div>

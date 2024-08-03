@@ -179,6 +179,24 @@ input.selected-group{
 }
 
 
+.notification-save{
+  opacity: 0; /* Comienza oculto */
+  transition: opacity 2s; /* Transición de 2 segundos */
+  background: rgb(99, 176, 122);
+  border-radius: 2px;
+  padding: 2px;
+  text-align: center;
+  /* background-color:  rgba(70, 157, 186, 0.445); */
+}
+
+.notification-save.visible {
+  opacity: 1; /* Visible */
+}
+
+.notification-save.fade-out {
+  opacity: 0; /* Oculto */
+}
+
 
 
 
