@@ -1,0 +1,65 @@
+{% extends 'layout3.html' %} {% block body %}{% load humanize %}
+
+
+<div class="container">
+
+
+   <div class="row mb-4">
+    <div class="col-md-6">
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+
+                <h5 class="fs-5">Remisiones recientes:</h5>
+                
+            </div>
+            <div class="card-body">
+
+                <ul class="list-group d-flex justify-content-between">
+                    {% for remission in remissions %}
+                    
+                    <li class="list-group-item d-flex justify-content-between">
+                   
+                    <span class="fw-bold">Empresa:</span> {{remission.company}}
+                    <span class="fw-bold">Fecha:</span> {{remission.date|naturaltime}}
+                    <a href="{% url 'product_remission' remission.id %}">Ver</a>
+                    </li>
+
+                    {% endfor %}
+
+                  </ul>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+
+                <h5 class="fs-5">Salidas reciende:</h5>
+                
+            </div>
+            <div class="card-body">
+
+                <ul class="list-group d-flex justify-content-between">
+                    {% for p in prod %}
+
+                    <li class="list-group-item d-flex justify-content-between">
+                    <span class="fw-bold">Model:</span> {{p.product.model}} 
+                    <!-- <span class="fw-bold">Cantidad:</span> <span class="">{{p.quantity}}</span>  -->
+                    <span class="fw-bold">Date:</span> <span class="">{{p.remission.date|naturaltime}}</span> 
+                    <a href="{% url 'product_remission' p.remission.id %}">Ver</a>
+                    </li>
+
+                    {% endfor %}
+
+                  </ul>
+            </div>
+        </div>
+    </div>
+   </div>   
+
+</div>
+
+
+{% endblock %}

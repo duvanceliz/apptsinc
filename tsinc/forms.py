@@ -101,6 +101,11 @@ class AddLicense(forms.Form):
     license = forms.ModelChoiceField(label="licencias",queryset=Product.objects.filter(product_name__icontains="LICENCIA"))
 
 class CreateRemission(forms.Form):
+    order_number = forms.CharField(label="Pedido No.", 
+                                  max_length=100,
+                                   widget=forms.TextInput(attrs={'class': 'form-control'})
+                                  
+                                  )
     city = forms.CharField(label="Ciudad", 
                            max_length=100,
                            widget=forms.TextInput(attrs={'class': 'form-control'})
@@ -127,6 +132,7 @@ class CreateRemission(forms.Form):
                                    widget=forms.TextInput(attrs={'class': 'form-control'})
                                   
                                   )
+     
 
 class CreateOrder(forms.Form):
 

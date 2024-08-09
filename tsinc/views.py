@@ -91,7 +91,7 @@ def seve_stat_prod():
 @login_required
 def product(request):
     search = request.GET.get('search')
-    print(search)
+    
     if search:
         page_obj = Product.objects.filter(Q(product_name__icontains= search) | Q(model__icontains= search))
     else:
@@ -157,14 +157,17 @@ def verify_code_point_des(description):
     code = "NA"
     point = "NA"
     descrip = "NA"
+    min_stock = 0
     
     if pd.notna(description):
         description_list = description.split(",")
-        code = description_list[0]
-        point = description_list[1]
-        descrip =  description_list[2]
+        if len(description_list) == 4:
+            code = description_list[0]
+            min_stock = description_list[1]
+            point = description_list[2]
+            descrip =  description_list[3]
     
-    return code,point,descrip
+    return code,point,descrip,min_stock
         
     
 @login_required   
@@ -193,11 +196,11 @@ def upload_products(request):
                         quantity = row['CANTIDAD'] if pd.notna(row['CANTIDAD']) else 0
                         description = row['ORBSERVACION']
                         sale_price = row['Precio de venta 12'] if pd.notna(row['Precio de venta 12']) else 0
-                        
+                        purcharse_price = row['Precio de venta 11'] if pd.notna(row['Precio de venta 11']) else 0
                         
                         product_exist = Product.objects.filter(model = model, brand = brand).exists()
                          
-                        code,point,descrip = verify_code_point_des(description)
+                        code,min_stock,point,descrip = verify_code_point_des(description)
                             
                         if product_exist:
                             product= Product.objects.filter(model=model, brand=brand).first()
@@ -208,9 +211,11 @@ def upload_products(request):
                             product.location = location
                             product.quantity = quantity
                             product.sale_price = sale_price
+                            product.purcharse_price = purcharse_price
                             product.code = code
                             product.point = point
                             product.description = descrip
+                            product.min_stock = min_stock
                             product.save()
                         
                         else:
@@ -223,8 +228,10 @@ def upload_products(request):
                             location=location,
                             quantity= quantity,
                             sale_price = sale_price,
+                            purcharse_price = purcharse_price,
                             code = code,
                             point = point,
+                            min_stock = min_stock,
                             description=descrip,
                             )
                 messages.success(request, 'Productos subidos y creados exitosamente.')
@@ -235,9 +242,11 @@ def upload_products(request):
                     factory_ref = row['factory_ref']
                     model = row['model']
                     sale_price = row['sale_price']
+                    purcharse_price = row['purcharse_price']
                     brand = row['brand']
                     location = row['location'] if pd.notna(row['location']) else 'NA'
                     quantity = row['quantity']
+                    min_stock = row['min_stock']
                     point = row['point'] if pd.notna(row['point']) else 'NA'
                     description = row['description'] if pd.notna(row['description']) else 'NA'
                     iva = row['iva']
@@ -254,8 +263,10 @@ def upload_products(request):
                         product.location = location
                         product.quantity = quantity
                         product.sale_price = sale_price
+                        product.purcharse_price = purcharse_price
                         product.description = description
                         product.point = point
+                        product.min_stock = min_stock
                         product.iva = iva
                         product.save()
                     else:
@@ -268,6 +279,8 @@ def upload_products(request):
                                 location = location,
                                 quantity = quantity,
                                 sale_price = sale_price,
+                                purcharse_price = purcharse_price,
+                                min_stock = min_stock,
                                 description = description,
                                 point = point,
                                 iva = iva,
@@ -907,6 +920,7 @@ def edit_product(request):
         factory_ref = request.POST.get('factory_ref')
         model = request.POST.get('model')
         sale_price = request.POST.get('sale_price')
+        purcharse_price = request.POST.get('purcharse_price')
         brand = request.POST.get('brand')
         location = request.POST.get('location')
         quantity = request.POST.get('quantity')
@@ -918,6 +932,7 @@ def edit_product(request):
         product.factory_ref = factory_ref
         product.model = model
         product.sale_price = sale_price
+        product.purcharse_price = purcharse_price
         product.brand = brand
         product.location = location
         product.quantity = quantity
@@ -990,7 +1005,7 @@ def create_remission(request):
 
         remission = Remission.objects.create(city = request.POST['city'],
                                             number = remission_code.code,
-                                            order_number = "PC-0029353-2",
+                                            order_number = request.POST['order_number'],
                                             company = request.POST['company'],
                                             nit = request.POST['nit'],
                                             location = request.POST['location'],
@@ -1402,7 +1417,7 @@ def create_order_entry(request,id):
             
             highest_price =  max(prices)
             product = Product.objects.filter(id = orderproduct.product.id).first()
-            product.sale_price = highest_price
+            product.purcharse_price = highest_price
             product.quantity += int(orderentry.quantity)
             product.save()
             calc_progress(order)
@@ -1591,9 +1606,8 @@ def product_statictics(request):
     total_inventory = 0
 
     for product in products:
-        total_inventory += product.sale_price
+        total_inventory += product.purcharse_price
 
-    
     return render(request,"productstatictics.html",{'prod_out_stock':prod_out_stock,
                                                     'prod_rotations':prod_rotations,
                                                     'total_inventory':total_inventory,
@@ -1602,5 +1616,11 @@ def product_statictics(request):
                                                     
                                                     })
 
+
+def remission_statictics(request):
+    remissions = Remission.objects.order_by('-date')[:10]
+    prod_remission = ProductSent.objects.order_by('-remission__date')[:10]
+
+    return render(request,"remissionstatictics.html",{'remissions':remissions,'prod':prod_remission})
 
 

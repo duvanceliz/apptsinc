@@ -1879,10 +1879,10 @@ def print_order(sheet,order):
 
     conditions = Note.objects.filter(tag="CONDICIONES OC").first()
 
-    print_row(sheet,[conditions.description],row1+1,1,config_style_titles3)
+    print_row(sheet,[conditions.description],row1+2,1,config_style_titles3)
 
     row2 = row1 + 25
-    sheet.merge_cells(f"A{row1+1}:M{row2}")
+    sheet.merge_cells(f"A{row1+2}:M{row2}")
 
     title4 = ["PÓLIZAS",
               None,

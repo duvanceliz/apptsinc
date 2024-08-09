@@ -4,11 +4,11 @@
 <div class="container">
 
     <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card" style="height: 16rem;">
+        <div class="col-md-3">
+            <div class="card" style="height: 8rem;">
                 <div class="card-body text-center p-4">
 
-                    <p class="fs-4 fw-bold m-0">
+                    <p class="fs-6 fw-bold m-0">
                           TOTAL EN INVENTARIO
                     </p>
                     
@@ -18,7 +18,11 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6"></div>
+        <div class="col-md-3"></div>
+        <div class="col-md-3"></div>
+        <div class="col-md-3">
+
+        </div>
     </div>
 
    <div class="row mb-4">
@@ -28,17 +32,29 @@
             <div class="card-header d-flex justify-content-between">
 
                 <h5 class="fs-5">Productos por agotarse:</h5>
-                <a href="{% url 'purcharse_order' %}">--</a>
+                
             </div>
             <div class="card-body">
 
                 <ul class="list-group d-flex justify-content-between">
                     {% for prod_s in prod_out_stock %}
-
+                    
                     <li class="list-group-item d-flex justify-content-between">
                     <span class="fw-bold">Model:</span> {{prod_s.product.model}} 
                     <span class="fw-bold">quantity:</span> {{prod_s.product.quantity}}
-                    
+                        {% if prod_s.out_stock >= 3 %}
+                        <span class="bg-success">
+                        <i class="bi bi-flag"></i>
+                        </span>
+                        {% elif prod_s.out_stock > 2  and prod_s.out_stock < 3 %}
+                        <span class="bg-warning">
+                        <i class="bi bi-flag"></i>
+                        </span>
+                        {% elif prod_s.out_stock >= 0  and prod_s.out_stock < 2 %}
+                        <span class="bg-danger">
+                        <i class="bi bi-flag"></i>
+                        </span>
+                        {% endif %}
                     <a href="{% url 'product_info' prod_s.product.id %}">Ver</a>
                     </li>
 
@@ -54,7 +70,7 @@
             <div class="card-header d-flex justify-content-between">
 
                 <h5 class="fs-5">Productos que mas rotaron:</h5>
-                <a href="{% url 'purcharse_order' %}">--</a>
+                
             </div>
             <div class="card-body">
 
@@ -63,7 +79,7 @@
 
                     <li class="list-group-item d-flex justify-content-between">
                     <span class="fw-bold">Model:</span> {{prod_r.product.model}} 
-                    <span class="fw-bold">Rataciones:</span> {{prod_r.rotations}}  
+                    <span class="fw-bold">Rataciones:</span> <span class="">{{prod_r.rotations}} <i class="bi bi-arrow-repeat"></i> </span> 
                     <a href="{% url 'product_info' prod_r.product.id %}">Ver</a>
                     </li>
 
@@ -84,7 +100,7 @@
             <div class="card-header d-flex justify-content-between">
 
                 <h5 class="fs-5">Productos mas caros:</h5>
-                <a href="{% url 'purcharse_order' %}">--</a>
+                
             </div>
             <div class="card-body">
 
@@ -93,7 +109,7 @@
 
                     <li class="list-group-item d-flex justify-content-between">
                     <span class="fw-bold">Model:</span> {{prod.model}} 
-                    <span class="fw-bold">quantity:</span> {{prod.sale_price}}
+                    <span class="fw-bold">Precio:</span> {{prod.sale_price}}
                     
                     <a href="{% url 'product_info' prod.id %}">Ver</a>
                     </li>
@@ -110,7 +126,7 @@
             <div class="card-header d-flex justify-content-between">
 
                 <h5 class="fs-5">Productos mas baratos:</h5>
-                <a href="{% url 'purcharse_order' %}">--</a>
+                
             </div>
             <div class="card-body">
 

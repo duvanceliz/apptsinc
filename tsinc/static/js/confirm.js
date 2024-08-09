@@ -33,3 +33,70 @@ function confirm_delete_file() {
     }
 
 }
+
+
+function confirm_delete_order() {
+
+    let resultado = window.confirm('¿Realmente quieres borrar la orden de compra?');
+    if (resultado === true) {
+        return true
+    } else {
+        return false
+    }
+
+}
+
+function confirm_delete_remission() {
+
+    let resultado = window.confirm('¿Realmente quieres borrar la remisión?');
+    if (resultado === true) {
+        return true
+    } else {
+        return false
+    }
+
+}
+
+function confirm_delete_entry() {
+
+    let resultado = window.confirm('¿Estas seguro de borrar la entrada?');
+    if (resultado === true) {
+        return true
+    } else {
+        return false
+    }
+
+}
+
+function confirm_delete_order_product() {
+
+    let resultado = window.confirm('¿Estas seguro de borrar el producto de la orden de compra?');
+    if (resultado === true) {
+        return true
+    } else {
+        return false
+    }
+
+}
+function confirm_delete_remission_product() {
+
+    let resultado = window.confirm('¿Estas seguro de borrar el producto de la remisión?');
+    if (resultado === true) {
+        return true
+    } else {
+        return false
+    }
+
+}
+
+
+function confirm_delete_product() {
+
+    let resultado = window.confirm('¿Estas seguro de borrar el producto?');
+    if (resultado === true) {
+        return true
+    } else {
+        return false
+    }
+
+}

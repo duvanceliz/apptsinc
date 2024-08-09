@@ -59,8 +59,8 @@
            
               <th scope="col">Cantidad</th>
               
-         
-              <th scope="col">Precio</th>
+              <th scope="col">Precio(compra)</th>
+              <th scope="col">Precio(venta)</th>
               <th scope="col">Bandera</th>
               <th scope="col"></th>
               
@@ -84,6 +84,10 @@
               <td>
                 {{product.quantity}}
               </td>
+
+              <td>
+                {{product.purcharse_price}}
+              </td>
               
               <td>
                 {{product.sale_price}}
@@ -96,7 +100,7 @@
                 <span class="bg-success">
                   <i class="bi bi-flag"></i>
                 </span>
-                {% elif flag.value > 2  and flag.value < 3 %}
+                {% elif flag.value >= 2  and flag.value < 3 %}
                 <span class="bg-warning">
                   <i class="bi bi-flag"></i>
                  
@@ -114,15 +118,15 @@
  
               
               <td>
-                <a class="btn btn-primary btn-sm" href="{% url 'product_info' product.id  %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Entrar a los Tableros"> <i class="bi bi-box-arrow-right"></i></a>
+                <a class="btn btn-primary btn-sm" href="{% url 'product_info' product.id  %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles de producto"> <i class="bi bi-box-arrow-right"></i></a>
 
-                <a class="btn btn-success btn-sm"   href="/editproduct/?id={{product.id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar parametros del tablero"><i class="bi bi-pencil-square"></i></a>
+                <a class="btn btn-success btn-sm"   href="/editproduct/?id={{product.id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar producto"><i class="bi bi-pencil-square"></i></a>
 
-                <a class="btn btn-danger btn-sm" href="{% url 'delete_product' product.id %}" onclick="return verificar()"> 
+                <a class="btn btn-danger btn-sm" href="{% url 'delete_product' product.id %}" onclick="return confirm_delete_product()"> 
                   <i class="bi bi-trash"></i>
                 </a>
 
-                <a class="btn btn-success btn-sm"   href="{% url 'add_product_to_box' product.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar a la remisión"><i class="bi bi-plus-circle"></i></a>
+                <a class="btn btn-success btn-sm"   href="{% url 'add_product_to_box' product.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar al carrito"><i class="bi bi-plus-circle"></i></a>
 
               </td>
             </tr>

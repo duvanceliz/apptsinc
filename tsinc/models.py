@@ -33,6 +33,7 @@ class Product(models.Model):
     factory_ref = models.CharField(max_length=200, default=None)
     model = models.CharField(max_length=200, default=None)
     sale_price = models.FloatField(default=0)
+    purcharse_price = models.FloatField(default=0)
     brand = models.CharField(max_length=200, default=None)
     location = models.CharField(max_length=200, default=None)
     quantity = models.IntegerField()
@@ -173,13 +174,13 @@ class OfferCode(models.Model):
 
 class Remission(models.Model):
     number = models.CharField(max_length=200, null= True)
-    order_number = models.CharField(max_length=200, null= True)
     city = models.CharField(max_length=200)
     company = models.CharField(max_length=200)
     nit = models.CharField(max_length=200)
     location = models.CharField(max_length=200)
     project = models.CharField(max_length=250)
     responsible = models.CharField(max_length=200)
+    order_number = models.CharField(max_length=100, null=True) 
     date = models.DateTimeField(default=timezone.now)
     usersession = models.ForeignKey(User,on_delete=models.CASCADE)
 

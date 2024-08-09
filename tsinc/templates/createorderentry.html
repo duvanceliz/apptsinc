@@ -113,7 +113,7 @@
                       
                       <td>
                        
-                        <a class="btn btn-danger btn-sm" href="{% url 'delete_order_entry' entry.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
+                        <a class="btn btn-danger btn-sm" href="{% url 'delete_order_entry' entry.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return confirm_delete_entry()"> <i class="bi bi-trash"></i> </a>
                       </td>
                     </tr>
           
@@ -126,6 +126,6 @@
          
     </div>
 </div>
-<!-- <script src="{% static 'js/getInput.js' %}"></script> -->
+<script src="{% static 'js/confirm.js' %}"></script>
 
 {% endblock %}

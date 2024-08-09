@@ -1,5 +1,5 @@
 
-{% extends 'layout.html' %} {% block body %} {% load humanize %}
+{% extends 'layout.html' %} {% block body %} {% load humanize %} {% load static %}
 
 <div class="container">
   <div class="row">
@@ -88,11 +88,11 @@
                   {% endif %}
                 </td>
                 <td>
-                  <a class="btn btn-primary btn-sm" href="{% url 'order_product_info' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Productos"> <i class="bi bi-box-arrow-right"></i></a>
-                  <a href="{% url 'create_order_entry' order.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar archivo de Puntos"><i class="bi bi-envelope-arrow-up"></i></a>
-                  <a href="{% url 'download_order' order.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar archivo de Puntos"><i class="bi bi-arrow-down-circle"></i></a>
-                  <a class="btn btn-success btn-sm" href="{% url 'edit_order' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Cambiar información de remisión"><i class="bi bi-pencil-square"></i></a>
-                  <a class="btn btn-danger btn-sm" href="{% url 'delete_order' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
+                  <a class="btn btn-primary btn-sm" href="{% url 'order_product_info' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles de remisión"> <i class="bi bi-box-arrow-right"></i></a>
+                  <a href="{% url 'create_order_entry' order.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver o editar las entradas"><i class="bi bi-envelope-arrow-up"></i></a>
+                  <a href="{% url 'download_order' order.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar orden de compra"><i class="bi bi-arrow-down-circle"></i></a>
+                  <a class="btn btn-success btn-sm" href="{% url 'edit_order' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar la orden de compra y sus productos"><i class="bi bi-pencil-square"></i></a>
+                  <a class="btn btn-danger btn-sm" href="{% url 'delete_order' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar orden de compra" onclick="return confirm_delete_order()"> <i class="bi bi-trash"></i> </a>
                 </td>
               </tr>
     
@@ -106,4 +106,5 @@
     </div>
   </div>
 
+  <script src="{% static 'js/confirm.js' %}"></script>
 {% endblock %}
