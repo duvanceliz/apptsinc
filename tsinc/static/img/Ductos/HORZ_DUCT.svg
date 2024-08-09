@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generado por Microsoft Visio, SVG Export HORZ_DUCT.svg Página-1 -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
+		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="0.906944in" height="0.520833in"
+		viewBox="0 0 65.3 37.5" xml:space="preserve" color-interpolation-filters="sRGB" class="st4">
+	<v:documentProperties v:langID="9226" v:metric="true" v:viewMarkup="false"/>
+
+	<style type="text/css">
+	<![CDATA[
+		.st1 {fill:url(#grad0-5);stroke:none;stroke-linecap:butt;stroke-width:0.75}
+		.st2 {fill:url(#grad0-9);stroke:none;stroke-linecap:butt;stroke-width:0.75}
+		.st3 {stroke:#000000;stroke-linecap:butt;stroke-width:0.75}
+		.st4 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
+	]]>
+	</style>
+
+	<defs id="Patterns_And_Gradients">
+		<linearGradient id="grad0-5" x1="0" y1="0" x2="1" y2="0" gradientTransform="rotate(270 0.5 0.5)">
+			<stop offset="0" stop-color="#666666" stop-opacity="1"/>
+			<stop offset="1" stop-color="#b3b3b3" stop-opacity="1"/>
+		</linearGradient>
+		<linearGradient id="grad0-9" x1="0" y1="0" x2="1" y2="0" gradientTransform="rotate(90 0.5 0.5)">
+			<stop offset="0" stop-color="#9a9a9a" stop-opacity="1"/>
+			<stop offset="1" stop-color="#e6e6e6" stop-opacity="1"/>
+		</linearGradient>
+	</defs>
+	<g v:mID="0" v:index="1" v:groupContext="foregroundPage">
+		<title>Página-1</title>
+		<v:pageProperties v:drawingScale="0.0393701" v:pageScale="0.0393701" v:drawingUnits="24" v:shadowOffsetX="8.50394"
+				v:shadowOffsetY="-8.50394"/>
+		<v:layer v:name="Drawing" v:index="0"/>
+		<g id="group1-1" transform="translate(1.15,-0.75)" v:mID="1" v:groupContext="group" v:layerMember="0">
+			<v:userDefs>
+				<v:ud v:nameU="ClassID" v:val="VT4(HVACAIR.HorzDuct)"/>
+				<v:ud v:nameU="Version" v:val="VT4(1.1)"/>
+				<v:ud v:nameU="Origin" v:val="VT4(MKEHQ)"/>
+			</v:userDefs>
+			<title>Horz Duct</title>
+			<g id="shape2-2" v:mID="2" v:groupContext="shape" v:layerMember="0" transform="translate(-0.3,-9)">
+				<title>Hoja.2</title>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<rect x="0" y="10.5" width="63.6" height="27" class="st1"/>
+			</g>
+			<g id="shape3-6" v:mID="3" v:groupContext="shape" v:layerMember="0" transform="translate(-0.3,7.10543E-15)">
+				<title>Hoja.3</title>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<rect x="0" y="28.5" width="63.6" height="9" class="st2"/>
+			</g>
+			<g id="shape4-10" v:mID="4" v:groupContext="shape">
+				<title>Hoja.4</title>
+				<path d="M-0.4 1.5 L63.4 1.5" class="st3"/>
+				<path d="M-0.4 10.5 L63.4 10.5" class="st3"/>
+				<path d="M-0.4 28.5 L63.4 28.5" class="st3"/>
+				<path d="M-0.4 37.5 L63.4 37.5" class="st3"/>
+			</g>
+		</g>
+	</g>
+</svg>
