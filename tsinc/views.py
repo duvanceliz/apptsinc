@@ -1280,7 +1280,7 @@ def download_remission(request,id):
         # workbook.save(path)
 
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename=Remision.xlsx'
+        response['Content-Disposition'] = f"attachment; filename=Remision_{remission.number}.xlsx"
 
         workbook.save(response)
 
@@ -1308,7 +1308,7 @@ def download_order(request,id):
         # workbook.save(path)
 
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename=Orden_de_compra.xlsx'
+        response['Content-Disposition'] = f"attachment; filename=Orden_de_compra_{order.code}.xlsx"
 
         workbook.save(response)
 
