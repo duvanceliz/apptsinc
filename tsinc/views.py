@@ -56,8 +56,8 @@ def replace_cero(value):
         value = 1
     return value
 
-def seve_stat_prod():
-    products = Product.objects.all()
+def seve_stat_prod(products):
+    # products = Product.objects.all()
     
     for product in products:
         
@@ -106,11 +106,9 @@ def product(request):
     }
     for product in products 
     ]
-    
-    
-    # paginator = Paginator(product, 10)
-    # page_number = request.GET.get('page')
-    # page_obj = paginator.get_page(page_number)
+    paginator = Paginator(page_obj, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     return render(request, 'product.html',{'page_obj': page_obj, 'flags':flags})
 
 
@@ -1013,6 +1011,7 @@ def create_remission(request):
                                             responsible = request.POST['responsible'],
                                             usersession = request.user
                                             )
+        products = []
         for productb in productbox:
             productsent = ProductSent.objects.create(
                 product = productb.product,
@@ -1021,11 +1020,12 @@ def create_remission(request):
                 remission = remission
             )
             product = Product.objects.filter(id= productsent.product.id).first()
-            
+            products.append(product)
             product.quantity -= productsent.quantity
             product.save()
         
-        seve_stat_prod()
+        seve_stat_prod(products)
+
         messages.success(request,f"La remisión ha sido generada correctamente.")
 
         return redirect("/createremission/")
@@ -1600,7 +1600,7 @@ def delete_remission_product(request,id):
     remissionproduct.delete()
 
     return redirect(f"/editremission/{remissionproduct.remission.id}")
-
+@login_required
 def product_statictics(request):
     products = Product.objects.all()
     prod_out_stock = ProductStatictics.objects.order_by("out_stock")[:10]
@@ -1621,7 +1621,7 @@ def product_statictics(request):
                                                     
                                                     })
 
-
+@login_required
 def remission_statictics(request):
     remissions = Remission.objects.order_by('-date')[:10]
     prod_remission = ProductSent.objects.order_by('-remission__date')[:10]
@@ -1629,3 +1629,28 @@ def remission_statictics(request):
     return render(request,"remissionstatictics.html",{'remissions':remissions,'prod':prod_remission})
 
 
+def add_car_remission(request,id):
+    productbox = ProductBox.objects.filter(usersession = request.user).all()
+    remission = Remission.objects.filter(id = id).first()
+
+    for productb in productbox:
+            if productb.quantity > productb.product.quantity:
+                messages.error(request,f"No hay sufiente cantidad del producto {productb.product.model} en el inventario")
+                return redirect(f"/editremission/{remission.id}")
+    products = []
+    for productb in productbox:
+        productsent = ProductSent.objects.create(
+            product = productb.product,
+            quantity = productb.quantity,
+            price = productb.price,
+            remission = remission
+        )
+        product = Product.objects.filter(id= productsent.product.id).first()
+        products.append(product)
+        product.quantity -= productsent.quantity
+        product.save()
+    
+    seve_stat_prod(products)
+
+    return redirect(f"/editremission/{remission.id}")
+    

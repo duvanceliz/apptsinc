@@ -62,6 +62,6 @@ urlpatterns = [
     path('deleteremissionproduct/<int:id>', views.delete_remission_product, name='delete_remission_product'),
     path('statictics/products', views.product_statictics, name='product_statictics'),
     path('statictics/remission', views.remission_statictics, name='remission_statictics'),
-
+    path('addcarremission/<int:id>', views.add_car_remission, name='add_car_remission'),
 
 ]
