@@ -1426,7 +1426,7 @@ def create_order_entry(request,id):
             product.quantity += int(orderentry.quantity)
             product.save()
             calc_progress(order)
-            seve_stat_prod()
+            seve_stat_prod([product])
             messages.success(request,f"La entrada ha sido creada correctamente")
 
         else:
