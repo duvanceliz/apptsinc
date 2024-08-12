@@ -167,7 +167,7 @@ def verify_code_point_des(description):
             point = description_list[2]
             descrip =  description_list[3]
     
-    return code,point,descrip,min_stock
+    return code,min_stock,point,descrip
         
     
 @login_required   
@@ -1050,6 +1050,11 @@ def remissions(request):
 @login_required
 def delete_remission(request,id):  
     remission = Remission.objects.filter(id = id).first()
+    remission_prod = ProductSent.objects.filter(remission = remission ).all()
+    for prod in remission_prod:
+        product = Product.objects.filter(id = prod.product.id).first()
+        product.quantity += prod.quantity
+        product.save()
     remission.delete()
     return redirect("/remissions/")
 

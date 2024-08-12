@@ -67,6 +67,7 @@
               <th scope="col">Cantidad</th>
               <th scope="col">Precio(und)</th>
               <th scope="col">Fecha</th>
+              <th scope="col"></th>
               
 
             </tr>
@@ -81,6 +82,7 @@
               <td>{{entry.quantity}}</td>
               <td>{{entry.price}}</td>
               <td>{{entry.date|naturaltime}}</td>
+              <td><a href="{% url 'order_product_info' entry.order.id %}">Ver</a></td>
               
              
             </tr>
@@ -107,6 +109,7 @@
               <th scope="col">Cantidad</th>
               <th scope="col">Precio(und)</th>
               <th scope="col">Fecha</th>
+              <th scope="col"></th>
             </tr>
           
           </thead>
@@ -120,6 +123,7 @@
               <td>{{product.quantity}}</td>
               <td>{{product.price}}</td>
               <td>{{product.remission.date|naturaltime}}</td>
+              <td><a href="{% url 'product_remission' product.remission.id %}">Ver</a></td>
             </tr>
             {%endfor%}
           </tbody>

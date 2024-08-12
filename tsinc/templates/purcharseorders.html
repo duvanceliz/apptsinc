@@ -88,7 +88,7 @@
                   {% endif %}
                 </td>
                 <td>
-                  <a class="btn btn-primary btn-sm" href="{% url 'order_product_info' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles de remisión"> <i class="bi bi-box-arrow-right"></i></a>
+                  <a class="btn btn-primary btn-sm" href="{% url 'order_product_info' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles de orden de compra"> <i class="bi bi-box-arrow-right"></i></a>
                   <a href="{% url 'create_order_entry' order.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver o editar las entradas"><i class="bi bi-envelope-arrow-up"></i></a>
                   <a href="{% url 'download_order' order.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar orden de compra"><i class="bi bi-arrow-down-circle"></i></a>
                   <a class="btn btn-success btn-sm" href="{% url 'edit_order' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar la orden de compra y sus productos"><i class="bi bi-pencil-square"></i></a>
