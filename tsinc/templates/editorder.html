@@ -89,8 +89,10 @@
 
         </div>
         <div class="col-md-8">
-            <a href="{% url 'purcharse_order' %}" class=" btn btn-primary btn-sm">Volver</a>
-
+            <a href="{% url 'purcharse_order' %}" class=" btn btn-primary btn-sm mb-2">Volver</a>
+            <a href="{% url 'remission' %}" class=" btn btn-primary btn-sm mb-2">Ver Carrito</a>
+            <a href="{% url 'add_car_order' order.id %}" class=" btn btn-success btn-sm mb-2">Agregar del carrito</a>
+          
             <div class="table-responsive">
                 <table class="table table-hover table-light">
                   <thead>

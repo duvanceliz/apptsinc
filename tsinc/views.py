@@ -1654,3 +1654,22 @@ def add_car_remission(request,id):
 
     return redirect(f"/editremission/{remission.id}")
     
+
+def add_car_order(request,id):
+    productbox = ProductBox.objects.filter(usersession = request.user).all()
+    order = PurcharseOrder.objects.filter(id = id).first()
+
+
+    for product in productbox:
+
+            OrderProduct.objects.create(
+                product = product.product,
+                quantity = product.quantity,
+                price = product.price,
+                order = order
+            )
+        
+    calc_t_quantity_price(order)
+    calc_progress(order)
+
+    return redirect(f"/editorder/{order.id}")

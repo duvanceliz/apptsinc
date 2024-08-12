@@ -63,5 +63,6 @@ urlpatterns = [
     path('statictics/products', views.product_statictics, name='product_statictics'),
     path('statictics/remission', views.remission_statictics, name='remission_statictics'),
     path('addcarremission/<int:id>', views.add_car_remission, name='add_car_remission'),
+    path('addcarorder/<int:id>', views.add_car_order, name='add_car_order'),
 
 ]
