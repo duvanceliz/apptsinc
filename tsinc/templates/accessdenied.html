@@ -1,0 +1,29 @@
+
+{% extends 'layout.html' %} {% block body %} {% load static %}
+
+<div class="container">
+    <div class="row">
+          
+       <div class="col-md-4">
+       
+    
+       </div>
+       <div class="col-md-4">
+       <div class="card">
+        <div class="card-header text-center">
+            <img src="{% static 'img/denied.webp' %}" alt="" style="width: 10rem;">
+        </div>
+        <div class="card-body" >
+            <p class="">No tienes permiso para acceder a esta página, por favor verifica los permisos de tu usuario.</p>
+            <p>Puedes regresar a la vista principal dando click en el siguiente enlace: <a href="{% url 'home' %}">Inicio</a></p>
+        </div>
+       </div>
+       </div>
+       <div class="col-md-4">
+
+       </div>
+      
+    </div>
+  </div>
+
+{% endblock %}

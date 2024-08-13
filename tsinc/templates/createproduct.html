@@ -7,22 +7,29 @@
       </div>
       <div class="col">
 
-        {% if form.errors %}
-        <div class="errors">
-        {% for field in form %}
-            {% for error in field.errors %}
-                <p>{{ error }}</p>
+        <div class="card">
+          <div class="card-body">
+            {% if form.errors %}
+            <div class="errors">
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-            </div>
-        {% endif %}
-        <form action="" method="POST">
-            {% csrf_token %}
-            {{form.as_p}}
+                </div>
+            {% endif %}
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{form.as_p}}
+            
+                <button class="btn btn-primary" style="width: 100%;">Guardar</button>
+            
+            </form>
+
+          </div>
+        </div>
+
         
-            <button class="btn btn-primary">Guardar</button>
-        
-        </form>
       </div>
       <div class="col">
       

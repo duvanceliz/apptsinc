@@ -30,14 +30,37 @@ class CreateProject(forms.Form):
   
 
 class CreateProduct(forms.Form):
-    code = forms.CharField(label="Codigo del Producto", max_length=200)
-    product_name = forms.CharField(label="Nombre del Producto", max_length=200)
-    ref = forms.CharField(label="Referencia de fabrica",max_length=200)
-    model = forms.CharField(label="Modelo",max_length=200)
-    price = forms.FloatField(label="Precio de venta")
-    brand =  forms.ModelChoiceField(label="Marca",queryset=Brand.objects.all())
-    location = forms.ModelChoiceField(label="Ubicacion",queryset=Location.objects.all())
-    quantity = forms.IntegerField(label="Cantidad")
+    code = forms.CharField(label="Codigo del Producto", max_length=200, 
+                           widget=forms.TextInput(attrs={'class': 'form-control'}))
+    
+    product_name = forms.CharField(label="Nombre del Producto", max_length=200,
+                                   widget=forms.TextInput(attrs={'class': 'form-control'}))
+    ref = forms.CharField(label="Referencia de fabrica",max_length=200,
+                          widget=forms.TextInput(attrs={'class': 'form-control'}))
+    model = forms.CharField(label="Modelo",max_length=200,
+                            widget=forms.TextInput(attrs={'class': 'form-control'}))
+    purcharse_price = forms.FloatField(label="Precio de compra",
+                             widget=forms.TextInput(attrs={'class': 'form-control'}))
+    sale_price = forms.FloatField(label="Precio de venta",
+                             widget=forms.TextInput(attrs={'class': 'form-control'}))
+    brand =  forms.CharField(label="Marca",max_length=200,
+                                    widget=forms.TextInput(attrs={'class': 'form-control'}))
+    location = forms.CharField(label="Ubicacion",max_length=200,
+                                widget=forms.TextInput(attrs={'class': 'form-control'}))
+    quantity = forms.IntegerField(label="Cantidad",
+                                    widget=forms.NumberInput(attrs={'class': 'form-control','min': '1'}),
+                                    min_value=1)
+
+    point = forms.CharField(label="Puntos del dipositivo",max_length=200,
+                                widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+    min_stock = forms.IntegerField(label="Stock minimo",
+                                    widget=forms.NumberInput(attrs={'class': 'form-control','min': '1'}),
+                                    min_value=1
+                                    )
+
+    description = forms.CharField(label="Descripción",max_length=500, widget=forms.Textarea(attrs={'class': 'form-control'}))
+
     iva = forms.BooleanField(label="Tiene el IVA incluido?")
 
 class UploadProducts(forms.Form):

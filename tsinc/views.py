@@ -6,7 +6,7 @@ from django.db.models import Max
 from .models import *
 from .forms import *
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 import pandas as pd
 import openpyxl
 from django.http import JsonResponse
@@ -21,6 +21,13 @@ from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField, F
 
 # Create your views here.
+
+
+def staff_required(user):
+    return user.is_staff
+
+def superuser_required(user):
+    return user.is_superuser
 
 @login_required
 def home(request):
@@ -87,7 +94,7 @@ def seve_stat_prod(products):
    
 
 
-
+@user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def product(request):
     search = request.GET.get('search')
@@ -136,6 +143,7 @@ def product_search(request):
         results = list(results)
         return JsonResponse(results,safe=False)
 
+@user_passes_test(staff_required,login_url='/accessdenied/')   
 @login_required
 def create_product(request):
     if request.method == 'GET':
@@ -147,7 +155,19 @@ def create_product(request):
         else:
             iva = False
 
-        project = Product.objects.create(code = request.POST['code'], product_name = request.POST['product_name'], factory_ref= request.POST['ref'], model= request.POST['model'], sale_price= request.POST['price'],iva=iva)
+        project = Product.objects.create(code = request.POST['code'], 
+                                         product_name = request.POST['product_name'], 
+                                         factory_ref= request.POST['ref'],
+                                         brand= request.POST['brand'], 
+                                         model= request.POST['model'], 
+                                         location= request.POST['location'],
+                                         quantity= request.POST['quantity'],
+                                         purcharse_price= request.POST['purcharse_price'],
+                                         sale_price= request.POST['sale_price'],
+                                         min_stock= request.POST['min_stock'],
+                                         point= request.POST['point'],
+                                         description= request.POST['description'],
+                                         iva=iva)
         return redirect('/product')
 
 
@@ -167,7 +187,7 @@ def verify_code_point_des(description):
     
     return code,min_stock,point,descrip
         
-    
+@user_passes_test(staff_required,login_url='/accessdenied/')    
 @login_required   
 def upload_products(request):
     if request.method == 'POST':
@@ -570,6 +590,8 @@ def handle_uploaded_file(file, path):
         for chunk in file.chunks():
             destination.write(chunk)
 
+
+@user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def upload_svg(request):
 
@@ -663,6 +685,7 @@ def upload_svg(request):
     folders = Folders.objects.all()
     return render(request, 'uploadsvg.html', {'folders':folders})
 
+@user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def files_folders(request):
      
@@ -673,6 +696,8 @@ def files_folders(request):
         'folders':folders,
         'panelitems': panelitems
     } )
+
+@user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def delete_file(request, id):
 
@@ -694,6 +719,8 @@ def delete_file(request, id):
     
 
     return redirect('/filesfolders')
+
+@user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def delete_folder(request, id):
     
@@ -969,6 +996,7 @@ def add_product(request,id):
         # messages.success(request,f"El producto {product.model} ya se encontraba en el carrito ahora tienes {productbox.quantity}.")
     return redirect('/createremission/')
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def subtract_product(request,id):  
 
@@ -989,7 +1017,7 @@ def increase_code():
 
     return remission_code
 
-
+@user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def create_remission(request): 
     if request.method == 'GET':
@@ -1035,14 +1063,15 @@ def create_remission(request):
         messages.success(request,f"La remisión ha sido generada correctamente.")
 
         return redirect("/createremission/")
-
+    
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def clean_productbox(request):  
     productbox = ProductBox.objects.all()
     productbox.delete()
     return redirect('/createremission/')
 
-
+@user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def remissions(request):  
     remissions = Remission.objects.filter().order_by('-date').all()[:10]
@@ -1052,7 +1081,7 @@ def remissions(request):
     
     return render(request,'remissions.html',{'remissions':remissions})
 
-
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def delete_remission(request,id):  
     remission = Remission.objects.filter(id = id).first()
@@ -1064,13 +1093,15 @@ def delete_remission(request,id):
     remission.delete()
     return redirect("/remissions/")
 
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def product_remission(request,id):  
     remission = Remission.objects.filter(id=id).first()
     products = ProductSent.objects.filter(remission= remission).all()
     return render(request,'productremission.html',{'products':products, 'remission':remission})
 
-
+@user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def product_shipped(request):  
     products_shipped = ProductSent.objects.all()[:10]
@@ -1126,6 +1157,7 @@ def increase_code_order():
 
     return code
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def create_order(request): 
     if request.method == 'POST':
@@ -1186,7 +1218,7 @@ def save_car(request):
             productbox.save()
         return JsonResponse({'mensaje': 'Datos guardados con éxito!'})
 
-
+@user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def purcharse_order(request):  
     orders = PurcharseOrder.objects.filter().order_by('progress').all()[:20]
@@ -1195,6 +1227,7 @@ def purcharse_order(request):
         orders = PurcharseOrder.objects.filter(Q(code__icontains= search) | Q(supplier__icontains= search))
     return render(request,'purcharseorders.html',{'orders':orders})
 
+@user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def purcharse_order_products(request):  
     purcharse_order_products = OrderProduct.objects.all()[:10]
@@ -1221,7 +1254,7 @@ def calc_info_order_product(orderproducts,orderentry):
         info_per_product.append(p)
     return info_per_product
 
-
+@user_passes_test(staff_required,login_url='/accessdenied/')   
 @login_required
 def order_product_info(request,id):  
     order = PurcharseOrder.objects.filter(id=id).first()
@@ -1280,6 +1313,8 @@ def order_product_info(request,id):
                                                    
                                                    })
 
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def download_remission(request,id):
 
@@ -1308,6 +1343,7 @@ def download_remission(request,id):
         messages.error(request,f"¡Ha ocurrido un error al momento de generar el archivo!.{e}")
         return redirect('/remissions/')
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def download_order(request,id):
 
@@ -1337,7 +1373,7 @@ def download_order(request,id):
         return redirect('/purcharseorder/')
 
 
-
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def edit_remission(request,id):
     remission = get_object_or_404(Remission,id=id)
@@ -1361,7 +1397,7 @@ def edit_remission(request,id):
     
     return render(request,'editremission.html',{'remission':remission, 'products':products})
 
-    
+@user_passes_test(staff_required,login_url='/accessdenied/')     
 @login_required
 def edit_order(request,id):
     order = get_object_or_404(PurcharseOrder,id=id)
@@ -1393,12 +1429,8 @@ def edit_order(request,id):
     
     return render(request,'editorder.html',{'order':order,'orderproducts':orderproducts})
 
-
-
-
-    
       
-
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def create_order_entry(request,id):
 
@@ -1454,7 +1486,7 @@ def create_order_entry(request,id):
                                                    'info_per_product':info_per_product
                                                    })
 
-
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def delete_order(request,id):  
     order = PurcharseOrder.objects.filter(id = id).first()
@@ -1481,6 +1513,7 @@ def delete_order_product(request,id):
     calc_progress(order)
     return redirect(f"/editorder/{order.id}")
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def delete_order_entry(request,id):  
     orderentry = OrderEntry.objects.filter(id = id).first()
@@ -1499,6 +1532,9 @@ def entry_info(request,id):
     entry = OrderEntry.objects.filter(id=id).first()
     return render(request,"entryinfo.html",{'entry':entry})
 
+
+
+@user_passes_test(superuser_required,login_url='/accessdenied/')
 @login_required
 def order_statictics(request): 
     # data = {
@@ -1601,7 +1637,7 @@ def add_entry_inventory(request,id):
     return redirect(f"/createorderentry/{entry.order.id}")
 
 
-
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def delete_remission_product(request,id):  
     remissionproduct = ProductSent.objects.filter(id = id).first()
@@ -1614,6 +1650,8 @@ def delete_remission_product(request,id):
     remissionproduct.delete()
 
     return redirect(f"/editremission/{remissionproduct.remission.id}")
+
+@user_passes_test(superuser_required,login_url='/accessdenied/')
 @login_required
 def product_statictics(request):
     products = Product.objects.all()
@@ -1635,6 +1673,7 @@ def product_statictics(request):
                                                     
                                                     })
 
+@user_passes_test(superuser_required,login_url='/accessdenied/')
 @login_required
 def remission_statictics(request):
     remissions = Remission.objects.order_by('-date')[:10]
@@ -1688,6 +1727,7 @@ def add_car_order(request,id):
 
     return redirect(f"/editorder/{order.id}")
 
+@user_passes_test(staff_required,login_url='/accessdenied/')   
 def duplicate_remission(request,id):
     remission = Remission.objects.filter(id = id).first()
     
@@ -1710,6 +1750,7 @@ def duplicate_remission(request,id):
          messages.error(request,f"Se ha presentado el siguiente error: {e}")
     return redirect("/remissions/")
 
+@user_passes_test(staff_required,login_url='/accessdenied/')   
 def duplicate_order(request,id):
     order = PurcharseOrder.objects.filter(id = id).first()
     
@@ -1736,3 +1777,6 @@ def duplicate_order(request,id):
         messages.error(request,f"Se ha presentado el siguiente error: {e}")
 
     return redirect("/purcharseorder/")
+
+def access_denied(request):
+    return render(request,"accessdenied.html")
