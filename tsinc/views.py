@@ -978,6 +978,18 @@ def subtract_product(request,id):
     return redirect('/createremission/')
 
 
+def increase_code():
+    remission_code = OfferCode.objects.filter(name = "remission").first()
+
+    new_code = int(remission_code.code) + 1
+
+    remission_code.code = new_code
+
+    remission_code.save()
+
+    return remission_code
+
+
 @login_required
 def create_remission(request): 
     if request.method == 'GET':
@@ -993,13 +1005,7 @@ def create_remission(request):
                 messages.error(request,f"No hay sufiente cantidad del producto {productb.product.model} en el inventario")
                 return redirect("/createremission/")
 
-        remission_code = OfferCode.objects.filter(name = "remission").first()
-
-        new_code = int(remission_code.code) + 1
-
-        remission_code.code = new_code
-
-        remission_code.save()
+        remission_code = increase_code()
 
         remission = Remission.objects.create(city = request.POST['city'],
                                             number = remission_code.code,
@@ -1106,20 +1112,26 @@ def calc_progress(order):
     order.progress = progress
     order.save()
 
+def increase_code_order():
+
+    code = OfferCode.objects.filter(name = "order").first()
+
+    code_splited = code.code.split("-")
+
+    new_code = int(code_splited[-1]) + 1
+
+    code.code = f"{code_splited[0]}-{new_code}"
+
+    code.save()
+
+    return code
+
 @login_required
 def create_order(request): 
     if request.method == 'POST':
         productbox = ProductBox.objects.filter(usersession = request.user).all()
         
-        code = OfferCode.objects.filter(name = "order").first()
-
-        code_splited = code.code.split("-")
-
-        new_code = int(code_splited[-1]) + 1
-
-        code.code = f"{code_splited[0]}-{new_code}"
-
-        code.save()
+        
 
         supplier = request.POST['supplier']
         nit = request.POST['nit']
@@ -1130,6 +1142,8 @@ def create_order(request):
         inspector = request.POST['inspector']
         supervisor = request.POST['supervisor']
         trm = request.POST['trm']
+
+        code = increase_code_order()
 
         order = PurcharseOrder.objects.create(code = code.code,
                                               supplier = supplier,
@@ -1673,3 +1687,52 @@ def add_car_order(request,id):
     calc_progress(order)
 
     return redirect(f"/editorder/{order.id}")
+
+def duplicate_remission(request,id):
+    remission = Remission.objects.filter(id = id).first()
+    
+    try:
+        remission_code = increase_code()
+
+        Remission.objects.create(
+            number = remission_code.code,
+            city = remission.city,
+            company = remission.company,
+            nit = remission.nit,
+            location = remission.location,
+            project = remission.project,
+            responsible = remission.responsible,
+            order_number = remission.order_number,
+            usersession = request.user
+        )
+        messages.success(request,"La remisión se ha duplicado con éxito")
+    except TypeError as e:
+         messages.error(request,f"Se ha presentado el siguiente error: {e}")
+    return redirect("/remissions/")
+
+def duplicate_order(request,id):
+    order = PurcharseOrder.objects.filter(id = id).first()
+    
+    try:
+        code = increase_code_order()
+
+        PurcharseOrder.objects.create(
+                                    code = code.code,
+                                    supplier = order.supplier,
+                                    nit = order.nit,
+                                    address = order.address,
+                                    phone = order.phone,
+                                    customer = order.customer,
+                                    cost_center = order.cost_center,
+                                    inspector = order.inspector,
+                                    supervisor = order.supervisor,
+                                    trm = order.trm,
+                                    usersession = request.user  
+                                        )
+        messages.success(request,"La orden de compra se ha duplicado con éxito")
+       
+    except TypeError as e:
+         
+        messages.error(request,f"Se ha presentado el siguiente error: {e}")
+
+    return redirect("/purcharseorder/")

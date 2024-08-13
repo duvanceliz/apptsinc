@@ -77,9 +77,10 @@
                 <td>
                   <a class="btn btn-primary btn-sm" href="{% url 'product_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles de remisión"> <i class="bi bi-box-arrow-right"></i></a>
                   <a href="{% url 'download_remission' remission.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar remisión"><i class="bi bi-arrow-down-circle"></i></a>
-                    <a class="btn btn-success btn-sm" href="{% url 'edit_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar remisión"><i class="bi bi-pencil-square"></i></a>
-                    <a class="btn btn-danger btn-sm" href="{% url 'delete_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return confirm_delete_remission()"> <i class="bi bi-trash"></i> </a>
-                </td>
+                  <a class="btn btn-success btn-sm" href="{% url 'edit_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar remisión"><i class="bi bi-pencil-square"></i></a>
+                  <a class="btn btn-danger btn-sm" href="{% url 'delete_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return confirm_delete_remission()"> <i class="bi bi-trash"></i> </a>
+                  <a class="btn btn-light btn-sm" href="{% url 'duplicate_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Duplicar remisión"><i class="bi bi-copy"></i></a>
+                  </td>
               </tr>
     
             

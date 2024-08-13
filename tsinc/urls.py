@@ -64,5 +64,8 @@ urlpatterns = [
     path('statictics/remission', views.remission_statictics, name='remission_statictics'),
     path('addcarremission/<int:id>', views.add_car_remission, name='add_car_remission'),
     path('addcarorder/<int:id>', views.add_car_order, name='add_car_order'),
+    path('duplicateremission/<int:id>', views.duplicate_remission, name='duplicate_remission'),
+    path('duplicateorder/<int:id>', views.duplicate_order, name='duplicate_order'),
+
 
 ]

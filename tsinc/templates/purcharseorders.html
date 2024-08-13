@@ -93,6 +93,8 @@
                   <a href="{% url 'download_order' order.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar orden de compra"><i class="bi bi-arrow-down-circle"></i></a>
                   <a class="btn btn-success btn-sm" href="{% url 'edit_order' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar la orden de compra y sus productos"><i class="bi bi-pencil-square"></i></a>
                   <a class="btn btn-danger btn-sm" href="{% url 'delete_order' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar orden de compra" onclick="return confirm_delete_order()"> <i class="bi bi-trash"></i> </a>
+                  <a class="btn btn-light btn-sm" href="{% url 'duplicate_order'  order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Duplicar orden de compra"><i class="bi bi-copy"></i></a>
+
                 </td>
               </tr>
     
