@@ -105,18 +105,18 @@ def product(request):
         search = "control"
         page_obj = Product.objects.filter(product_name__icontains= search)
 
-    products = Product.objects.all()
-    flags = [
-        {
-        'id':product.id,
-        'value':product.quantity/replace_cero(product.min_stock)
-    }
-    for product in products 
-    ]
+    # products = Product.objects.all()
+    # flags = [
+    #     {
+    #     'id':product.id,
+    #     'value':product.quantity/replace_cero(product.min_stock)
+    # }
+    # for product in products 
+    # ]
     paginator = Paginator(page_obj, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'product.html',{'page_obj': page_obj, 'flags':flags})
+    return render(request, 'product.html',{'page_obj': page_obj})
 
 
 @login_required
@@ -912,6 +912,7 @@ def edit_page(request):
     
     return render(request,'editpage.html',{'page':page})
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def edit_project(request):
     id = int(request.GET.get('id'))
@@ -929,17 +930,19 @@ def edit_project(request):
     
     return render(request,'editproject.html',{'project':project})
 
+
 @login_required
 def delete_product(request, id):
     product = Product.objects.filter(id=id).first()
     product.delete()
     return redirect(f"/product/")
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
-def edit_product(request):
-    id = int(request.GET.get('id'))
-    product = get_object_or_404(Product,id=id)
+def edit_product(request,id):
+    product = Product.objects.filter(id = id).first()
     if request.method == 'POST':
+        product = Product.objects.filter(id = id).first()
         code = request.POST.get('code')
         product_name = request.POST.get('product_name')
         factory_ref = request.POST.get('factory_ref')
@@ -966,9 +969,10 @@ def edit_product(request):
         product.min_stock = min_stock
         product.save()
         messages.success(request,f"Cambios realizados correctamente")
-        return redirect(f'/editproduct/?id={product.id}')
+        return redirect(f'/editproduct/{product.id}')
     
     return render(request,'editproduct.html',{'product':product})
+    
 
 
 @login_required
@@ -998,12 +1002,12 @@ def add_product(request,id):
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
-def subtract_product(request,id):  
+def subtract_product(request,id,path): 
 
     productbox = ProductBox.objects.filter(id = id).first()
     productbox.delete()
         # messages.success(request,f"El producto {product.model} ya se encontraba en el carrito ahora tienes {productbox.quantity}.")
-    return redirect('/createremission/')
+    return redirect(f"/{path}/")
 
 
 def increase_code():
@@ -1021,9 +1025,11 @@ def increase_code():
 @login_required
 def create_remission(request): 
     if request.method == 'GET':
+        path = "createremission"
 
         productbox = ProductBox.objects.filter(usersession = request.user).all()
-        return render(request,'createremission.html',{'productbox':productbox,'form':CreateRemission})
+        return render(request,'createremission.html',{'productbox':productbox,
+                                                      'form':CreateRemission,'path':path})
     else:
         productbox = ProductBox.objects.filter(usersession = request.user).all()
 
@@ -1066,10 +1072,10 @@ def create_remission(request):
     
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
-def clean_productbox(request):  
+def clean_productbox(request,path):  
     productbox = ProductBox.objects.all()
     productbox.delete()
-    return redirect('/createremission/')
+    return redirect(f"/{path}/")
 
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
@@ -1161,8 +1167,11 @@ def increase_code_order():
 @login_required
 def create_order(request): 
     if request.method == 'GET':
+        path = "createorder"
         productbox = ProductBox.objects.filter(usersession = request.user).all()
-        return render(request,"createorder.html",{'productbox':productbox,'form':CreateOrder() })
+        return render(request,"createorder.html",{'productbox':productbox,
+                                                  'form':CreateOrder(),
+                                                   'path':path })
 
     else:
         productbox = ProductBox.objects.filter(usersession = request.user).all()
@@ -1666,6 +1675,8 @@ def product_statictics(request):
 
     for product in products:
         total_inventory += product.purcharse_price
+    
+    total_inventory = round(total_inventory,2)
 
     return render(request,"productstatictics.html",{'prod_out_stock':prod_out_stock,
                                                     'prod_rotations':prod_rotations,
@@ -1785,4 +1796,5 @@ def access_denied(request):
 
 def carpage(request):
     productbox = ProductBox.objects.filter(usersession = request.user).all()
-    return render(request,"carpage.html",{'productbox':productbox})
+    path = "carpage"
+    return render(request,"carpage.html",{'productbox':productbox,'path':path})

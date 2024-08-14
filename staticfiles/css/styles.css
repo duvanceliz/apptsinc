@@ -1,0 +1,208 @@
+#outer-dropzone {
+  height: 80%;
+}
+
+.dropzone {
+  background-color: #21242b;
+  /* border: 2px dashed rgb(148, 146, 146); */
+  border-radius: 4px;
+  margin: 0;
+  padding: 10px;
+  width: 80%;
+  transition: background-color 0.3s;
+  background: 
+  linear-gradient(to right, #6060607b 1px, transparent 1px),
+  linear-gradient(to bottom, #6060607b 1px, transparent 1px);
+  background-size: 20px 20px;
+  border: 1px solid #6c6c6c;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  /* transform: translate(50%,50%); */
+  user-select: none;
+}
+body{
+  background: #e4e4e4;
+  color: #202020;
+  height: 100vh;
+}
+
+.dropzone{
+  margin: 0px;
+}
+
+.drag-drop{
+  position: absolute;
+}
+
+#item{
+
+  cursor: grab;
+
+}
+
+#alert{
+  background: rgb(215, 130, 130);
+  border-radius: 2px;
+  padding: 2px;
+  text-align: center;
+  /* background-color:  rgba(70, 157, 186, 0.445); */
+}
+.alert2{
+  opacity: 0; /* Comienza oculto */
+  transition: opacity 2s; /* Transición de 2 segundos */
+  background: rgb(99, 176, 122);
+  border-radius: 2px;
+  padding: 2px;
+  text-align: center;
+  /* background-color:  rgba(70, 157, 186, 0.445); */
+}
+
+.alert2.visible {
+  opacity: 1; /* Visible */
+}
+
+.alert2.fade-out {
+  opacity: 0; /* Oculto */
+}
+
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+.content {
+  flex: 1;
+}
+
+.dropzone > input{
+  background: #00000000;
+  font-family: Arial, Helvetica, sans-serif;
+  border: 0;
+  outline: none;
+  text-align: center;
+}
+
+
+.selected{
+ 
+  outline: 2px solid rgb(91, 91, 253);
+  outline-offset: 5px; /* Puedes ajustar este valor para separar más el borde */
+}
+
+input.selected{
+  outline: 2px solid rgb(91, 91, 253);
+  outline-offset: 5px; 
+}
+
+
+.selected-group{
+  outline: 2px solid rgb(91, 91, 253);
+  outline-offset: 5px; 
+  position: absolute;
+}
+
+input.selected-group{
+  outline: 2px solid rgb(91, 91, 253);
+  outline-offset: 5px;
+  position: absolute; 
+}
+
+
+#svgContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+#panelLeft{
+  height: 450px;
+  overflow-y: scroll; 
+}
+
+
+#panelLeft::-webkit-scrollbar {
+  width: 8px; /* Ancho de la barra de desplazamiento */
+  border-radius: 2px;
+}
+#panelLeft::-webkit-scrollbar-thumb {
+  background: #b8b4b4; /* Color del pulgar de la barra de desplazamiento */
+  border-radius: 2px; /* Bordes redondeados */
+}
+
+#parent-container-dropzone{
+  height: 800px;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  
+}
+
+
+
+.container-dropzone{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1500px;
+  height: 1000px;
+}
+
+#sidebar-home{
+  height: 400px;
+  overflow-y: scroll;
+}
+
+
+.selector {
+  position: absolute;
+  border: 2px dashed black;
+  background-color: rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  display: none;
+}
+
+#box{
+  width: 100%; /* Establece el ancho máximo del contenedor */
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+#box > a{
+  display: inline-block;
+  
+}
+
+
+.notification-save{
+  opacity: 0; /* Comienza oculto */
+  transition: opacity 2s; /* Transición de 2 segundos */
+  background: rgb(99, 176, 122);
+  border-radius: 2px;
+  padding: 2px;
+  text-align: center;
+  /* background-color:  rgba(70, 157, 186, 0.445); */
+}
+
+.notification-save.visible {
+  opacity: 1; /* Visible */
+}
+
+.notification-save.fade-out {
+  opacity: 0; /* Oculto */
+}
+
+
+
+
+
+
+
+
+
+

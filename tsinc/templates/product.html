@@ -94,25 +94,19 @@
               </td>
 
               <td>
-                {% for flag in flags %}
-                {% if flag.id == product.id %}
-                {% if flag.value >= 3 %}
+                
+                {% if product.quantity >= product.min_stock  %}
+              
                 <span class="bg-success">
                   <i class="bi bi-flag"></i>
                 </span>
-                {% elif flag.value >= 2  and flag.value < 3 %}
-                <span class="bg-warning">
-                  <i class="bi bi-flag"></i>
-                 
-                  </span>
-
-                {% elif flag.value >= 0  and flag.value < 2 %}
+                
+                {% else %}
                 <span class="bg-danger">
                   <i class="bi bi-flag"></i>
                   </span>
                 {% endif %}
-                {% endif %}
-                {% endfor %}
+               
                 
               </td>
  
@@ -120,7 +114,7 @@
               <td>
                 <a class="btn btn-primary btn-sm" href="{% url 'product_info' product.id  %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles de producto"> <i class="bi bi-box-arrow-right"></i></a>
 
-                <a class="btn btn-success btn-sm"   href="/editproduct/?id={{product.id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar producto"><i class="bi bi-pencil-square"></i></a>
+                <a class="btn btn-success btn-sm"   href="{% url 'edit_product' product.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar producto"><i class="bi bi-pencil-square"></i></a>
 
                 <a class="btn btn-danger btn-sm" href="{% url 'delete_product' product.id %}" onclick="return confirm_delete_product()"> 
                   <i class="bi bi-trash"></i>
