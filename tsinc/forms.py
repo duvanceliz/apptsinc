@@ -192,8 +192,8 @@ class CreateOrder(forms.Form):
                            widget=forms.TextInput(attrs={'class': 'form-control'})
     )
     
-    trm = forms.FloatField(label="Cual es el TRM?", 
-                           widget=forms.TextInput(attrs={'class': 'form-control'})
+    trm = forms.FloatField(label="Cual es el TRM?",
+                           widget=forms.TextInput(attrs={'class': 'form-control','data-bs-toggle':'tooltip','data-bs-placement':'right','title':'nota: Usar trm cuando el valor del producto sea COP, dejarlo en cero si el valor del porducto es USD'})
     )
     
     
