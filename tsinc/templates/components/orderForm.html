@@ -1,4 +1,4 @@
-<div class="card" id="order-form" hidden>
+<div class="card" id="order-form">
 
     <div class="card-header text-white" style="background: #005bc5;">
       <span class="fs-6 fw_light">
@@ -10,9 +10,8 @@
      
       <form action="{% url 'create_order' %}" method="POST" >
         {% csrf_token %}
-        {{form_or.as_p}}
-    
-        <button class="btn btn-primary mb-2">Guardar</button>
+        {{form.as_p}}
+        <button class="btn btn-primary mb-2" style="width: 100%;" id="btn-save">Guardar</button>
     
     </form>
     <a href=" {% url 'purcharse_order' %}" class="btn btn-link">Ver ordenes de compra generadas</a>

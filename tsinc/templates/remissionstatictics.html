@@ -22,7 +22,7 @@
                    
                     <span class="fw-bold">Empresa:</span> {{remission.company}}
                     <span class="fw-bold">Fecha:</span> {{remission.date|naturaltime}}
-                    <a href="{% url 'product_remission' remission.id %}">Ver</a>
+                    <a href="{% url 'product_remission' remission.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
                     </li>
 
                     {% endfor %}
@@ -48,7 +48,7 @@
                     <span class="fw-bold">Model:</span> {{p.product.model}} 
                     <!-- <span class="fw-bold">Cantidad:</span> <span class="">{{p.quantity}}</span>  -->
                     <span class="fw-bold">Date:</span> <span class="">{{p.remission.date|naturaltime}}</span> 
-                    <a href="{% url 'product_remission' p.remission.id %}">Ver</a>
+                    <a href="{% url 'product_remission' p.remission.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
                     </li>
 
                     {% endfor %}

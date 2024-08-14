@@ -67,6 +67,5 @@ urlpatterns = [
     path('duplicateremission/<int:id>', views.duplicate_remission, name='duplicate_remission'),
     path('duplicateorder/<int:id>', views.duplicate_order, name='duplicate_order'),
     path('accessdenied/', views.access_denied, name='access_denied'),
-
-
+    path('carpage/', views.carpage, name='carpage'),
 ]

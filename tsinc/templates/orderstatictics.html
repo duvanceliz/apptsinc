@@ -66,7 +66,7 @@
                 <div class="card-header d-flex justify-content-between">
 
                     <h5 class="fs-5">Ordenes Pendientes:</h5>
-                    <a href="{% url 'purcharse_order' %}"> Ver ordenes</a>
+                    <a href="{% url 'purcharse_order' %}" class="btn btn-primary btn-sm"> Ver ordenes</a>
                 </div>
                 <div class="card-body">
 
@@ -94,7 +94,7 @@
                             </div>
                             {% endif %}
                         <!-- <span class="fw-bold">Date:</span> {{order.order.date}}  -->
-                        <a href="{% url 'order_product_info' order.order.id %}">Ver</a>
+                        <a href="{% url 'order_product_info' order.order.id %}" >Ver</a>
                         </li>
                       
                         {% endfor %}
@@ -122,7 +122,7 @@
         
                         <span class="fw-bold">#</span> {{entry.quantity}} 
                         <span class="fw-bold">Date:</span> {{entry.date|naturaltime}} 
-                        <a href="{% url 'entry_info' entry.id %}">Ver</a>
+                        <a href="{% url 'entry_info' entry.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
                         </li>
 
                         {% endfor %}
@@ -141,7 +141,7 @@
                 <div class="card-header d-flex justify-content-between">
 
                     <h5 class="fs-5">Ordenes recientes:</h5>
-                    <a href="{% url 'purcharse_order' %}"> Ver ordenes</a>
+                    <a href="{% url 'purcharse_order' %}" class="btn btn-primary btn-sm"> Ver ordenes</a>
                 </div>
                 <div class="card-body">
 
@@ -151,7 +151,7 @@
                         <li class="list-group-item d-flex justify-content-between">
                         <span class="fw-bold">OPC:</span> {{order.code}} 
                         <span class="fw-bold">Date:</span> {{order.date|naturaltime}} 
-                        <a href="{% url 'order_product_info' order.id %}">Ver</a>
+                        <a href="{% url 'order_product_info' order.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
                         </li>
 
                         {% endfor %}

@@ -1023,7 +1023,7 @@ def create_remission(request):
     if request.method == 'GET':
 
         productbox = ProductBox.objects.filter(usersession = request.user).all()
-        return render(request,'createremission.html',{'productbox':productbox,'form_re':CreateRemission,'form_or':CreateOrder })
+        return render(request,'createremission.html',{'productbox':productbox,'form':CreateRemission})
     else:
         productbox = ProductBox.objects.filter(usersession = request.user).all()
 
@@ -1160,11 +1160,13 @@ def increase_code_order():
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def create_order(request): 
-    if request.method == 'POST':
+    if request.method == 'GET':
+        productbox = ProductBox.objects.filter(usersession = request.user).all()
+        return render(request,"createorder.html",{'productbox':productbox,'form':CreateOrder() })
+
+    else:
         productbox = ProductBox.objects.filter(usersession = request.user).all()
         
-        
-
         supplier = request.POST['supplier']
         nit = request.POST['nit']
         address = request.POST['address']
@@ -1780,3 +1782,7 @@ def duplicate_order(request,id):
 
 def access_denied(request):
     return render(request,"accessdenied.html")
+
+def carpage(request):
+    productbox = ProductBox.objects.filter(usersession = request.user).all()
+    return render(request,"carpage.html",{'productbox':productbox})

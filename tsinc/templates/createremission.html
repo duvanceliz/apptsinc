@@ -2,16 +2,7 @@
 {% extends 'layout.html' %} {% block body %} {% load static %}
 
 <div class="container">
-    <div class="row">
-      <div class="col-md-4">
-        <button class="btn btn-primary mb-3" id="btnrm">Generar una remisión</button>
-
-        <button class="btn btn-primary mb-3" id="btnor">Generar una Orden</button>
-      </div>
-      <div class="col-md-4"></div>
-      <div class="col-md-4"></div>
-    </div>
-
+   
     <div class="row">
 
      
@@ -44,13 +35,10 @@
     
     {% endif %}
     {% include 'components/remissionForm.html' %}
-    {% include 'components/orderForm.html' %}
+    
        </div>
-       <div class="col-md-8">
-        <div class="notification-save">
-          <span>Los parametros han sido guardado correctamente</span>
-        </div>
-          {% include 'components/car.html' %}
+       <div class="col-md-8">     
+        {% include 'components/car.html' %}
        </div>
        
       
@@ -58,5 +46,5 @@
   </div>
 
   <script src="{% static 'js/reorhidden.js' %}"></script>
-  <script src="{% static 'js/save_car.js' %}"></script>
+  
 {% endblock %}

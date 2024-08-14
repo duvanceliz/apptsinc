@@ -10,9 +10,9 @@
      
       <form action="" method="POST" id="form">
         {% csrf_token %}
-        {{form_re.as_p}}
+        {{form.as_p}}
     
-        <button class="btn btn-primary mb-2">Guardar</button>
+        <button class="btn btn-primary mb-2" style="width: 100%;" id="btn-save">Guardar</button>
     
     </form>
     <a href=" {% url 'remissions' %}" class="btn btn-link">Ver remisiones generadas</a>

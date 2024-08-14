@@ -30,10 +30,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-g3=)z0wy@_28znm85%z=tss+c^+!42*wbo@6t$m&j3fq7n4^h@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -154,4 +153,4 @@ LOGIN_URL = '/login/'
 # OPENAI_API_KEY = config('OPENAI_API_KEY')
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-CSRF_TRUSTED_ORIGINS = ['http://*']
+# CSRF_TRUSTED_ORIGINS = ['http://*']
