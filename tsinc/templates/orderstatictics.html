@@ -9,7 +9,7 @@
                 <div class="card-body text-center p-4">
 
                     <p class="fs-4 fw-bold m-0">
-                          Total en Ordenes
+                          Total en Ordenes(USD)
                     </p>
                     <span>(Sin completar)</span>
                     <p class="display-6">
@@ -25,7 +25,7 @@
                 <div class="card-body text-center p-4">
 
                     <p class="fs-4 fw-bold">
-                          Total Entregado
+                          Total Entregado(USD)
                     </p>
                     <p class="display-6">
                           ${{total_info.total_delivered|intcomma}}
@@ -40,7 +40,7 @@
                 <div class="card-body text-center p-4">
 
                     <p class="fs-4 fw-bold">
-                          Total Faltante
+                          Total Faltante(USD)
                     </p>
                     <p class="display-6">
                           ${{total_info.total_remaining|intcomma}}
@@ -61,48 +61,43 @@
 
     <div class="row mb-4">
         <div class="col-md-6">
-
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
 
-                    <h5 class="fs-5">Ordenes Pendientes:</h5>
+                    <h5 class="fs-5">Ordenes recientes:</h5>
                     <a href="{% url 'purcharse_order' %}" class="btn btn-primary btn-sm"> Ver ordenes</a>
                 </div>
                 <div class="card-body">
 
-                    <ul class="list-group ">
-                        {% for order in pending_orders %}
-                     
+                    <ul class="list-group">
+                        {% for order in recent_orders %}
+
                         <li class="list-group-item">
-                       
-                          
-                            <span class="fw-bold">OPC:</span> {{order.order.code}} 
-                            <span class="fw-bold">Fecha:</span> {{order.ago|naturaltime}}
-                        
-                        
-                            {% if order.order.progress >= 75 %}
-                            <div class="progress">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: {{order.order.progress}}%;" aria-valuenow="{{order.order.progress}}" aria-valuemin="0" aria-valuemax="100">{{order.order.progress}}%</div>
+                         <div class="row">
+                            
+                            
+                            <div class="col-3">
+                                <p class="fw-bold">OPC:</p> {{order.code}} 
                             </div>
-                            {% elif order.order.progress >= 50 and order.order.progress < 75 %}
-                            <div class="progress">
-                                <div class="progress-bar bg-warning" role="progressbar" style="width: {{order.order.progress}}%;" aria-valuenow="{{order.order.progress}}" aria-valuemin="0" aria-valuemax="100">{{order.order.progress}}%</div>
+                            <div class="col-3">
+                                <p class="fw-bold">Tracking:</p> {{order.tracking}} 
                             </div>
-                            {% else %}
-                            <div class="progress">
-                                <div class="progress-bar bg-danger" role="progressbar" style="width: {{order.order.progress}}%;" aria-valuenow="{{order.order.progress}}" aria-valuemin="0" aria-valuemax="100">{{order.order.progress}}%</div>
+                            <div class="col-3">
+                                <p class="fw-bold">Date:</p> {{order.date|naturaltime}} 
                             </div>
-                            {% endif %}
-                        <!-- <span class="fw-bold">Date:</span> {{order.order.date}}  -->
-                        <a href="{% url 'order_product_info' order.order.id %}" >Ver</a>
+                            <div class="col-3 text-end">
+                                <a href="{% url 'order_product_info' order.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
+
+                            </div>
+                         </div>
                         </li>
-                      
+
                         {% endfor %}
 
                       </ul>
                 </div>
             </div>
-
+            
         </div>
       
         <div class="col-md-6">
@@ -116,13 +111,25 @@
                     <ul class="list-group">
                         {% for entry in recent_entrys %}
 
-                        <li class="list-group-item d-flex justify-content-between">
-                       
-                        <span class="fw-bold">Producto:</span> {{entry.product.product.model}} 
-        
-                        <span class="fw-bold">#</span> {{entry.quantity}} 
-                        <span class="fw-bold">Date:</span> {{entry.date|naturaltime}} 
-                        <a href="{% url 'entry_info' entry.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
+                        <li class="list-group-item p-2">
+                         <div class="row">
+                            <div class="col-3">
+                                <p class="fw-bold m-0">Producto:</p> <p style="font-size: 0.8rem;">{{entry.product.product.model}}</p>
+                            </div>
+                            <div class="col-3">
+                                <p class="fw-bold m-0">Cantidad:</p> {{entry.quantity}} 
+                            </div>
+                            <div class="col-3">
+                                <p class="fw-bold m-0">Date:</p> <p style="font-size: 0.8rem;">{{entry.date|naturaltime}} </p>
+
+                            </div>
+                            <div class="col-3 text-end">
+                                <a href="{% url 'entry_info' entry.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
+
+                            </div>
+                         </div>
+                         
+                        
                         </li>
 
                         {% endfor %}
@@ -135,30 +142,62 @@
         </div>
 
      <div class="row">
-        <div class="col-md-6">
-
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
 
-                    <h5 class="fs-5">Ordenes recientes:</h5>
+                    <h5 class="fs-5">Ordenes Pendientes:</h5>
                     <a href="{% url 'purcharse_order' %}" class="btn btn-primary btn-sm"> Ver ordenes</a>
                 </div>
                 <div class="card-body">
 
-                    <ul class="list-group d-flex justify-content-between">
-                        {% for order in recent_orders %}
+                    <ul class="list-group ">
+                        {% for order in pending_orders %}
+                     
+                        <li class="list-group-item">
+                       
+                             <div class="row">
+                                <div class="col-3">
+                                    <span class="fw-bold">OPC:</span> {{order.order.code}} 
+                                </div>
+                                <div class="col-3">
+                                    <span class="fw-bold">Fecha:</span> {{order.ago|naturaltime}}
+                                </div>
+                                <div class="col-3">
+                                    {% if order.order.progress >= 75 %}
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: {{order.order.progress}}%;" aria-valuenow="{{order.order.progress}}" aria-valuemin="0" aria-valuemax="100">{{order.order.progress}}%</div>
+                                    </div>
+                                    {% elif order.order.progress >= 50 and order.order.progress < 75 %}
+                                    <div class="progress">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{order.order.progress}}%;" aria-valuenow="{{order.order.progress}}" aria-valuemin="0" aria-valuemax="100">{{order.order.progress}}%</div>
+                                    </div>
+                                    {% else %}
+                                    <div class="progress">
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: {{order.order.progress}}%;" aria-valuenow="{{order.order.progress}}" aria-valuemin="0" aria-valuemax="100">{{order.order.progress}}%</div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-3 text-center">
+                                    <a href="{% url 'order_product_info' order.order.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
 
-                        <li class="list-group-item d-flex justify-content-between">
-                        <span class="fw-bold">OPC:</span> {{order.code}} 
-                        <span class="fw-bold">Date:</span> {{order.date|naturaltime}} 
-                        <a href="{% url 'order_product_info' order.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
+                                </div>
+                             </div>
+                            
+                            
+                        
+                        
+                            
+                        <!-- <span class="fw-bold">Date:</span> {{order.order.date}}  -->
                         </li>
-
+                      
                         {% endfor %}
 
                       </ul>
                 </div>
             </div>
+
+           
 
         </div>
       

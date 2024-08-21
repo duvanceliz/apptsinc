@@ -85,13 +85,14 @@
   
       </div>
     </div> 
-    <div class="row">
+    <div class="row mb-4">
 
         <div class="col-md-4">
             <ul class="list-group">
                
                 <li class="list-group-item"><strong>Fecha: </strong>{{order.date}}</li>
                 <li class="list-group-item"><strong>OP Code: </strong>{{order.code}}</li>
+                <li class="list-group-item"><strong>Tracking: </strong>{{order.tracking}}</li>
                 <li class="list-group-item"><strong>Proveedor: </strong>{{order.supplier}}</li>
                 <li class="list-group-item"><strong>NIT: </strong>{{order.nit}}</li>
                 <li class="list-group-item"><strong>Dirección: </strong>{{order.address}}</li>
@@ -100,7 +101,7 @@
                 <li class="list-group-item"><strong>Centro de Costo: </strong>{{order.cost_center}}</li>
                 <li class="list-group-item"><strong>Interventor: </strong>{{order.inspector}}</li>
                 <li class="list-group-item"><strong>Supervisor: </strong>{{order.supervisor}}</li>
-                <li class="list-group-item"><strong>TRM: </strong>{{order.trm}}</li>
+                <li class="list-group-item"><strong>Observación: </strong>{{order.observation}}</li>
               </ul>
 
         </div>
@@ -177,6 +178,49 @@
        </div>
 
       
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+
+        <div class="card">
+          <div class="card-header fw-bold">
+            ARCHIVOS RELACIONADOS
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover table-light">
+            <thead>
+              
+          
+              <tr>
+
+                <th scope="col">Nombre</th>
+                <th scope="col">Tiempo de carga</th>
+                <th ></th>
+              </tr>
+            
+            </thead>
+            <tbody>
+              <tr>
+                {% for file in orderfiles %}
+    
+
+                <td>{{file.name}}</td>
+                <th>{{file.date|naturaltime}}</th>
+                 <th>
+                  <a href="{% url 'view_file' file.id 'oc' %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
+                  <a class="btn btn-danger btn-sm" href="{% url 'delete_order_file' file.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return confirm_delete_remission()"> <i class="bi bi-trash"></i> </a>
+
+                 </th>
+              </tr>
+              {%endfor%}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+      <div class="col-md-6"></div>
+  
     </div>
   </div>
 

@@ -1,13 +1,28 @@
-{% extends 'layout.html' %} {% block body %}
+{% extends 'layout.html' %} {% block body %}  {% load static %}{% load humanize %}
+
+
 
 <div class="container">
+  
   <div class="row mb-2">
-    <div class="col-2"><a class="btn btn-primary" href="{% url 'create_product' %}">Nuevo Producto</a></div>
-    <div class="col-2"><a class="btn btn-success" href="{% url 'uploadproducts' %}">Importar Tabla</a></div>
-    <div class="col-2"><a class="btn btn-success" href="{% url 'download_products' %}">Exportar Tabla</a></div>
-    <div class="col-2"><a class="btn btn-primary" href="{% url 'product_statictics' %}">Ver Estadísticas</a></div>
+    <div class="col-md-4 text-center">
+      <a class="btn btn-primary  m-2" href="{% url 'create_product' %}"><i class="bi bi-plus-circle"></i></a>
+      <a class="btn btn-success  m-2" href="{% url 'uploadproducts' %}"><i class="bi bi-cloud-upload"></i></a>
+      <a class="btn btn-success  m-2" href="{% url 'download_products' %}"><i class="bi bi-cloud-download"></i></a>
+      <a class="btn btn-primary  m-2" id="loader" href="{% url 'product_statictics' %}"><i class="bi bi-clipboard-data"></i></a>
+    </div>
 
-    <div class="col-4">
+    <div class="col-md-4">
+      <form action="{% url 'save_trm' %}" method="post" class="d-flex">
+        {% csrf_token %}
+        <label for="trm-input">TRM:</label>
+        <input class="form-control form-control-sm w-50 mx-2" id="trm-input" type="number" value="{{currency.value}}" min="1" name="trmvalue" step="any">
+         <button type="submit" class="btn btn-primary btn-sm" id="loader"><i class="bi bi-floppy"></i></button>
+      </form>
+      
+    </div>
+
+    <div class="col-md-4">
       <form id="form-search">
         <input id="input-search" type="text" name="search"/>
         <button id="btn-search" class="btn btn-primary m-2" type="submit">
@@ -15,11 +30,16 @@
         </button>
       </form>
     </div>
+
+    
   </div>
     <div class="row">
       
       
       <div class="col-12">
+        
+
+
 
         {% if messages %}
           
@@ -61,6 +81,7 @@
               
               <th scope="col">Precio(compra)</th>
               <th scope="col">Precio(venta)</th>
+              <th scope="col">Archivos</th>
               <th scope="col">Bandera</th>
               <th scope="col"></th>
               
@@ -70,28 +91,34 @@
           <tbody>
             <tr>
               {% for product in page_obj %}
-              <td>
+              <td >
                 {{product.code}}
               </td>
-              <td>{{product.product_name}}</td>
-              <td>
+              <td style="width: 50px;">{{product.product_name}}</td>
+              <td >
                 {{product.model}}
               </td>
-              <td>
+              <td >
                 {{product.brand}}
               </td>
             
-              <td>
+              <td >
                 {{product.quantity}}
               </td>
 
-              <td>
-                {{product.purcharse_price}}
+              <td >
+                {{product.purcharse_price|intcomma}}
               </td>
               
-              <td>
-                {{product.sale_price}}
+              <td >
+                {{product.sale_price|intcomma}}
               </td>
+
+              {% for file_info in product_files_info %}
+                {%  if file_info.product_id == product.id  %}
+                <td>{{file_info.quantity}}<i class="bi bi-file-earmark-text"></i></td>
+                {% endif %}
+                {% endfor %}
 
               <td>
                 
@@ -112,15 +139,16 @@
  
               
               <td>
-                <a class="btn btn-primary btn-sm" href="{% url 'product_info' product.id  %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles de producto"> <i class="bi bi-box-arrow-right"></i></a>
+                <a class="btn btn-primary btn-sm"  href="{% url 'product_info' product.id  %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles de producto"> <i class="bi bi-box-arrow-right"></i></a>
 
-                <a class="btn btn-success btn-sm"   href="{% url 'edit_product' product.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar producto"><i class="bi bi-pencil-square"></i></a>
+                <a class="btn btn-success btn-sm"    href="{% url 'edit_product' product.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar producto"><i class="bi bi-pencil-square"></i></a>
+                <a href="{% url 'upload_product_file' product.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Subir un archivo"><i class="bi bi-file-earmark-arrow-up"></i></a>
 
-                <a class="btn btn-danger btn-sm" href="{% url 'delete_product' product.id %}" onclick="return confirm_delete_product()"> 
+                <a class="btn btn-success btn-sm"    href="{% url 'add_product_to_box' product.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar al carrito"><i class="bi bi-plus-circle"></i></a>
+                <a class="btn btn-danger btn-sm"   href="{% url 'delete_product' product.id %}" onclick="return confirm_delete_product()"> 
                   <i class="bi bi-trash"></i>
                 </a>
 
-                <a class="btn btn-success btn-sm"   href="{% url 'add_product_to_box' product.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar al carrito"><i class="bi bi-plus-circle"></i></a>
 
               </td>
             </tr>
@@ -149,7 +177,10 @@
       
     </div>
   </div>
-  {% load static %}
+ 
   <script src="{% static 'js/confirm.js' %}"></script>
 
+
+ 
+  
 {% endblock %}

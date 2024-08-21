@@ -1,10 +1,15 @@
 
-{% extends 'layout.html' %} {% block body %}
+{% extends 'layout.html' %} {% block body %}{% load humanize  %}
 
 <div class="container">
-    <div class="row">
+    <div class="row mb-4">
 
         <div class="col-md-6">
+          <div class="card">
+            <div class="card-header fw-bold">
+              INFORMACÓN DE REMISIÓN
+            </div>
+          </div>
             <ul class="list-group">
 
                 <li class="list-group-item"><strong>Numero de remisión: </strong>{{remission.number}}</li> 
@@ -15,6 +20,7 @@
                 <li class="list-group-item"><strong>Dirección: </strong>{{remission.location}}</li>
                 <li class="list-group-item"><strong>Obra: </strong>{{remission.project}}</li>
                 <li class="list-group-item"><strong>Responsable: </strong>{{remission.responsible}}</li>
+                <li class="list-group-item"><strong>Observación: </strong>{{remission.observation}}</li>
                 <li class="list-group-item"><strong>Fecha: </strong>{{remission.date}}</li>
               </ul>
 
@@ -53,6 +59,50 @@
        </div>
 
       
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+
+        <div class="card">
+          <div class="card-header fw-bold">
+            ARCHIVOS RELACIONADOS
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover table-light">
+            <thead>
+              
+          
+              <tr>
+
+                <th scope="col">Nombre</th>
+                <th scope="col">Tiempo de carga</th>
+                <th ></th>
+              </tr>
+            
+            </thead>
+            <tbody>
+              <tr>
+                {% for file in remissionfiles %}
+    
+
+                <td>{{file.name}}</td>
+                <th>{{file.date|naturaltime}}</th>
+                 <th>
+                  <a href="{% url 'view_file' file.id 're' %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
+                  <a class="btn btn-danger btn-sm" href="{% url 'delete_remission_file' file.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return confirm_delete_remission()"> <i class="bi bi-trash"></i> </a>
+
+                 </th>
+              </tr>
+              {%endfor%}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+      <div class="col-md-6"></div>
+  
     </div>
   </div>
 

@@ -62,6 +62,10 @@
                             <label for="exampleFormControlInput6" class="form-label"></label>
                             <input type="text" class="form-control" id="exampleFormControlInput6" value="{{remission.responsible}}" name="responsible">
                           </div>
+                          <div class="mb-3">
+                            <label for="exampleFormControlInput6" class="form-label"></label>
+                            <input type="text" class="form-control" id="exampleFormControlInput6" value="{{remission.observation}}" name="observation">
+                          </div>
                           <button type="submit" class="btn btn-primary w-100">Guardar</button>
                      </form>
                     
@@ -71,7 +75,7 @@
         </div>
         <div class="col-md-8">
             <a href="{% url 'remissions' %}" class=" btn btn-primary btn-sm mb-2">Volver</a>
-            <a href="{% url 'remission' %}" class=" btn btn-primary btn-sm mb-2">Ver Carrito</a>
+            <a href="{% url 'carpage' %}" class=" btn btn-primary btn-sm mb-2">Ver Carrito</a>
             <a href="{% url 'add_car_remission' remission.id %}" class=" btn btn-success btn-sm mb-2">Agregar del carrito</a>
           
         

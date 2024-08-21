@@ -27,7 +27,11 @@ models_ = [ Project,
             PurcharseOrder,
             OrderProduct,
             OrderEntry,
-            ProductStatictics
+            ProductStatictics,
+            Trm,
+            RemissionFile,
+            OrderFile,
+            ProductFile,
+            Invoice
            ]
-
 admin.site.register(models_)

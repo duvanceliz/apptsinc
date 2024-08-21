@@ -1,5 +1,8 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('', views.home, name='home' ),
     path('createproject/', views.create_project, name='create_project'),
@@ -68,4 +71,15 @@ urlpatterns = [
     path('duplicateorder/<int:id>', views.duplicate_order, name='duplicate_order'),
     path('accessdenied/', views.access_denied, name='access_denied'),
     path('carpage/', views.carpage, name='carpage'),
-]
+    path('savetrm/', views.save_trm, name='save_trm'),
+    path('uploadremissionfile/<int:id>', views.upload_remission_file, name='upload_remission_file'),
+    path('deleteremissionfile/<int:id>', views.delete_remission_file, name='delete_remission_file'),
+    path('uploadorderfile/<int:id>', views.upload_order_file, name='upload_order_file'),
+    path('deleteorderfile/<int:id>', views.delete_order_file, name='delete_order_file'),
+    path('viewfile/<int:id>/<str:code>', views.view_file, name='view_file'),
+    path('uploadproductfile/<int:id>', views.upload_product_file, name='upload_product_file'),
+    path('deleteproductfile/<int:id>', views.delete_product_file, name='delete_product_file'),
+    path('createinvoice/', views.create_invoice, name='create_invoice'),
+    path('invoices/', views.invoices, name='invoices'),
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -54,9 +54,13 @@ class CreateProduct(forms.Form):
     point = forms.CharField(label="Puntos del dipositivo",max_length=200,
                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
 
-    min_stock = forms.IntegerField(label="Stock minimo",
+    min_stock = forms.IntegerField(label="Stock Minimo",
                                     widget=forms.NumberInput(attrs={'class': 'form-control','min': '1'}),
                                     min_value=1
+                                    )
+    
+    observation = forms.CharField(label="Observación",max_length=200,
+                                    widget=forms.TextInput(attrs={'class': 'form-control'})
                                     )
 
     description = forms.CharField(label="Descripción",max_length=500, widget=forms.Textarea(attrs={'class': 'form-control'}))
@@ -155,10 +159,19 @@ class CreateRemission(forms.Form):
                                    widget=forms.TextInput(attrs={'class': 'form-control'})
                                   
                                   )
-     
+    observation = forms.CharField(label="Observación", 
+                                  max_length=250,
+                                   widget=forms.TextInput(attrs={'class': 'form-control'})
+                                  
+                                  )
+
+   
 
 class CreateOrder(forms.Form):
-
+    tracking = forms.CharField(label="Tracking", 
+                           max_length=250,
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
     supplier = forms.CharField(label="Proveedor/contratista", 
                            max_length=100,
                            widget=forms.TextInput(attrs={'class': 'form-control'})
@@ -191,13 +204,51 @@ class CreateOrder(forms.Form):
                            max_length=100,
                            widget=forms.TextInput(attrs={'class': 'form-control'})
     )
-    
-    trm = forms.FloatField(label="Cual es el TRM?",
-                           widget=forms.TextInput(attrs={'class': 'form-control','data-bs-toggle':'tooltip','data-bs-placement':'right','title':'nota: Usar trm cuando el valor del producto sea COP, dejarlo en cero si el valor del porducto es USD'})
+    observation = forms.CharField(label="Observacion", 
+                           max_length=250,
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
     )
+    currency = forms.BooleanField(
+        label="Está en COP?",
+        widget=forms.RadioSelect(choices=[(True, 'Sí'), (False, 'No')]),
+        required=False,
+        initial=False  # Establece "No" como valor predeterminado
+    )
+
+class UploadRemissionFile(forms.Form):
+    file = forms.FileField() 
+
+
+class UploadOrderFile(forms.Form):
+    file = forms.FileField() 
     
+class UploadProductFile(forms.Form):
+    file = forms.FileField() 
+
+class CreateInvoice(forms.Form):
+    number = forms.CharField(label="numero de factura", 
+                           max_length=250,
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    total_price = forms.FloatField(label="Precio total",
+                                    widget=forms.NumberInput(attrs={'class': 'form-control','min': '1'}),
+                                    min_value=1
+                                    )
+    iva = forms.FloatField(label="Valor de IVA",
+                                    widget=forms.NumberInput(attrs={'class': 'form-control','min': '1'}),
+                                    min_value=1
+                                    )
+    source_retention = forms.FloatField(label="Retención en la fuente",
+                                    widget=forms.NumberInput(attrs={'class': 'form-control','min': '1'}),
+                                    min_value=1
+                                    )
+    ica_retention = forms.FloatField(label="Retención ICA",
+                                    widget=forms.NumberInput(attrs={'class': 'form-control','min': '1'}),
+                                    min_value=1
+                                    )
     
 
+    
 
 
 

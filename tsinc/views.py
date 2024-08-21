@@ -29,19 +29,25 @@ def staff_required(user):
 def superuser_required(user):
     return user.is_superuser
 
+def paginator(request, obj, number):
+    paginator = Paginator(obj, number)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return page_obj
+
+
 @login_required
 def home(request):
     projects = Project.objects.filter(usersesion=request.user)
     tabs = Tabs.objects.filter(project__in=projects)
     pages = Dasboard.objects.filter(tab__in=tabs)
-    paginator = Paginator(projects, 5)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+
+    page_obj = paginator(request,projects,5)
     user = request.user  # El usuario actualmente autenticado
     session_key = request.session.session_key 
-    is_admin = request.user.is_staff  # Verifica si el usuario es administrador
+    is_staff = staff_required(user) # Verifica si el usuario es administrador
                        
-    return render(request, 'home.html',{'page_obj': page_obj, 'username':user.username, 'session_key':session_key, 'is_admin':is_admin, 'tabs':tabs, 'pages':pages})
+    return render(request, 'home.html',{'page_obj': page_obj, 'username':user.username, 'session_key':session_key, 'is_staff':is_staff, 'tabs':tabs, 'pages':pages})
 
 @login_required
 def delete_project(request, id):
@@ -78,8 +84,15 @@ def seve_stat_prod(products):
             rotations = total_shippeds
         else:
             rotations = total_shippeds
-        
-        out_stock = product.quantity/replace_cero(product.min_stock)
+
+        if product.quantity > product.min_stock:
+
+            out_stock = 1
+
+        else:
+
+            out_stock = 0
+
         rotations = rotations
 
         # print(f"producto:{product.model}--Rotaciones:{rotations}--Fuera stock:{out_stock}")
@@ -97,26 +110,34 @@ def seve_stat_prod(products):
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def product(request):
+
     search = request.GET.get('search')
+    currency = Trm.objects.filter(currency = "usd").first()
     
     if search:
         page_obj = Product.objects.filter(Q(product_name__icontains= search) | Q(model__icontains= search))
     else:
-        search = "control"
-        page_obj = Product.objects.filter(product_name__icontains= search)
+        page_obj = Product.objects.all()
+        # page_obj = Product.objects.filter(product_name__icontains= search)
 
-    # products = Product.objects.all()
-    # flags = [
-    #     {
-    #     'id':product.id,
-    #     'value':product.quantity/replace_cero(product.min_stock)
-    # }
-    # for product in products 
-    # ]
-    paginator = Paginator(page_obj, 20)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'product.html',{'page_obj': page_obj})
+    product_files = ProductFile.objects.all()
+    products = Product.objects.all()
+
+    product_files_info = [
+    {'product_id': product.id, 
+     'quantity': sum(1 for file in product_files if file.product.id == product.id)
+    } 
+    for product in products
+    ]   
+
+    is_staff = staff_required(request.user)
+
+    page_obj = paginator(request,page_obj,20)
+    return render(request, 'product.html',{'page_obj': page_obj,
+                                           'is_staff':is_staff,
+                                           'currency':currency,
+                                           'product_files_info':product_files_info
+                                           })
 
 
 @login_required
@@ -166,6 +187,7 @@ def create_product(request):
                                          sale_price= request.POST['sale_price'],
                                          min_stock= request.POST['min_stock'],
                                          point= request.POST['point'],
+                                         observation= request.POST['observation'],
                                          description= request.POST['description'],
                                          iva=iva)
         return redirect('/product')
@@ -266,6 +288,7 @@ def upload_products(request):
                     quantity = row['quantity']
                     min_stock = row['min_stock']
                     point = row['point'] if pd.notna(row['point']) else 'NA'
+                    observation = row['observation'] if pd.notna(row['observation']) else 'NA'
                     description = row['description'] if pd.notna(row['description']) else 'NA'
                     iva = row['iva']
 
@@ -282,9 +305,10 @@ def upload_products(request):
                         product.quantity = quantity
                         product.sale_price = sale_price
                         product.purcharse_price = purcharse_price
-                        product.description = description
                         product.point = point
                         product.min_stock = min_stock
+                        product.observation = observation
+                        product.description = description
                         product.iva = iva
                         product.save()
                     else:
@@ -418,6 +442,7 @@ def download_points(request,id):
         if sv_tab:
             sheet_supervisor = workbook.create_sheet(title='Supervisor')
             print_calc_supervirsor(sheet_supervisor,sv_tab,c_quantity,project)
+        
         path = os.path.join(settings.BASE_DIR, 'tsinc','static', 'points','Points.xlsx')
         workbook.save(path)
 
@@ -595,34 +620,34 @@ def handle_uploaded_file(file, path):
 @login_required
 def upload_svg(request):
 
-    if request.method == 'POST' and request.FILES.getlist('files'):
-        folder_name = request.POST.get('folder_name')
-        tag = request.POST.get('tag')
-        files = request.FILES.getlist('files')
+    if request.method == 'POST' and request.FILES.getlist('files'):#verifica si el metodo es post y si exiten archivos
+        folder_name = request.POST.get('folder_name') #nombre de la carpeta
+        tag = request.POST.get('tag') #etiqueta 
+        files = request.FILES.getlist('files') #archivos
 
-        def validation_panelitem(file):
+        def validation_panelitem(file):#valida que exita el item de panel
             panelitem_exists = PanelItems.objects.filter(name=file.name).exists()
             return panelitem_exists
             
        
-        def validation_folder(folder_name):
+        def validation_folder(folder_name):#valida que exista el folter
             exist = Folders.objects.filter(name= folder_name).exists()
             return exist
             
             
-        panelitem_exist = list(map(validation_panelitem, files))
+        panelitem_exist = list(map(validation_panelitem, files)) #con la funcion map valida cada uno de los archivos y devuelve una lista de booleanos
 
     
         if not any(panelitem_exist):
             
             exist = validation_folder(folder_name)
 
-            if not exist:
+            if not exist:# si no existe el folder entra y lo crea
                 folder = Folders.objects.create(
                         name= folder_name,
                         path = f'img/{folder_name}'
                     )
-            else:
+            else:# De lo contrario lo busca en la base de datos
 
                 folder = Folders.objects.get(name=folder_name)
                  
@@ -953,6 +978,7 @@ def edit_product(request,id):
         location = request.POST.get('location')
         quantity = request.POST.get('quantity')
         point = request.POST.get('point')
+        observation = request.POST.get('observation')
         description = request.POST.get('description')
         min_stock = request.POST.get('min_stock')
         product.code = code
@@ -965,13 +991,15 @@ def edit_product(request,id):
         product.location = location
         product.quantity = quantity
         product.point = point
+        product.observation = observation
         product.description = description
         product.min_stock = min_stock
         product.save()
         messages.success(request,f"Cambios realizados correctamente")
         return redirect(f'/editproduct/{product.id}')
     
-    return render(request,'editproduct.html',{'product':product})
+    is_staff = staff_required(request.user)
+    return render(request,'editproduct.html',{'product':product, 'is_staff':is_staff})
     
 
 
@@ -1028,8 +1056,9 @@ def create_remission(request):
         path = "createremission"
 
         productbox = ProductBox.objects.filter(usersession = request.user).all()
+        is_staff = staff_required(request.user)
         return render(request,'createremission.html',{'productbox':productbox,
-                                                      'form':CreateRemission,'path':path})
+                                                      'form':CreateRemission,'path':path,'is_staff':is_staff})
     else:
         productbox = ProductBox.objects.filter(usersession = request.user).all()
 
@@ -1049,6 +1078,7 @@ def create_remission(request):
                                             location = request.POST['location'],
                                             project = request.POST['project'],
                                             responsible = request.POST['responsible'],
+                                            observation = request.POST['observation'],
                                             usersession = request.user
                                             )
         products = []
@@ -1080,12 +1110,28 @@ def clean_productbox(request,path):
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def remissions(request):  
-    remissions = Remission.objects.filter().order_by('-date').all()[:10]
+    remissions = Remission.objects.filter().order_by('-date').all()
     search = request.GET.get('search')
     if search:
-        remissions = Remission.objects.filter(Q(company__icontains= search) | Q(project__icontains= search))
+        remissions = Remission.objects.filter(Q(company__icontains= search) | Q(project__icontains= search) | Q(number__icontains= search))
     
-    return render(request,'remissions.html',{'remissions':remissions})
+    remission_files = RemissionFile.objects.all()
+    
+    remission_files_info = [
+    {'remission_id': remission.id, 
+     'quantity': sum(1 for file in remission_files if file.remission.id == remission.id)
+    } 
+    for remission in remissions
+    ]         
+
+    remissions = paginator(request,remissions,10)
+
+    is_staff = staff_required(request.user)
+
+    return render(request,'remissions.html',{'remissions':remissions, 
+                                             'is_staff':is_staff,
+                                             'remission_files_info':remission_files_info
+                                             })
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
@@ -1105,7 +1151,11 @@ def delete_remission(request,id):
 def product_remission(request,id):  
     remission = Remission.objects.filter(id=id).first()
     products = ProductSent.objects.filter(remission= remission).all()
-    return render(request,'productremission.html',{'products':products, 'remission':remission})
+    remissionfiles = RemissionFile.objects.filter(remission = remission).all()
+    is_staff = staff_required(request.user)
+    return render(request,'productremission.html',{'products':products, 
+                                                   'remission':remission, 
+                                                   'remissionfiles':remissionfiles,'is_staff':is_staff})
 
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
@@ -1115,8 +1165,8 @@ def product_shipped(request):
     if search:
         products = Product.objects.filter(Q(product_name__icontains= search) | Q(model__icontains= search))
         products_shipped = ProductSent.objects.filter(product__in = products)
-        
-    return render(request,'productshipped.html',{'products':products_shipped})
+    is_staff = staff_required(request.user)   
+    return render(request,'productshipped.html',{'products':products_shipped,'is_staff':is_staff})
 
 def calc_t_quantity_price(order):
     
@@ -1169,13 +1219,16 @@ def create_order(request):
     if request.method == 'GET':
         path = "createorder"
         productbox = ProductBox.objects.filter(usersession = request.user).all()
+        is_staff = staff_required(request.user)
         return render(request,"createorder.html",{'productbox':productbox,
                                                   'form':CreateOrder(),
-                                                   'path':path })
+                                                   'path':path,
+                                                   'is_staff':is_staff
+                                                     })
 
     else:
         productbox = ProductBox.objects.filter(usersession = request.user).all()
-        
+        tracking = request.POST['tracking']
         supplier = request.POST['supplier']
         nit = request.POST['nit']
         address = request.POST['address']
@@ -1184,11 +1237,13 @@ def create_order(request):
         cost_center = request.POST['cost_center']
         inspector = request.POST['inspector']
         supervisor = request.POST['supervisor']
-        trm = request.POST['trm']
-
+        observation = request.POST['observation']
+        currency = request.POST['currency']
+    
         code = increase_code_order()
 
         order = PurcharseOrder.objects.create(code = code.code,
+                                              tracking = tracking,
                                               supplier = supplier,
                                               nit = nit,
                                               address = address,
@@ -1197,7 +1252,8 @@ def create_order(request):
                                               cost_center = cost_center,
                                               inspector = inspector,
                                               supervisor = supervisor,
-                                              trm = trm,
+                                              observation = observation,
+                                              currency = currency,
                                               usersession = request.user
                                              )
         for product in productbox:
@@ -1213,7 +1269,7 @@ def create_order(request):
 
         messages.success(request,f"La orden de compra ha sido generada correctamente.")
             
-        return redirect("/createremission/")
+        return redirect("/createorder/")
     
 @login_required
 def save_car(request):
@@ -1232,11 +1288,27 @@ def save_car(request):
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def purcharse_order(request):  
-    orders = PurcharseOrder.objects.filter().order_by('progress').all()[:20]
+    orders = PurcharseOrder.objects.filter().order_by('progress').all()
     search = request.GET.get('search')
     if search:
-        orders = PurcharseOrder.objects.filter(Q(code__icontains= search) | Q(supplier__icontains= search))
-    return render(request,'purcharseorders.html',{'orders':orders})
+        orders = PurcharseOrder.objects.filter(Q(code__icontains= search) | Q(supplier__icontains= search) | Q(tracking__icontains= search))
+
+    orders = paginator(request,orders,10)
+
+    order_files = OrderFile.objects.all()
+
+    order_files_info = [
+    {'order_id': order.id, 
+     'quantity': sum(1 for file in order_files if file.order.id == order.id)
+    } 
+    for order in orders
+    ] 
+
+    is_staff = staff_required(request.user)
+    return render(request,'purcharseorders.html',{'orders':orders, 
+                                                  'is_staff':is_staff,
+                                                  'order_files_info':order_files_info
+                                                  })
 
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
@@ -1245,8 +1317,10 @@ def purcharse_order_products(request):
     search = request.GET.get('search')
     if search:
         products = Product.objects.filter(Q(product_name__icontains= search) | Q(model__icontains= search))
-        purcharse_order_products = OrderProduct.objects.filter(product__in = products)     
-    return render(request,'purcharseorderproducts.html',{'products':purcharse_order_products})
+        purcharse_order_products = OrderProduct.objects.filter(product__in = products)  
+
+    is_staff = staff_required(request.user)   
+    return render(request,'purcharseorderproducts.html',{'products':purcharse_order_products,'is_staff':is_staff})
 
 
 def calc_info_order_product(orderproducts,orderentry):
@@ -1271,7 +1345,7 @@ def order_product_info(request,id):
     order = PurcharseOrder.objects.filter(id=id).first()
     products = OrderProduct.objects.filter(order= order).all()
     orderentry = OrderEntry.objects.filter(order = order).all()
-    
+    orderfiles = OrderFile.objects.filter(order = order).all()
     
     most_recent_entry = OrderEntry.objects.filter(order = order).order_by("-date").first()
     
@@ -1307,12 +1381,14 @@ def order_product_info(request,id):
 
     badge = ""
 
-    if order.trm != 0:
+    if order.currency:
         badge = "COP"
     else:
         badge = "USD"
     
     info_per_product = calc_info_order_product(products,orderentry)
+    
+    is_staff = staff_required(request.user)
 
     return render(request,'orderproductinfo.html',{'products':products, 
                                                    'order':order, 
@@ -1320,7 +1396,9 @@ def order_product_info(request,id):
                                                    'total_info':total_info,
                                                    'info_per_product':info_per_product,
                                                    'delivery_time':delivery_time,
-                                                   'badge':badge
+                                                   'badge':badge,
+                                                   'orderfiles':orderfiles,
+                                                   'is_staff':is_staff
                                                    
                                                    })
 
@@ -1396,17 +1474,19 @@ def edit_remission(request,id):
         location = request.POST.get('location')
         project = request.POST.get('project')
         responsible = request.POST.get('responsible')
+        observation = request.POST.get('observation')
         remission.city = city
         remission.company = company
         remission.nit = nit
         remission.location = location
         remission.project = project
         remission.responsible = responsible
+        remission.observation = observation
         remission.save()
         messages.success(request,f"Cambios realizados correctamente")
         return redirect(f'/editremission/{id}')
-    
-    return render(request,'editremission.html',{'remission':remission, 'products':products})
+    is_staff = staff_required(request.user)
+    return render(request,'editremission.html',{'remission':remission, 'products':products, 'is_staff':is_staff})
 
 @user_passes_test(staff_required,login_url='/accessdenied/')     
 @login_required
@@ -1415,6 +1495,7 @@ def edit_order(request,id):
     orderproducts = OrderProduct.objects.filter(order = order).all()
     if request.method == 'POST':
         code = request.POST.get('code')
+        tracking = request.POST.get('tracking')
         supplier = request.POST.get('supplier')
         nit = request.POST.get('nit')
         address = request.POST.get('address')
@@ -1423,7 +1504,9 @@ def edit_order(request,id):
         cost_center = request.POST.get('cost_center')
         inspector = request.POST.get('inspector')
         supervisor = request.POST.get('supervisor')
-        trm = request.POST.get('trm')
+        observation = request.POST.get('observation')
+        currency = request.POST.get('currency')
+        order.tracking = tracking
         order.code = code
         order.supplier = supplier
         order.nit = nit 
@@ -1433,12 +1516,14 @@ def edit_order(request,id):
         order.cost_center = cost_center
         order.inspector = inspector
         order.supervisor = supervisor
-        order.trm = trm
+        order.observation = observation
+        order.currency = currency
         order.save()
         messages.success(request,f"Cambios realizados correctamente")
         return redirect(f'/editorder/{id}')
-    
-    return render(request,'editorder.html',{'order':order,'orderproducts':orderproducts})
+    is_staff = staff_required(request.user)
+
+    return render(request,'editorder.html',{'order':order,'orderproducts':orderproducts, 'is_staff':is_staff})
 
       
 @user_passes_test(staff_required,login_url='/accessdenied/') 
@@ -1474,8 +1559,16 @@ def create_order_entry(request,id):
                                       )
             
             entries = OrderEntry.objects.filter(product__product__id = orderproduct.product.id).all()
-
-            prices = [ entry.price for entry in entries ]  
+            
+            currency = Trm.objects.filter(currency = "usd").first()
+            prices = []
+            for entry in entries:
+                if entry.order.currency:
+                    if currency.value > 0:
+                        price_usd = round(entry.price / currency.value,2)
+                        prices.append(price_usd)
+                else:
+                    prices.append(entry.price)
             
             highest_price =  max(prices)
             product = Product.objects.filter(id = orderproduct.product.id).first()
@@ -1490,11 +1583,12 @@ def create_order_entry(request,id):
 
             messages.error(request,f"No puedes generar mas entradas, Todos los productos han sido entregados!")
         return redirect(f'/createorderentry/{id}')
-    
+    is_staff = staff_required(request.user)
     return render(request,'createorderentry.html',{'order':order,
                                                    'orderproducts':orderproducts, 
                                                    'orderentry':orderentry,
-                                                   'info_per_product':info_per_product
+                                                   'info_per_product':info_per_product,
+                                                   'is_staff':is_staff
                                                    })
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
@@ -1556,6 +1650,7 @@ def order_statictics(request):
     most_recent_order = PurcharseOrder.objects.all().order_by("-date")[:5]
     purcharseorders = PurcharseOrder.objects.all()
     entrys = OrderEntry.objects.all()
+    currency = Trm.objects.filter(currency="usd").first()
 
     total_price = 0
     total_delivered = 0
@@ -1563,15 +1658,16 @@ def order_statictics(request):
 
     for order in purcharseorders:
         if order.progress != 100:
-            if order.trm != 0:
-                total_price += round(order.total_price / order.trm,2)
+            if order.currency:
+                if currency.value > 0:
+                    total_price += round(order.total_price / currency.value,2)
             else:
                 total_price += order.total_price
 
             for entry in entrys:
                 if order.id == entry.order.id:
-                    if order.trm != 0:
-                        total_delivered += (entry.product.price/order.trm) * entry.quantity
+                    if order.currency:
+                        total_delivered += (entry.product.price/currency.value) * entry.quantity
                     else:
                         total_delivered += entry.product.price * entry.quantity
     
@@ -1592,8 +1688,8 @@ def order_statictics(request):
 
    
     total_info ={
-        'total_orders': total_price,
-        'total_delivered':total_delivered,
+        'total_orders': round(total_price,2),
+        'total_delivered':round(total_delivered,2),
         'total_remaining': round(total_price - total_delivered,2)
 
     }
@@ -1622,18 +1718,17 @@ def product_info(request,id):
     else:
         rotations = total_shippeds
 
-  
-
+    product_files = ProductFile.objects.filter(product = product).all()
  
-    
+    is_staff = staff_required(request.user)
     return render(request,"productinfo.html",{'product':product, 
                                               'orderentry':orderentry, 
                                               'products_shipped':products_shipped, 
                                               'total_entrys':total_entrys,
                                               'total_shippeds':total_shippeds,
                                               'rotations':rotations,
-                                            
-
+                                              'product_files':product_files,
+                                              'is_staff':is_staff
                                               })
 
 @login_required
@@ -1671,16 +1766,21 @@ def product_statictics(request):
     expensive_prod = Product.objects.order_by("-sale_price")[:10]
     cheaper_prod = Product.objects.order_by("sale_price")[:10]
 
+    seve_stat_prod(products)
+
     total_inventory = 0
+    total_inventory_cop = 0
 
     for product in products:
-        total_inventory += product.purcharse_price
+        total_inventory += product.purcharse_price * product.quantity
+        total_inventory_cop += product.purcharse_price_cop * product.quantity
     
     total_inventory = round(total_inventory,2)
-
+    total_inventory_cop = round(total_inventory_cop,2)
     return render(request,"productstatictics.html",{'prod_out_stock':prod_out_stock,
                                                     'prod_rotations':prod_rotations,
                                                     'total_inventory':total_inventory,
+                                                    'total_inventory_cop':total_inventory_cop,
                                                     'exp_prod':expensive_prod,
                                                     'cheaper_prod':cheaper_prod
                                                     
@@ -1695,6 +1795,8 @@ def remission_statictics(request):
     return render(request,"remissionstatictics.html",{'remissions':remissions,'prod':prod_remission})
 
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
 def add_car_remission(request,id):
     productbox = ProductBox.objects.filter(usersession = request.user).all()
     remission = Remission.objects.filter(id = id).first()
@@ -1721,6 +1823,8 @@ def add_car_remission(request,id):
     return redirect(f"/editremission/{remission.id}")
     
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
 def add_car_order(request,id):
     productbox = ProductBox.objects.filter(usersession = request.user).all()
     order = PurcharseOrder.objects.filter(id = id).first()
@@ -1740,7 +1844,8 @@ def add_car_order(request,id):
 
     return redirect(f"/editorder/{order.id}")
 
-@user_passes_test(staff_required,login_url='/accessdenied/')   
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
 def duplicate_remission(request,id):
     remission = Remission.objects.filter(id = id).first()
     
@@ -1755,6 +1860,7 @@ def duplicate_remission(request,id):
             location = remission.location,
             project = remission.project,
             responsible = remission.responsible,
+            observation = remission.observation,
             order_number = remission.order_number,
             usersession = request.user
         )
@@ -1763,7 +1869,8 @@ def duplicate_remission(request,id):
          messages.error(request,f"Se ha presentado el siguiente error: {e}")
     return redirect("/remissions/")
 
-@user_passes_test(staff_required,login_url='/accessdenied/')   
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required 
 def duplicate_order(request,id):
     order = PurcharseOrder.objects.filter(id = id).first()
     
@@ -1772,6 +1879,7 @@ def duplicate_order(request,id):
 
         PurcharseOrder.objects.create(
                                     code = code.code,
+                                    tracking = order.tracking,
                                     supplier = order.supplier,
                                     nit = order.nit,
                                     address = order.address,
@@ -1780,7 +1888,7 @@ def duplicate_order(request,id):
                                     cost_center = order.cost_center,
                                     inspector = order.inspector,
                                     supervisor = order.supervisor,
-                                    trm = order.trm,
+                                    observation = order.observation,
                                     usersession = request.user  
                                         )
         messages.success(request,"La orden de compra se ha duplicado con éxito")
@@ -1794,7 +1902,281 @@ def duplicate_order(request,id):
 def access_denied(request):
     return render(request,"accessdenied.html")
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
 def carpage(request):
     productbox = ProductBox.objects.filter(usersession = request.user).all()
     path = "carpage"
     return render(request,"carpage.html",{'productbox':productbox,'path':path})
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def save_trm(request):
+
+    if request.method == "POST":
+        if Trm.objects.filter(currency = "usd").exists():
+            currency = Trm.objects.filter(currency = "usd").first()
+            currency.value = request.POST.get('trmvalue')
+            currency.save()
+        else:
+            Trm.objects.create(currency="usd",value = request.POST.get('trmvalue'))
+        
+        products = Product.objects.all()
+        currency = Trm.objects.filter(currency = "usd").first()
+    
+        for product in products:
+            sale_price_cop = round(currency.value * product.sale_price,2)
+            purcharse_price_cop = round(currency.value * product.purcharse_price,2)
+            product.sale_price_cop = sale_price_cop
+            product.purcharse_price_cop = purcharse_price_cop
+            product.save()
+
+    messages.success(request,f"Se ha establecido el TRM de: {currency.value} a todos los productos")    
+
+    return redirect("/product/")
+
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def upload_remission_file(request,id):
+    remission = Remission.objects.filter(id = id).first()
+    if request.method == "POST":
+        form = UploadRemissionFile(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
+            file_without_space = file.name.replace(" ", "_")
+
+            remission_file_exists = RemissionFile.objects.filter(name=file_without_space,remission = remission).exists()
+
+            if remission_file_exists:
+                remission_file = RemissionFile.objects.filter(name=file_without_space).first()
+
+                upload_dir = os.path.join(settings.MEDIA_ROOT, "remission_files", f"{remission.number}")
+                os.makedirs(upload_dir, exist_ok=True)
+                file_path = os.path.join(upload_dir, file_without_space)
+                handle_uploaded_file(file, file_path)
+
+                messages.info(request,f"El archivo {remission_file.name} ya existe, ha sido reemplazado")
+                return redirect(f"/uploadremissionfile/{remission.id}")
+            
+            else:
+                remission_file = RemissionFile.objects.create(name = file_without_space,
+                                                            remission=remission,
+                                                            usersession = request.user
+                                                            )  
+            
+            upload_dir = os.path.join(settings.MEDIA_ROOT, "remission_files", f"{remission.number}")
+            os.makedirs(upload_dir, exist_ok=True)
+            file_path = os.path.join(upload_dir, file_without_space)
+            handle_uploaded_file(file, file_path)
+
+
+            
+            messages.success(request,f"El archivo {remission_file.name} ha sido cargado correctamente")
+
+        return redirect(f"/uploadremissionfile/{remission.id}")
+    
+    is_staff = staff_required(request.user)
+    
+    return render(request,"uploadremissionfile.html",{'form':UploadRemissionFile, 'is_staff':is_staff, 'remission':remission})
+
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def view_file(request,id,code):
+
+    is_staff = staff_required(request.user)
+
+    if code == "re":
+        remission_file = get_object_or_404(RemissionFile,id=id)
+        # Construir la URL del archivo
+        file_url = os.path.join(settings.MEDIA_URL, "remission_files", f"{remission_file.remission.number}", remission_file.name)
+
+        return render(request, "view_file.html", {"file_url": file_url, 
+                                                  "file_name": remission_file.name,
+                                                  "is_staff":is_staff
+                                                  })
+    elif code == "oc":
+            
+        order_file = get_object_or_404(OrderFile,id=id)
+         # Construir la URL del archivo
+        file_url = os.path.join(settings.MEDIA_URL, "order_files", f"{order_file.order.code}", order_file.name)
+
+        return render(request, "view_file.html", {"file_url": file_url, 
+                                                  "file_name": order_file.name,
+                                                  "is_staff":is_staff
+                                                  })
+    elif code == "p":
+            
+        product_file = get_object_or_404(ProductFile,id=id)
+         # Construir la URL del archivo
+        file_url = os.path.join(settings.MEDIA_URL, "product_files", f"{product_file.product.id}", product_file.name)
+
+        return render(request, "view_file.html", {"file_url": file_url, 
+                                                  "file_name": product_file.name,
+                                                  "is_staff":is_staff
+                                                  })
+
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def delete_remission_file(request,id):
+    remission_file = get_object_or_404(RemissionFile,id=id)
+    file_path = os.path.join(settings.MEDIA_ROOT, "remission_files", f"{remission_file.remission.number}", remission_file.name)
+    
+    if os.path.exists(file_path):
+        os.remove(file_path) 
+    
+    remission_file.delete()
+
+    return redirect(f"/productremission/{remission_file.remission.id}")
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def upload_order_file(request,id):
+    order = PurcharseOrder.objects.filter(id = id).first()
+    if request.method == "POST":
+        form = UploadOrderFile(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
+            file_without_space = file.name.replace(" ", "_")
+            order_file_exists = OrderFile.objects.filter(name=file_without_space,order = order).exists()
+
+            if order_file_exists:
+                order_file = OrderFile.objects.filter(name=file_without_space).first()
+
+                upload_dir = os.path.join(settings.MEDIA_ROOT, "order_files", f"{order.code}")
+                os.makedirs(upload_dir, exist_ok=True)
+                file_path = os.path.join(upload_dir, file_without_space)
+                handle_uploaded_file(file, file_path)
+
+                messages.info(request,f"El archivo {order_file.name} ya existe, ha sido reemplazado")
+                return redirect(f"/uploadorderfile/{order.id}")
+            
+            else:
+                order_file = OrderFile.objects.create(name = file_without_space,
+                                                            order=order,
+                                                            usersession = request.user
+                                                            )  
+            
+            upload_dir = os.path.join(settings.MEDIA_ROOT, "order_files", f"{order.code}")
+            os.makedirs(upload_dir, exist_ok=True)
+            file_path = os.path.join(upload_dir, file_without_space)
+            handle_uploaded_file(file, file_path)
+
+
+            messages.success(request,f"El archivo {order_file.name} ha sido cargado correctamente")
+
+        return redirect(f"/uploadorderfile/{order.id}")
+    
+    is_staff = staff_required(request.user)
+    
+    return render(request,"uploadorderfile.html",{'form':UploadOrderFile, 
+                                                      'is_staff':is_staff, 
+                                                      'order':order})
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required   
+def delete_order_file(request,id):
+    order_file = get_object_or_404(OrderFile,id=id)
+    file_path = os.path.join(settings.MEDIA_ROOT, "order_files", f"{order_file.order.code}", order_file.name)
+    
+    if os.path.exists(file_path):
+        os.remove(file_path) 
+    
+    order_file.delete()
+
+    return redirect(f"/orderproductinfo/{order_file.order.id}")
+
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def upload_product_file(request,id):
+    product = Product.objects.filter(id = id).first()
+    if request.method == "POST":
+        form = UploadProductFile(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
+            file_without_space = file.name.replace(" ", "_")
+            product_file_exists = ProductFile.objects.filter(name=file_without_space,product = product).exists()
+
+            if product_file_exists:
+
+                product_file = ProductFile.objects.filter(name=file_without_space).first()
+                upload_dir = os.path.join(settings.MEDIA_ROOT, "product_files", f"{product.id}")
+                os.makedirs(upload_dir, exist_ok=True)
+                file_path = os.path.join(upload_dir, file_without_space)
+                handle_uploaded_file(file, file_path)
+                messages.info(request,f"El archivo {product_file.name} ya existe, ha sido reemplazado")
+                return redirect(f"/uploadproductfile/{product.id}")
+            
+            else:
+                product_file = ProductFile.objects.create(name = file_without_space,
+                                                            product=product,
+                                                            usersession = request.user
+                                                            )  
+            
+            upload_dir = os.path.join(settings.MEDIA_ROOT, "product_files", f"{product.id}")
+            os.makedirs(upload_dir, exist_ok=True)
+            file_path = os.path.join(upload_dir, file_without_space)
+            handle_uploaded_file(file, file_path)
+
+
+            messages.success(request,f"El archivo {product_file.name} ha sido cargado correctamente")
+
+        return redirect(f"/uploadproductfile/{product.id}")
+    
+    is_staff = staff_required(request.user)
+    
+    return render(request,"uploadproductfile.html",{'form':UploadOrderFile, 
+                                                      'is_staff':is_staff, 
+                                                      'product':product})
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required    
+def delete_product_file(request,id):
+    product_file = get_object_or_404(ProductFile,id=id)
+    file_path = os.path.join(settings.MEDIA_ROOT, "product_files", f"{product_file.product.id}", product_file.name)
+    
+    if os.path.exists(file_path):
+        os.remove(file_path) 
+    
+    product_file.delete()
+
+    return redirect(f"/productinfo/{product_file.product.id}")
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def create_invoice(request):
+    if request.method == "POST":
+        number = request.POST['number']
+        total_price = request.POST['total_price']
+        iva = request.POST['iva']
+        source_retention = request.POST['source_retention']
+        ica_retention = request.POST['ica_retention']
+        Invoice.objects.create(
+            number = number,
+            total_price = total_price,
+            iva = iva,
+            source_retention = source_retention,
+            ica_retention = ica_retention,
+            usersession = request.user
+        )
+        messages.success(request,"La factura ha sido creado correctamente")
+        return redirect(f"/createinvoice/")
+    
+    return render(request,"create_invoice.html",{'form':CreateInvoice})
+
+def invoices(request):
+    
+    invoices = Invoice.objects.filter().order_by('-date').all()
+    search = request.GET.get('search')
+    if search:
+        invoices = Invoice.objects.filter(Q(number__icontains= search) | Q(total_price__icontains= search))
+    
+    
+    invoices = paginator(request,invoices,10)
+
+    return render(request,"invoices.html",{
+        'invoices':invoices
+    })

@@ -1,0 +1,113 @@
+
+{% extends 'layout.html' %} {% block body %} {% load humanize %} {% load static %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-4">
+      
+    </div>
+    <div class="col-md-4">
+      <form id="form-search">
+        <input id="input-search" type="text" name="search"/>
+        <button id="btn-search" class="btn btn-primary m-2" type="submit">
+          Buscar
+        </button>
+      </form>
+    </div>
+  </div>
+    <div class="row">
+   
+       <div class="col-md-12">
+        {% if messages %}
+          
+        {% for message in messages %}
+  
+            {% if message.tags == 'success' %}
+            <div class="alert alert-success" role="alert">
+            {{ message }} <a href="{% url 'remission' %}">Ir a generar una remisón</a>
+            </div>
+            {% endif %}
+  
+            {% if message.tags == 'info' %}
+            <div class="alert alert-warning" role="alert">
+            {{ message }}
+            </div>
+            {% endif %}
+            {% if message.tags == 'error' %}
+            <div class="alert alert-danger" role="alert">
+            {{ message }}
+            </div>
+            {% endif %}
+  
+        {% endfor %}
+    
+    
+    {% endif %}
+        <a href="{% url 'order_statictics' %}" class="btn btn-primary btn-sm mb-2"> Ver Estadísticas</a>
+        <div class="table-responsive">
+          <table class="table table-hover table-light">
+            <thead>
+              
+          
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Creado por:</th>
+                <th scope="col">Numero de factura</th>
+                <th scope="col">Precio total</th>
+                <th scope="col">iva</th>
+                <th scope="col">Rete fuente</th>
+                <th scope="col">Rete ICA</th>
+                <th scope="col">Tiempo</th>
+                <th></th>
+              </tr>
+            
+            </thead>
+            <tbody>
+              <tr>
+                {% for invoice in invoices %}
+    
+                <th scope="row">{{invoice.id}}</th>
+                <th>{{invoice.usersession}}</th>
+                <th>{{invoice.number}}</th>
+                <th>{{invoice.total_price}}</th>
+                <th>{{invoice.iva}}</th>
+                <td>{{invoice.source_retention}}</td>
+                <td>{{invoice.ica_retention}}</td>
+                <td>{{invoice.date|naturaltime}}</td>
+                <td>
+       
+                </td>
+              </tr>
+              
+              {%endfor%}
+            </tbody>
+          </table>
+        </div>
+        
+       </div>
+       <div class="pagination">
+        <span class="step-links">
+            {% if invoices.has_previous %}
+                <a href="?page=1">&laquo; Primero</a>
+                <a href="?page={{ invoices.previous_page_number }}">Anterior</a>
+            {% endif %}
+    
+            <span class="current">
+                Página {{ invoices.number }} de {{ invoices.paginator.num_pages }}.
+            </span>
+    
+            {% if invoices.has_next %}
+                <a href="?page={{ invoices.next_page_number }}">Siguiente</a>
+                <a href="?page={{ invoices.paginator.num_pages }}">Último &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+      
+    </div>
+  </div>
+
+  <script src="{% static 'js/confirm.js' %}"></script>
+{% endblock %}

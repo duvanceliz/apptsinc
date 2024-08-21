@@ -38,6 +38,10 @@
                     {% endif %}
                      <form method="post">
                         {% csrf_token %}
+                        <div class="mb-3">
+                          <label for="exampleFormControlInput1" class="form-label">Tracking</label>
+                          <input type="text" class="form-control" id="exampleFormControlInput1" value="{{order.tracking}}" name="tracking">
+                        </div>
                           <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">OP Code</label>
                             <input type="text" class="form-control" id="exampleFormControlInput1" value="{{order.code}}" name="code">
@@ -77,11 +81,26 @@
                             <input type="text" class="form-control" id="exampleFormControlInput2" value="{{order.supervisor}}" name="supervisor">
                           </div>
                           <div class="mb-3">
-                            <label for="exampleFormControlInput2" class="form-label">TRM</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput2" value="{{order.trm}}" name="trm">
+                            <label for="exampleFormControlInput2" class="form-label">Observación</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput2" value="{{order.observation}}" name="observation">
                           </div>
-    
-                          <button type="submit" class="btn btn-primary">Guardar</button>
+                          
+                          <label>¿Está en COP?</label><br>
+                           {% if not order.currency %}
+                          <input type="radio" id="currency_yes" name="currency" value="True">
+                          <label for="currency_yes">Sí</label><br>
+                      
+                          <input type="radio" id="currency_no" name="currency" value="False" checked>
+                          <label for="currency_no">No</label><br>
+                          {% else %}
+                          <input type="radio" id="currency_yes" name="currency" value="True" checked>
+                          <label for="currency_yes">Sí</label><br>
+                      
+                          <input type="radio" id="currency_no" name="currency" value="False" >
+                          <label for="currency_no">No</label><br>
+                          {% endif %}
+                         
+                          <button type="submit" class="btn btn-primary mt-2 w-100">Guardar</button>
                      </form>
                     
                 </div>

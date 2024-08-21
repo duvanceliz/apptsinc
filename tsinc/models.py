@@ -33,11 +33,14 @@ class Product(models.Model):
     factory_ref = models.CharField(max_length=200, default=None)
     model = models.CharField(max_length=200, default=None)
     sale_price = models.FloatField(default=0)
+    sale_price_cop = models.FloatField(default=0)
     purcharse_price = models.FloatField(default=0)
+    purcharse_price_cop = models.FloatField(default=0)
     brand = models.CharField(max_length=200, default=None)
     location = models.CharField(max_length=200, default=None)
     quantity = models.IntegerField()
     point = models.CharField(max_length=100,null=True,blank=True)
+    observation =models.CharField(max_length=250, null=True)
     description = models.TextField(validators=[MaxLengthValidator(500)], null=True)
     min_stock = models.IntegerField(default=0)
     iva = models.BooleanField(default=False)
@@ -181,6 +184,7 @@ class Remission(models.Model):
     project = models.CharField(max_length=250)
     responsible = models.CharField(max_length=200)
     order_number = models.CharField(max_length=100, null=True) 
+    observation = models.CharField(max_length=250, null=True) 
     date = models.DateTimeField(default=timezone.now)
     usersession = models.ForeignKey(User,on_delete=models.CASCADE)
 
@@ -203,6 +207,7 @@ class ProductBox(models.Model):
 
 class PurcharseOrder(models.Model):
     code =  models.CharField(max_length=200)
+    tracking =  models.CharField(max_length=250,null=True)
     supplier = models.CharField(max_length=200, null=True)
     nit = models.CharField(max_length=100, null=True)
     address = models.CharField(max_length=100, null=True)
@@ -212,6 +217,8 @@ class PurcharseOrder(models.Model):
     inspector = models.CharField(max_length=200, null=True)
     supervisor = models.CharField(max_length=200, null=True)
     trm = models.FloatField(default=0)
+    currency = models.BooleanField(default=False)
+    observation = models.CharField(max_length=250, null=True) 
     total_price = models.FloatField(default=0)
     total_quantity = models.IntegerField(default=0)
     usersession = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
@@ -242,8 +249,36 @@ class ProductStatictics(models.Model):
     rotations = models.IntegerField(default=0)
     out_stock = models.FloatField(default=0)
 
+class Trm(models.Model):
+    currency = models.CharField(max_length=50)
+    value = models.FloatField(default=0)
 
+class RemissionFile(models.Model):
+    name = models.CharField(max_length=200)
+    remission = models.ForeignKey(Remission,on_delete=models.CASCADE, null=True)
+    date = models.DateTimeField(default=timezone.now)
+    usersession = models.ForeignKey(User,on_delete=models.CASCADE)
 
-    
+class OrderFile(models.Model):
+    name = models.CharField(max_length=200)
+    order = models.ForeignKey(PurcharseOrder,on_delete=models.CASCADE, null=True)
+    date = models.DateTimeField(default=timezone.now)
+    usersession = models.ForeignKey(User,on_delete=models.CASCADE)
+
+class ProductFile(models.Model):
+    name = models.CharField(max_length=200)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE, null=True)
+    date = models.DateTimeField(default=timezone.now)
+    usersession = models.ForeignKey(User,on_delete=models.CASCADE)
+
+class Invoice(models.Model):
+    number = models.CharField(max_length=100)
+    total_price = models.FloatField(default=0)
+    iva = models.FloatField(default=0)
+    source_retention = models.FloatField(default=0)
+    ica_retention = models.FloatField(default=0)
+    usersession = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
+    date = models.DateTimeField(default=timezone.now)
+
 
 

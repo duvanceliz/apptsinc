@@ -1,0 +1,57 @@
+
+{% extends 'layout.html' %} {% block body %} {% load static %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+        
+        </div>
+       <div class="col-md-4">
+        {% if messages %}
+          
+        {% for message in messages %}
+  
+            {% if message.tags == 'success' %}
+            <div class="alert alert-success" role="alert">
+            {{ message }} <a href="{% url 'invoices' %}">Ver todas las facturas</a>
+            </div>
+            {% endif %}
+  
+            {% if message.tags == 'info' %}
+            <div class="alert alert-warning" role="alert">
+            {{ message }}
+            </div>
+            {% endif %}
+            {% if message.tags == 'error' %}
+            <div class="alert alert-danger" role="alert">
+            {{ message }}
+            </div>
+            {% endif %}
+  
+        {% endfor %}
+    
+    
+    {% endif %}
+      
+       <div class="card">
+        <div class="card-header">GENERAR UN FACTURA</div>
+        <div class="card-body">
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button class="btn btn-primary mb-2 w-100">Guardar</button>
+            
+            </form>
+        
+        </div>
+       </div>
+       </div>
+       <div class="col-md-4">
+        
+       </div>
+       
+      
+    </div>
+  </div>
+
+{% endblock %}

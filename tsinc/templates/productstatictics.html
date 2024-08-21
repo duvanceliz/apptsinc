@@ -8,17 +8,30 @@
             <div class="card" style="height: 8rem;">
                 <div class="card-body text-center p-4">
 
-                    <p class="fs-6 fw-bold m-0">
-                          TOTAL EN INVENTARIO
+                    <p class="fs-6 fw-bold m-0 text-secondary">
+                          TOTAL EN INVENTARIO(USD)
                     </p>
                     
-                    <p class="display-6">
-                          ${{total_inventory|intcomma}}
+                    <p class="fw-bold text-success">
+                        <i class="bi bi-currency-dollar"></i>{{total_inventory|intcomma}}
                     </p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3"></div>
+        <div class="col-md-3">
+            <div class="card" style="height: 8rem;">
+                <div class="card-body text-center p-4">
+
+                    <p class="fs-6 fw-bold m-0 text-secondary">
+                          TOTAL EN INVENTARIO(COP)
+                    </p>
+                    
+                    <p class=" fw-bold text-success">
+                        <i class="bi bi-currency-dollar"></i> {{total_inventory_cop|intcomma}}
+                    </p>
+                </div>
+            </div>
+        </div>
         <div class="col-md-3"></div>
         <div class="col-md-3">
 
@@ -42,16 +55,13 @@
                     <li class="list-group-item d-flex justify-content-between">
                     <span class="fw-bold">Model:</span> {{prod_s.product.model}} 
                     <span class="fw-bold">quantity:</span> {{prod_s.product.quantity}}
-                        {% if prod_s.out_stock >= 3 %}
-                        <span class="bg-success">
-                        <i class="bi bi-flag"></i>
-                        </span>
-                        {% elif prod_s.out_stock > 2  and prod_s.out_stock < 3 %}
-                        <span class="bg-warning">
-                        <i class="bi bi-flag"></i>
-                        </span>
-                        {% elif prod_s.out_stock >= 0  and prod_s.out_stock < 2 %}
+                        {% if prod_s.out_stock == 0 %}
                         <span class="bg-danger">
+                        <i class="bi bi-flag"></i>
+                        </span>
+            
+                        {% else %}
+                        <span class="bg-success">
                         <i class="bi bi-flag"></i>
                         </span>
                         {% endif %}

@@ -56,10 +56,12 @@
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Generada por:</th>
+                <th scope="col">Remisión#</th>
                 <th scope="col">Empresa</th>
                 <th scope="col">Ciudad</th>
                 <th scope="col">Proyecto/Obra</th>
-                <th scope="col">Fecha</th>
+                <th scope="col">Archivos</th>
+                <th scope="col">Tiempo</th>
                 <th ></th>
               </tr>
             
@@ -70,27 +72,49 @@
     
                 <th scope="row">{{remission.id}}</th>
                 <th>{{remission.usersession}}</th>
+                <th>{{remission.number}}</th>
                 <th>{{remission.company}}</th>
                 <td>{{remission.city}}</td>
                 <td>{{remission.project}}</td>
+                {% for file_info in remission_files_info %}
+                {%  if file_info.remission_id == remission.id  %}
+                <td>{{file_info.quantity}}<i class="bi bi-file-earmark-text"></i></td>
+                {% endif %}
+                {% endfor %}
                 <td>{{remission.date|naturaltime}}</td>
                 <td>
                   <a class="btn btn-primary btn-sm" href="{% url 'product_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles de remisión"> <i class="bi bi-box-arrow-right"></i></a>
-                  <a href="{% url 'download_remission' remission.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar remisión"><i class="bi bi-arrow-down-circle"></i></a>
                   <a class="btn btn-success btn-sm" href="{% url 'edit_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar remisión"><i class="bi bi-pencil-square"></i></a>
+                  <a class="btn btn-primary  btn-sm" href="{% url 'duplicate_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Duplicar remisión"><i class="bi bi-copy"></i></a>
+                  <a href="{% url 'upload_remission_file' remission.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Subir un archivo"><i class="bi bi-file-earmark-arrow-up"></i></a>
+                  <a href="{% url 'download_remission' remission.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar remisión"><i class="bi bi-arrow-down-circle"></i></a>
                   <a class="btn btn-danger btn-sm" href="{% url 'delete_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return confirm_delete_remission()"> <i class="bi bi-trash"></i> </a>
-                  <a class="btn btn-light btn-sm" href="{% url 'duplicate_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Duplicar remisión"><i class="bi bi-copy"></i></a>
                   </td>
               </tr>
     
-            
-                
               {%endfor%}
             </tbody>
           </table>
         </div>
        </div>
-
+       <div class="pagination">
+        <span class="step-links">
+            {% if remissions.has_previous %}
+                <a href="?page=1">&laquo; Primero</a>
+                <a href="?page={{ remissions.previous_page_number }}">Anterior</a>
+            {% endif %}
+    
+            <span class="current">
+                Página {{ remissions.number }} de {{ remissions.paginator.num_pages }}.
+            </span>
+    
+            {% if remissions.has_next %}
+                <a href="?page={{ remissions.next_page_number }}">Siguiente</a>
+                <a href="?page={{ remissions.paginator.num_pages }}">Último &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+      
       
     </div>
   </div>
