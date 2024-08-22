@@ -2167,6 +2167,8 @@ def create_invoice(request):
     
     return render(request,"create_invoice.html",{'form':CreateInvoice})
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
 def invoices(request):
     
     invoices = Invoice.objects.filter().order_by('-date').all()
@@ -2180,3 +2182,57 @@ def invoices(request):
     return render(request,"invoices.html",{
         'invoices':invoices
     })
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def create_order_invoice(request,id):
+    order = get_object_or_404(PurcharseOrder,id=id)
+    
+
+    if request.method == "POST":
+        value_paid = request.POST.get('amount_to_pay')
+        iva = request.POST.get('iva')
+        source_retention = request.POST.get('source_retention')
+        ica_retention = request.POST.get('ica_retention')
+        OrderInvoice.objects.create(
+            order = order,
+            value_paid = value_paid,
+            iva = iva,
+            source_retention = source_retention,
+            ica_retention = ica_retention,
+            usersession = request.user
+        )
+
+    return render(request,"create_order_invoice.html",{
+        'order':order
+    })
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def workspace(request):
+    root_folders =  Folder.objects.filter(parent__isnull=True)
+
+    def get_subfolders(folder):
+        """Función recursiva para obtener las subcarpetas."""
+        subfolders = folder.children.all()
+        return [{'folder': sub, 'subfolders': get_subfolders(sub)} for sub in subfolders]
+    
+    # Construir la estructura de árbol
+    folder_tree = [{'folder': folder, 'subfolders': get_subfolders(folder)} for folder in root_folders]
+
+    is_staff = staff_required(request.user)
+    
+    context = {
+        'folder_tree': folder_tree, 
+        'is_staff':is_staff 
+    }
+
+    return render(request,"workspace.html",context)
+
+
+
+
+
+
+
+

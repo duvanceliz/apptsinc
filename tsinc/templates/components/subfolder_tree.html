@@ -1,0 +1,13 @@
+{% for node in subfolders %} {%  load static  %}
+    <li>
+        {% if node.subfolders %}
+            <span class="toggle-button" onclick="toggleSubfolders(this)"><i class="bi bi-caret-right-fill"></i></span>
+        {% endif %}
+        {{ node.folder.name }}
+        {% if node.subfolders %}
+            <ul style="display: none;">
+                {% include 'components/subfolder_tree.html' with subfolders=node.subfolders %}
+            </ul>
+        {% endif %}
+    </li>
+{% endfor %}

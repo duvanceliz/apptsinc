@@ -280,5 +280,20 @@ class Invoice(models.Model):
     usersession = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
     date = models.DateTimeField(default=timezone.now)
 
+class OrderInvoice(models.Model):
+    order = models.ForeignKey(PurcharseOrder,on_delete=models.CASCADE, null=True)
+    value_paid = models.FloatField(default=0)
+    iva = models.FloatField(default=0)
+    source_retention = models.FloatField(default=0)
+    ica_retention = models.FloatField(default=0)
+    usersession = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
+    date = models.DateTimeField(default=timezone.now)
 
-
+class Folder(models.Model):
+    name = models.CharField(max_length=200)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    def __str__(self):
+        return self.name
+    class Meta:
+        verbose_name = "Carpeta"
+        verbose_name_plural = "Carpetas"

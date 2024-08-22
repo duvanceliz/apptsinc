@@ -227,9 +227,28 @@ input.selected-group{
   100% { transform: rotate(360deg); }
 }
 
+ul {
+  list-style-type: none;
+}
+ul ul {
+  margin-left: 10px;
+}
+.toggle-button {
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 5px;
+}
 
+.workspace-nav{
+  height: 400px;
+  overflow-y: scroll; 
+}
 
-
+.workspace-nav{
+  width: 100%; /* Establece el ancho máximo del contenedor */
+  overflow-x: scroll;
+  white-space: nowrap;
+}
 
 
 

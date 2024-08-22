@@ -32,6 +32,8 @@ models_ = [ Project,
             RemissionFile,
             OrderFile,
             ProductFile,
-            Invoice
+            Invoice,
+            OrderInvoice,
+            Folder
            ]
 admin.site.register(models_)
