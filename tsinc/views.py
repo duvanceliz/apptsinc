@@ -2183,52 +2183,72 @@ def invoices(request):
         'invoices':invoices
     })
 
+def calc_total_invoice(invoices, order):
+    total = 0
+    ica_rete = 0
+    iva = 0
+    source_rete = 0
+    total_invoice = {}
+    for invoice in invoices:
+        total += invoice.value_paid
+        ica_rete = invoice.ica_retention
+        source_rete = invoice.source_retention
+        iva = invoice.iva
+
+    total_invoice['total_value'] = total
+    total_invoice['total_leftover'] = order.total_price - total
+    total_invoice['ica_rete'] = ica_rete
+    total_invoice['source_rete'] = source_rete
+    total_invoice['iva'] = iva
+     
+    if total_invoice['total_leftover'] == 0:
+        order.paid = True
+        order.save()
+
+    return total_invoice     
+        
+    
+
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def create_order_invoice(request,id):
     order = get_object_or_404(PurcharseOrder,id=id)
-    
+    invoices = OrderInvoice.objects.filter(order = order).all()
+
+    total_invoice = calc_total_invoice(invoices,order)
 
     if request.method == "POST":
+        
         value_paid = request.POST.get('amount_to_pay')
         iva = request.POST.get('iva')
         source_retention = request.POST.get('source_retention')
         ica_retention = request.POST.get('ica_retention')
-        OrderInvoice.objects.create(
-            order = order,
-            value_paid = value_paid,
-            iva = iva,
-            source_retention = source_retention,
-            ica_retention = ica_retention,
-            usersession = request.user
-        )
-
+        if float(value_paid) <= order.total_price and float(value_paid) <= total_invoice['total_leftover']:
+            OrderInvoice.objects.create(
+                order = order,
+                value_paid = value_paid,
+                iva = iva,
+                source_retention = source_retention,
+                ica_retention = ica_retention,
+                usersession = request.user
+            )
+        
+            return redirect(f"/createorderinvoice/{order.id}")
+        
+        else:
+            messages.error(request,f"El valor ingresado: {value_paid} es mayor del valor total de la orden: {order.total_price} o del valor restante {total_invoice['total_leftover']}")
+            return redirect(f"/createorderinvoice/{order.id}")
+      
     return render(request,"create_order_invoice.html",{
-        'order':order
+        'order':order,
+        'invoices':invoices,
+        'total_invoice':total_invoice
     })
 
-@user_passes_test(staff_required,login_url='/accessdenied/') 
-@login_required
-def workspace(request):
-    root_folders =  Folder.objects.filter(parent__isnull=True)
-
-    def get_subfolders(folder):
-        """Función recursiva para obtener las subcarpetas."""
-        subfolders = folder.children.all()
-        return [{'folder': sub, 'subfolders': get_subfolders(sub)} for sub in subfolders]
-    
-    # Construir la estructura de árbol
-    folder_tree = [{'folder': folder, 'subfolders': get_subfolders(folder)} for folder in root_folders]
-
-    is_staff = staff_required(request.user)
-    
-    context = {
-        'folder_tree': folder_tree, 
-        'is_staff':is_staff 
-    }
-
-    return render(request,"workspace.html",context)
-
+def delete_order_invoice(request,id):
+    orderinvoice = get_object_or_404(OrderInvoice,id=id)
+    orderinvoice.delete()
+    return redirect(f"/createorderinvoice/{orderinvoice.order.id}")
 
 
 

@@ -20,7 +20,7 @@
 
     
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
+  
   </head>
 
       <nav class="navbar navbar-expand-lg navbar navbar-dark" style="background: linear-gradient(90deg, rgba(1,38,119,1) 0%, rgba(0,91,197,1) 22%, rgba(0,91,197,1) 100%);">
@@ -95,44 +95,47 @@
         </div>
       </nav>
 
-
-
-     <div class="container-flow content p-4">
-        <div class="row mb-4">
-          
-       
-          <div class="col">
-           
-          </div>
-          <div class="col-8">
-         
-           
-          </div>
-          <div class="col">
-           
-          </div>
-        </div>
-    
       
-      <div class="row">
-        <div class="col-4"></div>
-        <div class="col-4">
-      </nav>
-        </div>
-        <div class="col-4"></div>
-      </div>
-      
+      <div class="continer-fluid">
         <div class="row">
           
          
-        <div id="loading-overlay" class="overlay" style="display: none;">
-          <div class="spinner"></div>
-        </div>
-       
-          {% block body %} {% endblock %}
-        </div>
-        
-     </div>
+          <div id="loading-overlay" class="overlay" style="display: none;">
+            <div class="spinner"></div>
+          </div>
+         
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-header">
+                    Navegación 
+                </div>
+                <div class="card-body workspace-nav">
+                    <ul>
+                        {% for node in folder_tree %}
+                            <li>
+                                {% if node.subfolders %}
+                                <span class="toggle-button" onclick="toggleSubfolders(this)"><i class="bi bi-caret-right-fill"></i></span>
+                                {% endif %}
+                                 <a href="{% url 'overview_folder' node.folder.name %}">{{ node.folder.name }}</a>
+                                {% if node.subfolders %}
+                                    <ul style="display: none;">
+                                        {% include 'workspace_comp/subfolder_tree.html' with subfolders=node.subfolders %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            </div>
+            <div class="col-md-9">
+              {% block body %} {% endblock %}
+            </div>
+          </div>
+          
+      </div>
+      
+    
 
      
 

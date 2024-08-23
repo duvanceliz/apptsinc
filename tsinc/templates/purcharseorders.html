@@ -53,15 +53,17 @@
               
           
               <tr>
-                <th scope="col">#</th>
+               
                 <th scope="col">Creado por:</th>
                 <th scope="col">OP Code</th>
                 <th scope="col">Tracking</th>
                 <th scope="col">Proveedor</th>
                 <th scope="col">Precio(total)</th>
                 <th scope="col">Archivos</th>
+                <th scope="col">Facturación</th>
                 <th scope="col">Tiempo</th>
                 <th scope="col">Recibido</th>
+                
                 <th></th>
               </tr>
             
@@ -70,7 +72,7 @@
               <tr>
                 {% for order in orders %}
     
-                <th scope="row">{{order.id}}</th>
+           
                 <th>{{order.usersession}}</th>
                 <th>{{order.code}}</th>
                 <th>{{order.tracking}}</th>
@@ -85,6 +87,15 @@
                  <td>{{file.quantity}}<i class="bi bi-file-earmark-text"></i> </td>
                  {% endif %}
                 {%endfor%}
+
+                <td>
+                  {% if order.paid %}
+                  <i class="bi bi-check-square-fill text-success"></i>
+                  {%else%}
+                  <i class="bi bi-x-square-fill text-danger"></i>
+                  {%endif%}
+
+                </td>
                 <td>{{order.date|naturaltime}}</td>
                 <td>
                   {% if order.progress == 100 %}
@@ -101,6 +112,7 @@
                   </div>
                   {% endif %}
                 </td>
+                
                 <td>
                   <a class="btn btn-primary btn-sm" href="{% url 'order_product_info' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles de orden de compra"> <i class="bi bi-box-arrow-right"></i></a>
                   <a class="btn btn-success btn-sm" href="{% url 'edit_order' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar la orden de compra y sus productos"><i class="bi bi-pencil-square"></i></a>

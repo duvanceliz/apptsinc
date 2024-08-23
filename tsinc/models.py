@@ -216,7 +216,7 @@ class PurcharseOrder(models.Model):
     cost_center = models.CharField(max_length=200, null=True)
     inspector = models.CharField(max_length=200, null=True)
     supervisor = models.CharField(max_length=200, null=True)
-    trm = models.FloatField(default=0)
+    paid = models.BooleanField(default=False)
     currency = models.BooleanField(default=False)
     observation = models.CharField(max_length=250, null=True) 
     total_price = models.FloatField(default=0)
@@ -279,6 +279,11 @@ class Invoice(models.Model):
     ica_retention = models.FloatField(default=0)
     usersession = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
     date = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return self.number
+    class Meta:
+        verbose_name = "Factura"
+        verbose_name_plural = "Facturas"
 
 class OrderInvoice(models.Model):
     order = models.ForeignKey(PurcharseOrder,on_delete=models.CASCADE, null=True)
@@ -289,11 +294,11 @@ class OrderInvoice(models.Model):
     usersession = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
     date = models.DateTimeField(default=timezone.now)
 
-class Folder(models.Model):
-    name = models.CharField(max_length=200)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-    def __str__(self):
-        return self.name
-    class Meta:
-        verbose_name = "Carpeta"
-        verbose_name_plural = "Carpetas"
+# class Folder(models.Model):
+#     name = models.CharField(max_length=200)
+#     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+#     def __str__(self):
+#         return self.name
+#     class Meta:
+#         verbose_name = "Carpeta"
+#         verbose_name_plural = "Carpetas"

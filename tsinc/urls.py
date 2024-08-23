@@ -82,6 +82,6 @@ urlpatterns = [
     path('createinvoice/', views.create_invoice, name='create_invoice'),
     path('invoices/', views.invoices, name='invoices'),
     path('createorderinvoice/<int:id>', views.create_order_invoice, name='create_order_invoice'),
-    path('workspace/', views.workspace, name='workspace'),
+    path('deleteorderinvoice/<int:id>', views.delete_order_invoice, name='delete_order_invoice'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

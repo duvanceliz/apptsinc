@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'whitenoise.runserver_nostatic',
     'django.contrib.humanize',
-    'tsinc'
+    'tsinc',
+    'workspace',
+    'api'
 ]
 
 MIDDLEWARE = [

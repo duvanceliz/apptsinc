@@ -3,10 +3,10 @@
         {% if node.subfolders %}
             <span class="toggle-button" onclick="toggleSubfolders(this)"><i class="bi bi-caret-right-fill"></i></span>
         {% endif %}
-        {{ node.folder.name }}
+        <a href="{% url 'overview_folder' node.folder.name %}">{{ node.folder.name }}</a>
         {% if node.subfolders %}
             <ul style="display: none;">
-                {% include 'components/subfolder_tree.html' with subfolders=node.subfolders %}
+                {% include 'workspace_comp/subfolder_tree.html' with subfolders=node.subfolders %}
             </ul>
         {% endif %}
     </li>

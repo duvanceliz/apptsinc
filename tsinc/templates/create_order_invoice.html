@@ -56,43 +56,54 @@
                              <div class="col-6">
                               <div class="mb-3">
                                 <label for="exampleFormControlInput3" class="form-label">Valor Pagado</label>
-                                <input type="number" class="form-control" id="exampleFormControlInput3" value="" name="value_paid" min="0" step="any" disabled>
+                                <input type="number" class="form-control" id="exampleFormControlInput3" value="{{total_invoice.total_value}}" name="value_paid" min="0" step="any" disabled>
                               </div> 
                              </div>
                              <div class="col-6">
                               <div class="mb-3">
                                 <label for="exampleFormControlInput3" class="form-label">Valor restante</label>
-                                <input type="number" class="form-control" id="exampleFormControlInput3" value="" name="leftover_value" min="0" step="any" disabled>
+                                <input type="number" class="form-control" id="exampleFormControlInput3" value="{{total_invoice.total_leftover}}" name="leftover_value" min="0" step="any" disabled>
                               </div> 
                              </div>
                              <div class="col-6">
+
                               <div class="mb-3">
                                 <label for="exampleFormControlInput3" class="form-label">valor IVA</label>
-                                <input type="number" class="form-control" id="exampleFormControlInput3" value="" name="iva" min="0" step="any">
+                                <input type="number" class="form-control" id="exampleFormControlInput3" value="{{total_invoice.iva}}" name="iva" min="0" step="any">
                               </div> 
                              </div>
                              <div class="col-6">
                               <div class="mb-3">
                                 <label for="exampleFormControlInput3" class="form-label">Rentencion en la fuente</label>
-                                <input type="number" class="form-control" id="exampleFormControlInput3" value="" name="source_retention" min="0" step="any">
+                                <input type="number" class="form-control" id="exampleFormControlInput3" value="{{total_invoice.ica_rete}}" name="source_retention" min="0" step="any">
                               </div>
                              </div>
                              <div class="col-6">
                               <div class="mb-3">
                                 <label for="exampleFormControlInput3" class="form-label">Retencion ICA</label>
-                                <input type="number" class="form-control" id="exampleFormControlInput3" value="" name="ica_retention" min="0" step="any">
+                                
+                                <input type="number" class="form-control" id="exampleFormControlInput3" value="{{total_invoice.source_rete}}" name="ica_retention" min="0" step="any">
                               </div> 
                             
                              </div>
                              <div class="col-6">
                               <div class="mb-3">
                                 <label for="exampleFormControlInput3" class="form-label">Valor a Abonar</label>
-                                <input type="number" class="form-control" id="exampleFormControlInput3" value="" name="amount_to_pay" min="0" step="any">
+                                {% if total_invoice.total_leftover == 0 %}
+                                <input type="number" class="form-control" id="exampleFormControlInput3" value="" placeholder="Completado!" name="amount_to_pay" min="0" step="any" disabled>
+                                {% else %}
+                                <input type="number" class="form-control" id="exampleFormControlInput3" value="{{total_invoice.total_leftover}}" name="amount_to_pay" min="0" step="any">
+
+                                {% endif %}
                               </div> 
                              </div>
                            </div>
-                          
+                           {% if total_invoice.total_leftover == 0 %}
+                          <button type="submit" class="btn btn-primary w-100" disabled>Guardar</button>
+                          {% else %}
                           <button type="submit" class="btn btn-primary w-100">Guardar</button>
+
+                          {% endif %}
                      </form>
                     
                 </div>
@@ -124,18 +135,19 @@
                   </thead>
                   <tbody>
                     <tr>
-                      {% for entry in orderentry %}
+                      {% for invoice in invoices %}
           
-                      <th scope="row">{{entry.id}}</th>
-                      <td>{{entry.order.usersession}}</td>
-                      <td>{{entry.product.product.model}}</td>
-                      <td>{{entry.order.code}}</td>
-                      <td>{{entry.quantity}}</td>
-                      <td>{{entry.date|naturaltime}}</td>
-                      
+                      <th scope="row">{{invoice.id}}</th>
+                      <td>{{invoice.usersession}}</td>
+                      <td>{{invoice.order.code}}</td>
+                      <td>{{invoice.value_paid|intcomma}}</td>
+                      <td>{{invoice.iva|intcomma}}</td>
+                      <td>{{invoice.source_retention|intcomma}}</td>
+                      <td>{{invoice.ica_retention|intcomma}}</td>
+                      <td>{{invoice.date}}</td>
                       <td>
                        
-                        <a class="btn btn-danger btn-sm" href="{% url 'delete_order_entry' entry.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return confirm_delete_entry()"> <i class="bi bi-trash"></i> </a>
+                        <a class="btn btn-danger btn-sm" href="{% url 'delete_order_invoice' invoice.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return confirm_delete_entry()"> <i class="bi bi-trash"></i> </a>
                       </td>
                     </tr>
           
