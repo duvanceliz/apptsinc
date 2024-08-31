@@ -1,0 +1,8 @@
+{% if folder.parent %}
+
+       
+    {% include 'workspace_comp/breadcrumb.html' with folder=folder.parent %}
+    <li class="breadcrumb-item"><a href="{% url 'overview_folder' folder.parent.id %}">{{folder.parent}}</a></li>
+
+  
+{% endif %}

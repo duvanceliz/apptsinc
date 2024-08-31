@@ -1,0 +1,24 @@
+{% for folder in folders %}
+    {% if folder.parent_id == parent %}
+
+    <li data-id="{{folder.id}}">
+            <span class="toggle-button " onclick="toggleSubfolders(this)"> <button class="btn btn btn-sm "><i class="bi bi-folder2-open"></i></button> </span>
+            <div id="folder-color-indicator" style="background: {{folder.color}};"></div>
+            <a href="{% url 'overview_folder' folder.id %}" class="text-dark" style="text-decoration: none;" >{{ folder.name }}</a>
+            <a href="{% url 'delete_folder' folder.id %}" id="btn-delete-folder-{{folder.id}}" class="btn btn-light btn-sm" style="display: none;" onclick="return confirm_delete_folder()"><i class="bi bi-x"></i></a>
+            
+            {% if folder.children.exists %}
+                <ul data-id="{{folder.id}}" style="display: none;">
+                    {% include 'workspace_comp/subfolder_tree.html' with folders=folders parent=folder.id %}
+                </ul>
+            {% else %}
+            <ul>
+
+            </ul>
+            {% endif %}
+        </li>
+    
+    {% endif %}
+{% endfor %}
+
+

@@ -1,0 +1,93 @@
+{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load static %} 
+
+<div class="container">
+   
+
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>';">
+                        <ol class="breadcrumb">
+                            {% include 'workspace_comp/breadcrumb.html' with folder=folder %}
+                             <li class="breadcrumb-item">
+                                {{folder.name}}
+                             </li>
+                        </ol>
+                    </nav>
+                    
+                
+            </div>
+            <div class="col-md-4">
+             
+
+            </div>
+            
+        </div>
+
+        <div class="row mb-4">
+           <div class="col-md-6 ">
+            {% include 'workspace_comp/form_update_folder.html' with  folder=folder project=folder.project %}
+
+           </div>
+           <div class="col-md-2">
+          
+           </div>
+           <div class="col-md-2"></div>
+        </div>
+
+        {% if folder.project %}
+
+            <div class="row mb-4">
+
+                <div class="col-md-4">
+                    
+                    {% include 'workspace_comp/project_info.html' with project=folder.project %}
+        
+                </div>
+                <div class="col-md-8">
+                </div>
+
+
+            </div>
+            <div class="row mb-4">
+
+                <div class="col-md-6">
+                    
+                    {% include 'workspace_comp/project_remissions.html' with remissions=remissions project=folder.project %}
+        
+                </div>
+                <div class="col-md-6">
+                    {% include 'workspace_comp/project_invoices.html' with invoices=invoices project=folder.project %}
+
+                </div>
+              
+            </div>
+            <div class="row mb-4">
+
+                <div class="col-md-6">
+                    
+                    {% include 'workspace_comp/project_documents.html' %}
+
+                </div>
+              
+            </div>
+            
+
+        {% endif %}
+        
+        {% if children %}
+        <div class="row mb-4">
+
+            <div class="col-md-4">
+                
+                {% include 'overview_comp/summary_folders.html' with children=children %}
+    
+            </div>
+          
+        </div>
+
+        {% endif %}
+
+   
+   
+</div>
+{% endblock %}

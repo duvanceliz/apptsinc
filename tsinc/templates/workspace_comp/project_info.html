@@ -1,0 +1,35 @@
+
+<div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+            <h4>INFORMACIÓN DE PROYECTO</h4>
+
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+        <div class="accordion-body p-0">
+
+            <div class="list-group">
+                <div class="list-group-item">
+                    <strong>NOMBRE: </strong><span>{{project.name}}</span>
+                </div>
+                <div class="list-group-item">
+                    <strong>EMPRESA: </strong><span>{{project.company_name}}</span>
+                    
+                </div>
+                <div class="list-group-item">
+                    <strong>NIT: </strong><span>{{project.nit}}</span>
+                </div>
+                <div class="list-group-item">
+                    <strong>ASESOR: </strong><span>{{project.asesor}}</span>
+                </div>
+                <div class="list-group-item">
+                    <strong>FECHA: </strong><span>{{project.date}}</span>
+                </div>
+             </div>
+        </div>
+      </div>
+    </div>
+</div>
+

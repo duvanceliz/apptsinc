@@ -19,7 +19,7 @@ from django.db.models import Q, F
 import math
 from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField, F
-
+from django.views.decorators.http import require_POST
 # Create your views here.
 
 
@@ -38,7 +38,7 @@ def paginator(request, obj, number):
 
 @login_required
 def home(request):
-    projects = Project.objects.filter(usersesion=request.user)
+    projects = Project.objects.filter(usersession=request.user)
     tabs = Tabs.objects.filter(project__in=projects)
     pages = Dasboard.objects.filter(tab__in=tabs)
 
@@ -51,18 +51,43 @@ def home(request):
 
 @login_required
 def delete_project(request, id):
+    referer = request.META.get('HTTP_REFERER')
     object = get_object_or_404(Project, id=id)
     object.delete()
-    return redirect('/')
+    return redirect(referer)
 
 @login_required
 def create_project(request):
+    referer = request.META.get('HTTP_REFERER')
     if request.method == 'GET':
        return render(request, 'createproject.html',{'form': CreateProject()})
     else:
-        print(request.POST)
-        project = Project.objects.create(name = request.POST['name'], company_name = request.POST['company_name'],nit=request.POST['nit'], asesor = request.POST['asesor'], usersesion=request.user )
-        return redirect('/')
+        project = Project.objects.create(name = request.POST['name'], 
+                                         company_name = request.POST['company_name'],
+                                         nit=request.POST['nit'], 
+                                         asesor = request.POST['asesor'], 
+                                         usersession=request.user )
+        
+        def create_folders(offers_folder):
+
+            company_folder = Folder.objects.filter(name__icontains = project.company_name, parent = offers_folder ).first() # traesr la carpeta company
+            
+            if company_folder:# si la carpeta company exite
+                Folder.objects.create(name=project.name, parent = company_folder, project = project) # crea la carpeta con el nombre del proyecto dentro de la carpeta company
+            else:# si no exite 
+                company_folder = Folder.objects.create(name = project.company_name, parent = offers_folder ) # crea la carpeta company
+                Folder.objects.create(name=project.name, parent = company_folder, project = project) # crea la carpeta del projecto debajo de company
+
+        offers_folder = Folder.objects.filter(name__icontains ="ofertas").first() # traer la carpeta ofertas
+
+        if offers_folder:# si la carpeta ofertas existe
+            create_folders(offers_folder)
+     
+        else: # si la carpeta ofertas no existe 
+            offers_folder = Folder.objects.create(name="OFERTAS") # crea la carpeta "ofertas"
+            create_folders(offers_folder) # crea las carpetas correpondiente
+
+        return redirect(referer)
 
 def replace_cero(value):
     if value == 0:
@@ -132,7 +157,7 @@ def product(request):
 
     is_staff = staff_required(request.user)
 
-    page_obj = paginator(request,page_obj,20)
+    page_obj = paginator(request,page_obj,10)
     return render(request, 'product.html',{'page_obj': page_obj,
                                            'is_staff':is_staff,
                                            'currency':currency,
@@ -1030,35 +1055,52 @@ def add_product(request,id):
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
-def subtract_product(request,id,path): 
-
+def subtract_product(request,id): 
+    referer = request.META.get('HTTP_REFERER')
     productbox = ProductBox.objects.filter(id = id).first()
     productbox.delete()
         # messages.success(request,f"El producto {product.model} ya se encontraba en el carrito ahora tienes {productbox.quantity}.")
-    return redirect(f"/{path}/")
+    return redirect(referer)
 
 
 def increase_code():
     remission_code = OfferCode.objects.filter(name = "remission").first()
+    if remission_code:
+        new_code = int(remission_code.code) + 1
 
-    new_code = int(remission_code.code) + 1
+        remission_code.code = new_code
 
-    remission_code.code = new_code
+        remission_code.save()
+    else:
+        remission_code = OfferCode.objects.create(name= "remission", code ="1" )
+        
+        new_code = int(remission_code.code) + 1
 
-    remission_code.save()
+        remission_code.code = new_code
+
+        remission_code.save()
+
 
     return remission_code
 
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
-def create_remission(request): 
+def create_remission(request,id): 
+   
+    project = Project.objects.filter(id=id).first()
+
     if request.method == 'GET':
-        path = "createremission"
+        path = f"createremission"
 
         productbox = ProductBox.objects.filter(usersession = request.user).all()
         is_staff = staff_required(request.user)
         return render(request,'createremission.html',{'productbox':productbox,
-                                                      'form':CreateRemission,'path':path,'is_staff':is_staff})
+                                                      'form':CreateRemission,
+                                                      'path':path,
+                                                      'is_staff':is_staff,
+                                                      'project':project,
+
+                                                      })
     else:
         productbox = ProductBox.objects.filter(usersession = request.user).all()
 
@@ -1066,7 +1108,7 @@ def create_remission(request):
         for productb in productbox:
             if productb.quantity > productb.product.quantity:
                 messages.error(request,f"No hay sufiente cantidad del producto {productb.product.model} en el inventario")
-                return redirect("/createremission/")
+                return redirect(f"/createremission/{project.id}")
 
         remission_code = increase_code()
 
@@ -1076,9 +1118,11 @@ def create_remission(request):
                                             company = request.POST['company'],
                                             nit = request.POST['nit'],
                                             location = request.POST['location'],
-                                            project = request.POST['project'],
+                                            contruction_site = request.POST['contruction_site'],
+                                            supplier = request.POST['supplier'],
                                             responsible = request.POST['responsible'],
                                             observation = request.POST['observation'],
+                                            project = project,
                                             usersession = request.user
                                             )
         products = []
@@ -1098,14 +1142,15 @@ def create_remission(request):
 
         messages.success(request,f"La remisión ha sido generada correctamente.")
 
-        return redirect("/createremission/")
+        return redirect(f"/show_remission/{remission.id}")
     
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
-def clean_productbox(request,path):  
+def clean_productbox(request):
+    referer = request.META.get('HTTP_REFERER')  
     productbox = ProductBox.objects.all()
     productbox.delete()
-    return redirect(f"/{path}/")
+    return redirect(referer)
 
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
@@ -1113,7 +1158,7 @@ def remissions(request):
     remissions = Remission.objects.filter().order_by('-date').all()
     search = request.GET.get('search')
     if search:
-        remissions = Remission.objects.filter(Q(company__icontains= search) | Q(project__icontains= search) | Q(number__icontains= search))
+        remissions = Remission.objects.filter(Q(company__icontains= search) | Q(nit__icontains= search) | Q(number__icontains= search))
     
     remission_files = RemissionFile.objects.all()
     
@@ -1138,24 +1183,27 @@ def remissions(request):
 def delete_remission(request,id):  
     remission = Remission.objects.filter(id = id).first()
     remission_prod = ProductSent.objects.filter(remission = remission ).all()
+    referer = request.META.get('HTTP_REFERER')
     for prod in remission_prod:
         product = Product.objects.filter(id = prod.product.id).first()
         product.quantity += prod.quantity
         product.save()
     remission.delete()
-    return redirect("/remissions/")
+    return redirect(referer)
 
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
-def product_remission(request,id):  
+def show_remission(request,id):  
     remission = Remission.objects.filter(id=id).first()
     products = ProductSent.objects.filter(remission= remission).all()
     remissionfiles = RemissionFile.objects.filter(remission = remission).all()
-    is_staff = staff_required(request.user)
-    return render(request,'productremission.html',{'products':products, 
+    from_show_remission = True
+    return render(request,'show_remission.html',{'products':products, 
                                                    'remission':remission, 
-                                                   'remissionfiles':remissionfiles,'is_staff':is_staff})
+                                                   'remissionfiles':remissionfiles,
+                                                   'from_show_remission':from_show_remission
+                                                   })
 
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
@@ -1201,13 +1249,27 @@ def calc_progress(order):
 
 def increase_code_order():
 
+
+
     code = OfferCode.objects.filter(name = "order").first()
 
-    code_splited = code.code.split("-")
+    if code:
 
-    new_code = int(code_splited[-1]) + 1
+        code_splited = code.code.split("-")
 
-    code.code = f"{code_splited[0]}-{new_code}"
+        new_code = int(code_splited[-1]) + 1
+
+        code.code = f"{code_splited[0]}-{new_code}"
+
+    else:
+
+        code = OfferCode.objects.create(name = "order", code="OC-1" )
+
+        code_splited = code.code.split("-")
+
+        new_code = int(code_splited[-1]) + 1
+
+        code.code = f"{code_splited[0]}-{new_code}"
 
     code.save()
 
@@ -1390,7 +1452,9 @@ def order_product_info(request,id):
     
     is_staff = staff_required(request.user)
 
-    return render(request,'orderproductinfo.html',{'products':products, 
+    from_show_order = True
+
+    return render(request,'show_order.html',{'products':products, 
                                                    'order':order, 
                                                    'orderentry':orderentry,
                                                    'total_info':total_info,
@@ -1398,7 +1462,8 @@ def order_product_info(request,id):
                                                    'delivery_time':delivery_time,
                                                    'badge':badge,
                                                    'orderfiles':orderfiles,
-                                                   'is_staff':is_staff
+                                                   'is_staff':is_staff,
+                                                   'from_show_order':from_show_order
                                                    
                                                    })
 
@@ -1465,6 +1530,7 @@ def download_order(request,id):
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def edit_remission(request,id):
+    referer = request.META.get('HTTP_REFERER')
     remission = get_object_or_404(Remission,id=id)
     products = ProductSent.objects.filter(remission = remission).all()
     if request.method == 'POST':
@@ -1472,29 +1538,33 @@ def edit_remission(request,id):
         company = request.POST.get('company')
         nit = request.POST.get('nit')
         location = request.POST.get('location')
+        contruction_site = request.POST.get('contruction_site')
+        supplier = request.POST.get('supplier')
         project = request.POST.get('project')
         responsible = request.POST.get('responsible')
         observation = request.POST.get('observation')
         remission.city = city
         remission.company = company
         remission.nit = nit
+        remission.contruction_site = contruction_site
+        remission.supplier = supplier
         remission.location = location
         remission.project = project
         remission.responsible = responsible
         remission.observation = observation
         remission.save()
         messages.success(request,f"Cambios realizados correctamente")
-        return redirect(f'/editremission/{id}')
-    is_staff = staff_required(request.user)
-    return render(request,'editremission.html',{'remission':remission, 'products':products, 'is_staff':is_staff})
+        return redirect(referer)
+    
+    return render(request,'edit_remission.html',{'remission':remission, 'products':products})
 
 @user_passes_test(staff_required,login_url='/accessdenied/')     
 @login_required
 def edit_order(request,id):
+    referer = request.META.get('HTTP_REFERER')
     order = get_object_or_404(PurcharseOrder,id=id)
     orderproducts = OrderProduct.objects.filter(order = order).all()
     if request.method == 'POST':
-        code = request.POST.get('code')
         tracking = request.POST.get('tracking')
         supplier = request.POST.get('supplier')
         nit = request.POST.get('nit')
@@ -1507,7 +1577,6 @@ def edit_order(request,id):
         observation = request.POST.get('observation')
         currency = request.POST.get('currency')
         order.tracking = tracking
-        order.code = code
         order.supplier = supplier
         order.nit = nit 
         order.address = address
@@ -1520,10 +1589,10 @@ def edit_order(request,id):
         order.currency = currency
         order.save()
         messages.success(request,f"Cambios realizados correctamente")
-        return redirect(f'/editorder/{id}')
-    is_staff = staff_required(request.user)
+        return redirect(referer)
+    
 
-    return render(request,'editorder.html',{'order':order,'orderproducts':orderproducts, 'is_staff':is_staff})
+    return render(request,'editorder.html',{'order':order,'orderproducts':orderproducts})
 
       
 @user_passes_test(staff_required,login_url='/accessdenied/') 
@@ -1542,21 +1611,21 @@ def create_order_entry(request,id):
         tracking = request.POST.get('tracking')
         if not product_id == 'None':
             orderproduct = OrderProduct.objects.filter(id=product_id).first()
-            if orderproduct.order.trm != 0:
-                price_dollar = round(orderproduct.price / orderproduct.order.trm,2)
-                orderentry = OrderEntry.objects.create(order = order, 
-                                      product = orderproduct, 
-                                      quantity=quantity,
-                                      price = price_dollar,
-                                      tracking=tracking,
-                                      )
-            else:
-                orderentry = OrderEntry.objects.create(order = order, 
-                                      product = orderproduct, 
-                                      quantity=quantity,
-                                      price = orderproduct.price,
-                                      tracking=tracking,
-                                      )
+            # if orderproduct.order.trm != 0:
+            #     price_dollar = round(orderproduct.price / orderproduct.order.trm,2)
+            #     orderentry = OrderEntry.objects.create(order = order, 
+            #                           product = orderproduct, 
+            #                           quantity=quantity,
+            #                           price = price_dollar,
+            #                           tracking=tracking,
+            #                           )
+            # else:
+            orderentry = OrderEntry.objects.create(order = order, 
+                                    product = orderproduct, 
+                                    quantity=quantity,
+                                    price = orderproduct.price,
+                                    tracking=tracking,
+                                    )
             
             entries = OrderEntry.objects.filter(product__product__id = orderproduct.product.id).all()
             
@@ -1601,22 +1670,15 @@ def delete_order(request,id):
 
 @login_required
 def delete_order_product(request,id):  
+    referer = request.META.get("HTTP_REFERER")
     orderproduct = OrderProduct.objects.filter(id = id).first()
     order = PurcharseOrder.objects.filter(id = orderproduct.order.id).first()
     orderproducts = OrderProduct.objects.filter(order = order).all()
     orderproduct.delete()
     calc_t_quantity_price(order)
     calc_progress(order)
-    return redirect(f"/editorder/{orderproduct.order.id}")
+    return redirect(referer)
 
-@login_required
-def delete_order_product(request,id):  
-    orderproduct = OrderProduct.objects.filter(id = id).first()
-    order = PurcharseOrder.objects.filter(id = orderproduct.order.id).first()
-    orderproduct.delete()
-    calc_t_quantity_price(order)
-    calc_progress(order)
-    return redirect(f"/editorder/{order.id}")
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
@@ -1747,6 +1809,7 @@ def add_entry_inventory(request,id):
 @login_required
 def delete_remission_product(request,id):  
     remissionproduct = ProductSent.objects.filter(id = id).first()
+    referer = request.META.get("HTTP_REFERER")
     product = Product.objects.filter(id = remissionproduct.product.id).first()
 
     product.quantity += remissionproduct.quantity
@@ -1755,7 +1818,7 @@ def delete_remission_product(request,id):
     
     remissionproduct.delete()
 
-    return redirect(f"/editremission/{remissionproduct.remission.id}")
+    return redirect(referer)
 
 @user_passes_test(superuser_required,login_url='/accessdenied/')
 @login_required
@@ -1798,13 +1861,14 @@ def remission_statictics(request):
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def add_car_remission(request,id):
+    referer = request.META.get("HTTP_REFERER")
     productbox = ProductBox.objects.filter(usersession = request.user).all()
     remission = Remission.objects.filter(id = id).first()
 
     for productb in productbox:
             if productb.quantity > productb.product.quantity:
                 messages.error(request,f"No hay sufiente cantidad del producto {productb.product.model} en el inventario")
-                return redirect(f"/editremission/{remission.id}")
+                return redirect(referer)
     products = []
     for productb in productbox:
         productsent = ProductSent.objects.create(
@@ -1820,12 +1884,13 @@ def add_car_remission(request,id):
     
     seve_stat_prod(products)
 
-    return redirect(f"/editremission/{remission.id}")
+    return redirect(referer)
     
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def add_car_order(request,id):
+    referer = request.META.get("HTTP_REFERER")
     productbox = ProductBox.objects.filter(usersession = request.user).all()
     order = PurcharseOrder.objects.filter(id = id).first()
 
@@ -1842,13 +1907,13 @@ def add_car_order(request,id):
     calc_t_quantity_price(order)
     calc_progress(order)
 
-    return redirect(f"/editorder/{order.id}")
+    return redirect(referer)
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def duplicate_remission(request,id):
     remission = Remission.objects.filter(id = id).first()
-    
+    referer = request.META.get('HTTP_REFERER')
     try:
         remission_code = increase_code()
 
@@ -1867,7 +1932,7 @@ def duplicate_remission(request,id):
         messages.success(request,"La remisión se ha duplicado con éxito")
     except TypeError as e:
          messages.error(request,f"Se ha presentado el siguiente error: {e}")
-    return redirect("/remissions/")
+    return redirect(referer)
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required 
@@ -1907,7 +1972,8 @@ def access_denied(request):
 def carpage(request):
     productbox = ProductBox.objects.filter(usersession = request.user).all()
     path = "carpage"
-    return render(request,"carpage.html",{'productbox':productbox,'path':path})
+    is_staff = staff_required(request.user)
+    return render(request,"carpage.html",{'productbox':productbox,'path':path, 'is_staff':is_staff})
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
@@ -2147,7 +2213,10 @@ def delete_product_file(request,id):
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
-def create_invoice(request):
+def create_invoice(request,id):
+
+    project = Project.objects.filter(id=id).first()
+
     if request.method == "POST":
         number = request.POST['number']
         total_price = request.POST['total_price']
@@ -2160,12 +2229,13 @@ def create_invoice(request):
             iva = iva,
             source_retention = source_retention,
             ica_retention = ica_retention,
+            project = project,
             usersession = request.user
         )
         messages.success(request,"La factura ha sido creado correctamente")
-        return redirect(f"/createinvoice/")
+        return redirect(f"/createinvoice/{project.id}")
     
-    return render(request,"create_invoice.html",{'form':CreateInvoice})
+    return render(request,"create_invoice.html",{'form':CreateInvoice, 'project':project})
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
@@ -2245,14 +2315,254 @@ def create_order_invoice(request,id):
         'total_invoice':total_invoice
     })
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
 def delete_order_invoice(request,id):
     orderinvoice = get_object_or_404(OrderInvoice,id=id)
     orderinvoice.delete()
     return redirect(f"/createorderinvoice/{orderinvoice.order.id}")
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def show_all_offers(request):
+    offers = Project.objects.all()
+    tabs = Tabs.objects.filter(project__in=offers)
+    pages = Dasboard.objects.filter(tab__in=tabs)
+
+    page_obj = paginator(request,offers,10)
+    user = request.user  # El usuario actualmente autenticado
+    session_key = request.session.session_key 
+    is_staff = staff_required(user) # Verifica si el usuario es administrador
+                       
+    return render(request,"show_all_offers.html",{'page_obj':page_obj, 'is_staff':is_staff})
+
+def move_to_running_project(project):
+    project_running = Folder.objects.filter(name__icontains = "PROYECTOS EN EJECUCION").first()
+
+    if project_running:
+
+        offers_folder = Folder.objects.filter(name__icontains = "OFERTAS").first()
+
+        if offers_folder:
+
+            company_folder_in_offers_folder = Folder.objects.filter(name__icontains= project.company_name,parent = offers_folder).first()
+
+            if company_folder_in_offers_folder:
+
+                project_folder = Folder.objects.filter(project = project, parent = company_folder_in_offers_folder).first()
+
+                if project_folder:
+
+                    company_folder_in_project_ronning = Folder.objects.filter(name__icontains = project.company_name,parent = project_running).first()
+
+                    if company_folder_in_project_ronning:
+
+                        project_folder.parent = company_folder_in_project_ronning
+                        project_folder.save()
+                    else:
+                        new_company_folder_in_project_ronning = Folder.objects.create(name = project.company_name,parent = project_running)
+                        project_folder.parent = new_company_folder_in_project_ronning
+                        project_folder.save()
+                else:
+                    print("LA CARPETA RELACIONADA CON EL PROYECTO NO EXISTE!")
+
+            else:
+                print('CARPETA EMPRESA DENTRO DE OFERTA NO EXISTE!')
+        else:
+
+            print("OFERTAS NO EXISTE!")
+    else:
+        print("PROYECTOS EN EJECUCION NO EXISTE!")
+
+            
+
+
+def change_offer_status(request,id):
+    project = Project.objects.filter(id=id).first()
+    
+    if not project.approved:
+        project.approved = True
+        
+        move_to_running_project(project)
+
+        project.save()
+    else:
+        project.approved = False
+        project.save()
+
+    return redirect("/show_all_offers/")
 
 
 
+
+def folder_tree_func():
+
+    root_folders =  Folder.objects.filter(parent__isnull=True)
+    folders = Folder.objects.select_related('parent').order_by('parent_id', 'order')
+   
+    return folders
+
+
+@login_required
+def overview(request):
+    
+
+    folder_tree = folder_tree_func()
+
+    is_staff = staff_required(request.user)
+    
+    context = {
+        'folders': folder_tree, 
+        'is_staff':is_staff 
+    }
+
+    return render(request,"workspace.html",context)
+
+@login_required
+def overview_folder(request,id):
+    folder = Folder.objects.filter(id = id).first()
+
+    if not folder:
+        return redirect("/overview/")
+
+
+    projects = Project.objects.filter(folder__isnull=True)
+
+    if folder.project:
+        project = Project.objects.filter(id = folder.project.id).first()
+        remissions = Remission.objects.filter(project  = project).all()
+        invoices = Invoice.objects.filter(project = project).all()
+    else:
+        project = None
+        remissions = None
+        invoices = None
+
+    if not folder.project:
+        children = folder.children.all().order_by('date')[:5]
+    else:
+        children = None
+
+
+    folder_tree = folder_tree_func()
+    is_staff = staff_required(request.user)
+
+    context = {
+        'folders': folder_tree, 
+        'folder': folder,
+        'is_staff':is_staff,
+        'projects':projects,
+        'remissions':remissions,
+        'invoices':invoices,
+        'children':children
+    }
+    
+    return render(request,'overview_folder.html',context)
+
+@require_POST
+def update_tree_order(request):
+    try:
+        data = json.loads(request.body)
+        project_running_folder = Folder.objects.filter(name__icontains = "PROYECTOS EN EJECUCION").first()
+        offers_folder = Folder.objects.filter(name__icontains = "OFERTAS").first()
+
+        for item in data['order']:
+            folder = Folder.objects.get(id=item['id'])
+            folder.parent_id = item.get('parent', None)  # Actualiza el padre si existe
+            if project_running_folder:
+                if folder.project and folder.parent:
+                    if folder.parent.parent:
+                        if folder.parent.parent.id == project_running_folder.id:
+                            project = Project.objects.filter(id = folder.project.id).first()
+                            if not project.approved:
+                                project.approved = True
+                                project.save()
+                        elif folder.parent.parent.id == offers_folder.id:
+                            project = Project.objects.filter(id = folder.project.id).first()
+                            if project.approved:
+                                project.approved = False
+                                project.save()
+                     
+            folder.order = item['order']
+            folder.save()
+
+        return JsonResponse({'status': 'success'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    
+@login_required
+def delete_folder(request,id):
+    referer = request.META.get('HTTP_REFERER')
+    folder = Folder.objects.filter(id = id).first()
+    folder.delete()
+    return redirect(referer)
+
+@login_required
+def new_folder(request):
+    referer = request.META.get('HTTP_REFERER')
+    if request.method == "POST":
+        name = request.POST.get("name")
+        Folder.objects.create(name = name, color ="#ffffff" ,usersession = request.user , order = 0)
+    return redirect(referer)
+
+
+@login_required
+def update_folder(request,id):
+    referer = request.META.get('HTTP_REFERER')
+    if request.method == "POST":
+        name = request.POST.get("name")
+        project_id = request.POST.get("project_id")
+        color = request.POST.get("color")
+        folder = Folder.objects.filter(id = id).first()     
+        if not project_id == "none":
+            folder.project_id = project_id
+        else:
+            folder.project = None
+             
+        folder.name = name
+        folder.color = color
+        folder.save()   
+        
+    return redirect(referer)
+
+@login_required
+def show_invoice(request, id):
+    invoice = Invoice.objects.filter(id=id).first()
+
+    return render(request,"show_invoice.html",{'invoice':invoice})
+
+
+@login_required
+def delete_invoice(request,id):
+    referer = request.META.get('HTTP_REFERER')
+    invoice = Invoice.objects.filter(id = id).first()
+    invoice.delete()
+    return redirect(referer)
+
+
+@login_required
+def update_invoice(request,id):
+    invoice = Invoice.objects.filter(id = id).first()
+    referer = request.META.get('HTTP_REFERER')
+    if request.method == "POST":
+        number = request.POST.get("number")
+        total_price = request.POST.get("total_price")
+        iva = request.POST.get("iva")
+        source_retention = request.POST.get("source_retention")
+        ica_retention = request.POST.get("ica_retention")
+
+        invoice.number = number
+        invoice.total_price = total_price
+        invoice.iva = iva
+        invoice.source_retention = source_retention
+        invoice.ica_retention = ica_retention
+        invoice.save()
+
+        messages.success(request,"Se ha guardado correctamente")
+
+        return redirect(referer)
+    else:
+        messages.error(request,"Algo ha salido mal y no se ha guardado")
+    
 
 
 

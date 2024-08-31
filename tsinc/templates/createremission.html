@@ -1,47 +1,53 @@
 
-{% extends 'layout.html' %} {% block body %} {% load static %}
+{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load static %}
 
-<div class="container">
+<div class="container p-5 bg-light">
+
+    <div class="row">
+      <div class="col-md-8">
+        <h4 class="display-6">NUEVA REMISIÓN, PARA {{project.name}}</h4>
+      </div>
+      <div class="col-md-4"></div>
+     
+    </div>
    
     <div class="row">
+    
+      {% if messages %}
+          
+      {% for message in messages %}
 
-     
-          
-       <div class="col-md-4">
-     
-        {% if messages %}
-          
-        {% for message in messages %}
+          {% if message.tags == 'success' %}
+          <div class="alert alert-success" role="alert">
+          {{ message }}
+          </div>
+          {% endif %}
+
+          {% if message.tags == 'info' %}
+          <div class="alert alert-warning" role="alert">
+          {{ message }}
+          </div>
+          {% endif %}
+          {% if message.tags == 'error' %}
+          <div class="alert alert-danger" role="alert">
+          {{ message }}
+          </div>
+          {% endif %}
+
+      {% endfor %}
   
-            {% if message.tags == 'success' %}
-            <div class="alert alert-success" role="alert">
-            {{ message }}
-            </div>
-            {% endif %}
   
-            {% if message.tags == 'info' %}
-            <div class="alert alert-warning" role="alert">
-            {{ message }}
-            </div>
-            {% endif %}
-            {% if message.tags == 'error' %}
-            <div class="alert alert-danger" role="alert">
-            {{ message }}
-            </div>
-            {% endif %}
-  
-        {% endfor %}
-    
-    
-    {% endif %}
-    {% include 'components/remissionForm.html' %}
-    
-       </div>
-       <div class="col-md-8">     
-        {% include 'components/car.html' %}
-       </div>
+  {% endif %}
+       {% include 'components/remission_comp.html' with project=project %}
+
+       
        
       
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {% include 'components/car.html' %}
+      </div>
     </div>
   </div>
 

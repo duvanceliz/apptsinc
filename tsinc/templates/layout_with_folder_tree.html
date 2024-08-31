@@ -1,0 +1,240 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css_w/styles_workspace.css' %}">
+
+  
+  </head>
+
+      <nav class="navbar navbar-expand-lg navbar navbar-dark" style="background: linear-gradient(90deg, rgba(1,38,119,1) 0%, rgba(0,91,197,1) 22%, rgba(0,91,197,1) 100%);">
+        <div class="container-fluid">
+
+          <div class="mx-2">
+          <button class="btn btn-primary" id="btn-open-close-nav"><i class="bi bi-list"></i></button>
+
+          </div>
+
+          <a class="navbar-brand" href="#" >T&S INC</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              
+              {% if user.is_staff %}
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle fs-5 text-white text-center" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="fs-5">Bienvenido, {{user.username}}</span>
+                  <i class="bi bi-person-circle"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDarkDropdownMenuLink">
+                  <li><a class="dropdown-item" href="/admin">Panel admin</a></li>
+                  <li><hr class="dropdown-divider"></li>
+
+                  <li><form method="post" action="{% url 'logout' %}" class="d-flex align-items-center">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-link text-white fs-6">Salir</button>
+                  </form>
+                </li>
+                </ul>
+              </li>
+              
+              {% endif %}
+
+            </div>
+          </div>
+        </div>
+      </nav>
+
+    <body >
+
+      
+        
+     
+      <div class="continer-flow content">
+        <div class="row">
+          <div class="col-md-4">
+          </div>
+          <div class="col-md-8">
+           
+          </div>
+          
+        </div>
+        <div class="row row-cols-2">
+          
+         
+          <div id="loading-overlay" class="overlay" style="display: none;">
+            <div class="spinner"></div>
+          </div>
+           
+         
+            <div class="col" style="display: none;  width: 400px;" id="nav-tree">
+              <div class="card">
+                <div class="card-header">
+                    
+                    
+                    <div class="row">
+                      <div class="col-8">
+                        <form id="form-save-folder" style="display: none;" action="{% url 'new_folder' %}" method="post">
+                          {% csrf_token %}
+                          <input type="text" style="width: 150px;" name="name">
+                          
+                          <button class="btn btn-success btn-sm">Crear</button>
+                        </form>
+                      </div>
+                      <div class="col-4 text-end">
+                        
+                       
+                          <button id="btn-hidden-delete-folder" class="btn btn-danger btn-sm" ><i class="bi bi-trash3"></i></button>
+                          
+                          <button id="btn-hidden-folder" class="btn btn-success btn-sm"><i class="bi bi-folder-plus"></i></button>
+                      </div>
+                    </div>
+
+                </div>
+                <div class="card-body workspace-nav">
+                  <ul id="tree" >
+                   
+                      {% include 'workspace_comp/subfolder_tree.html' with folders=folder_tree parent=None %}
+                  
+                </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md">
+
+              <ul class="nav nav-tabs justify-content-center mb-4">
+              
+                <li class="nav-item">
+                  <a class="nav-link text-dark text-center" href="{% url 'show_all_offers' %}">
+                    <i class="bi bi-buildings d-block"></i>
+                    Ofertas
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-dark text-center" href="{% url 'product' %}">
+                    <i class="bi bi-table d-block"></i>
+                    Inventario
+                  </a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle text-center text-dark" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                    <i class="bi bi-send d-block"></i>
+                     Remisiones
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'remissions' %}">
+                      Ver remisiones</a></li>
+                    <li><a class="dropdown-item" href="{% url 'product_shipped' %}">
+                      Productos</a></li>
+                   
+                  </ul>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle text-center text-dark" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                    <i class="bi bi-bag d-block"></i>
+                    Ordenes
+                  
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'purcharse_order' %}">Ver ordenes</a></li>
+                    <li><a class="dropdown-item" href="{% url 'purcharse_order_products' %}">Productos</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'create_order' %}">Generar una orden</a></li>
+                    
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-dark text-center" href="{% url 'invoices' %}">
+                    <i class="bi bi-receipt d-block"></i>
+                    Facturas
+                  </a>
+                </li>
+
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle text-center text-dark" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                    <i class="bi bi-image d-block"></i>
+                  
+                  Items
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'upload_svg' %}">Cargar SVGs</a></li>
+                    <li><a class="dropdown-item" href="{% url 'files_folders' %}">Carpetas</a></li>
+                    
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-dark text-center" href="{% url 'order_statictics' %}">
+                    <i class="bi bi-graph-up-arrow d-block"></i>
+                    Estadísticas 
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-dark text-center" href="{% url 'carpage' %}">
+                    <i class="bi bi-cart4 d-block"></i>
+                    Carrito
+                  </a>
+                </li>
+              </ul>
+
+
+
+              
+                {% block body %} {% endblock %}
+              
+           
+            </div>
+
+        </div>
+          
+      </div>
+     
+    
+
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+          crossorigin="anonymous"
+        ></script>
+        <script src="{% static 'js/spinner.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+        <script src="{% static 'js_w/nav.js' %}"></script>
+        <script src="{% static 'js_w/deployment.js' %}"></script>
+        <script src="{% static 'js_w/confirmations.js' %}"></script>
+        <script src="{% static 'js_w/utils.js' %}"></script>
+        <script src="{% static 'js_w/scroll_position.js' %}"></script>
+        <script src="{% static 'js_w/popup.js' %}"></script>
+   
+    
+        <footer class="bg-light mt-4 d-flex justify-content-center">
+        
+          <div class="p-4">© 2017–2021 T&S INC. Tel:+573045644316. Email:duvanceliz@tsinc.com.co
+         </div>
+        
+        </footer>
+    </body>
+   
+  
+</html>

@@ -1,5 +1,5 @@
 
-{% extends 'layout.html' %} {% block body %} {% load humanize %} {% load static %}
+{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load humanize %} {% load static %}
 
 <div class="container">
   <div class="row">
@@ -47,7 +47,7 @@
     
     {% endif %}
         <a href="{% url 'order_statictics' %}" class="btn btn-primary btn-sm mb-2"> Ver Estadísticas</a>
-        <div class="table-responsive">
+        
           <table class="table table-hover table-light">
             <thead>
               
@@ -69,23 +69,36 @@
               <tr>
                 {% for invoice in invoices %}
     
-                <th scope="row">{{invoice.id}}</th>
-                <th>{{invoice.usersession}}</th>
-                <th>{{invoice.number}}</th>
-                <th>{{invoice.total_price}}</th>
-                <th>{{invoice.iva}}</th>
+                <td scope="row">{{invoice.id}}</td>
+                <td>{{invoice.usersession}}</td>
+                <td>{{invoice.number}}</td>
+                <td>{{invoice.total_price}}</td>
+                <td>{{invoice.iva}}</th>
                 <td>{{invoice.source_retention}}</td>
                 <td>{{invoice.ica_retention}}</td>
-                <td>{{invoice.date|naturaltime}}</td>
+                <td>{{invoice.date}}</td>
                 <td>
-       
+                  <div class="dropdown d-inline">
+                    <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+                      <i class="bi bi-gear"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item" href="{% url 'show_invoice' invoice.id %}">Ver</a></li>
+                      <li><a class="dropdown-item" href="">Editar</a></li>
+                      <li><a class="dropdown-item" href="">Duplicar</a></li>
+                      <li><a class="dropdown-item" href="">Cargar archivo</a></li>
+                      <li><a class="dropdown-item" href="">Descargar</a></li>
+                      <li><a class="dropdown-item" href="{% url 'delete_invoice' invoice.id %}" onclick="return confirm_delete_invoice()">Eliminar</a></li>
+                    </ul>
+                  </div>
+                
                 </td>
               </tr>
               
               {%endfor%}
             </tbody>
           </table>
-        </div>
+    
         
        </div>
        <div class="pagination">

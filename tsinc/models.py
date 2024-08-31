@@ -11,9 +11,10 @@ class Project(models.Model):
     nit = models.CharField(max_length=200,null=True)
     asesor = models.CharField(max_length=200, default=None)
     verified = models.BooleanField(default=False)
+    approved = models.BooleanField(default=False)
     progress = models.IntegerField(default=0)
     date = models.DateField(default=datetime.date.today)
-    usersesion = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    usersession = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return self.name
     
@@ -181,12 +182,14 @@ class Remission(models.Model):
     company = models.CharField(max_length=200)
     nit = models.CharField(max_length=200)
     location = models.CharField(max_length=200)
-    project = models.CharField(max_length=250)
+    contruction_site= models.CharField(max_length=250, null=True)
+    supplier = models.CharField(max_length=250, null=True)
     responsible = models.CharField(max_length=200)
     order_number = models.CharField(max_length=100, null=True) 
     observation = models.CharField(max_length=250, null=True) 
     date = models.DateTimeField(default=timezone.now)
-    usersession = models.ForeignKey(User,on_delete=models.CASCADE)
+    usersession = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True )
+    project = models.ForeignKey(Project,on_delete=models.CASCADE, null=True, blank=True)
 
 class ProductSent(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
@@ -201,7 +204,7 @@ class ProductBox(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
     price = models.FloatField(default=0)
-    usersession = models.ForeignKey(User,on_delete=models.CASCADE)
+    usersession = models.ForeignKey(User,on_delete=models.SET_NULL,null=True, blank=True)
     def __str__(self):
         return self.product.product_name
 
@@ -221,7 +224,7 @@ class PurcharseOrder(models.Model):
     observation = models.CharField(max_length=250, null=True) 
     total_price = models.FloatField(default=0)
     total_quantity = models.IntegerField(default=0)
-    usersession = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
+    usersession = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
     progress = models.IntegerField(default=0)
     date = models.DateTimeField(default=timezone.now)
     def __str__(self):
@@ -257,19 +260,19 @@ class RemissionFile(models.Model):
     name = models.CharField(max_length=200)
     remission = models.ForeignKey(Remission,on_delete=models.CASCADE, null=True)
     date = models.DateTimeField(default=timezone.now)
-    usersession = models.ForeignKey(User,on_delete=models.CASCADE)
+    usersession = models.ForeignKey(User,on_delete=models.SET_NULL,null=True, blank=True)
 
 class OrderFile(models.Model):
     name = models.CharField(max_length=200)
     order = models.ForeignKey(PurcharseOrder,on_delete=models.CASCADE, null=True)
     date = models.DateTimeField(default=timezone.now)
-    usersession = models.ForeignKey(User,on_delete=models.CASCADE)
+    usersession = models.ForeignKey(User,on_delete=models.SET_NULL,null=True, blank=True)
 
 class ProductFile(models.Model):
     name = models.CharField(max_length=200)
     product = models.ForeignKey(Product,on_delete=models.CASCADE, null=True)
     date = models.DateTimeField(default=timezone.now)
-    usersession = models.ForeignKey(User,on_delete=models.CASCADE)
+    usersession = models.ForeignKey(User,on_delete=models.SET_NULL,null=True, blank=True)
 
 class Invoice(models.Model):
     number = models.CharField(max_length=100)
@@ -277,7 +280,8 @@ class Invoice(models.Model):
     iva = models.FloatField(default=0)
     source_retention = models.FloatField(default=0)
     ica_retention = models.FloatField(default=0)
-    usersession = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
+    usersession = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     date = models.DateTimeField(default=timezone.now)
     def __str__(self):
         return self.number
@@ -291,8 +295,10 @@ class OrderInvoice(models.Model):
     iva = models.FloatField(default=0)
     source_retention = models.FloatField(default=0)
     ica_retention = models.FloatField(default=0)
-    usersession = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
+    usersession = models.ForeignKey(User,on_delete=models.SET_NULL,
+                                     null=True)
     date = models.DateTimeField(default=timezone.now)
+
 
 # class Folder(models.Model):
 #     name = models.CharField(max_length=200)
@@ -302,3 +308,20 @@ class OrderInvoice(models.Model):
 #     class Meta:
 #         verbose_name = "Carpeta"
 #         verbose_name_plural = "Carpetas"
+
+
+class Folder(models.Model):
+    name = models.CharField(max_length=200)
+    order = models.PositiveIntegerField(default=0)
+    color = models.CharField(max_length=50, null=True, blank=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
+    usersession = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True )
+    date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.name
+    class Meta:
+        verbose_name = "Carpeta"
+        verbose_name_plural = "Carpetas"
+        ordering = ['order']

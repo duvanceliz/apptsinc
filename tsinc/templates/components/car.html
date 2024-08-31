@@ -2,8 +2,8 @@
 <div class="notification-save">
   <span>Los parametros han sido guardado correctamente</span>
 </div>
-  <a href="{% url 'clean_productbox' path %}" class="btn btn-primary btn-sm mb-2">Limpiar carrito</a>
-  <a href="{% url 'product' %}" class="btn btn-primary btn-sm mb-2">Agregar productos</a>
+  <a href="{% url 'clean_productbox'%}" class="btn btn-success btn-sm mb-2">Limpiar carrito</a>
+  <a href="{% url 'product' %}" class="btn btn-success btn-sm mb-2">Agregar productos</a>
   <a href="{% url 'remissions' %}" class="btn btn-primary btn-sm mb-2">Ver remisiones</a>
   <a href="{% url 'purcharse_order' %}" class="btn btn-primary btn-sm mb-2">Ver Ordenes</a>
 
@@ -42,7 +42,7 @@
           <td><input type="number" value="{{product.price}}" style="width: 100px;" id="price{{product.id}}"></td>
           <td>{{product.product.description}}</td>
           <td>
-            <a href="{% url 'subtract_product' product.id path %}" class="btn btn-danger bnt-sm"><i class="bi bi-trash"></i></a>
+            <a href="{% url 'subtract_product' product.id %}" class="btn btn-danger bnt-sm"><i class="bi bi-trash"></i></a>
           </td>
         </tr>
         {%endfor%}

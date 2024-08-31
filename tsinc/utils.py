@@ -1675,7 +1675,7 @@ def print_remission(sheet,remission):
         remission.company,
         remission.date.strftime("%d-%m-%Y"),
         remission.order_number,
-        remission.project,
+        remission.project.name,
         remission.responsible
     ]
 
@@ -1878,8 +1878,28 @@ def print_order(sheet,order):
     sheet.merge_cells(f"L{row1}:M{row1}")
 
     conditions = Note.objects.filter(tag="CONDICIONES OC").first()
-
-    print_row(sheet,[conditions.description],row1+2,1,config_style_titles3)
+    if conditions:
+        print_row(sheet,[conditions.description],row1+2,1,config_style_titles3)
+    else:
+        description =  """
+            			
+                1. Tipo de contrato:XXXXX											
+                2. El valor ofertado es a todo costo, el cual cubre todo el objeto negociado y los  sobre costos que se llegaren a presentar son responsabilidad de XXXXXX											
+                3. El proveedor deberá emplear toda su experiencia y core de negocio, para cumplir con el objeto de la presente orden de compra, en términos de calidad											
+                oportunidad, eficiencia y servicio post-venta											
+                "Nota Con la aceptacion de este documento el proveedor se obliga a cumplir con todas las normas de seguridad industrial y ocupacional establecidas en la ley para las personas para las personas que realizan trabajos en altura, como a nivel de piso, tanto para personas como para los materiales y equipos que se empleen en el desarrollo de este contrato.
+                Para la ejecucion de las catividades, no se permitora el ingreso del personal ue no este afilado al sistema de seguridad social (EPS, ARL Y PENSION) y cuente con la cobertura acorde con los trabajos contratados. Igualmente para realizar los pagos se debe adjuntar copia de las planillas con los pagos realizados. "											
+                4. Este contrato, no es un contrato laboral, por lo que no existe un relación entre el CONTRATANTE - T&S INC y el CONTRATISTA. Por ende, no											
+                hay relación directa, ni existe responsabilidad entre las partes											
+                5. FORMA DE PAGO: las partes acuerdan:											
+                                                            
+                6. Especificaciones, Todas las contenidas en la cotizacion XXXXXX											
+                Representante legal XXXXXX											
+                7. PÓLIZAS DE LA PRESENTE ORDEN DECOMPRA
+        
+        """
+        conditions = Note.objects.create(tag="CONDICIONES OC", description = description)
+        print_row(sheet,[conditions.description],row1+2,1,config_style_titles3)
 
     row2 = row1 + 25
     sheet.merge_cells(f"A{row1+2}:M{row2}")

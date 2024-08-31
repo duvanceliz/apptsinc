@@ -1,0 +1,145 @@
+
+
+{% if from %}
+<form action="{% url 'edit_order' order.id %}" method="post">
+
+    {% csrf_token %}
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+          <label>¿Está en COP?</label>
+          {% if not order.currency %}
+         <input type="radio" id="currency_yes" name="currency" value="True">
+         <label for="currency_yes">Sí</label>
+         <input type="radio" id="currency_no" name="currency" value="False" checked>
+         <label for="currency_no">No</label>
+         {% else %}
+         <input type="radio" id="currency_yes" name="currency" value="True" checked>
+         <label for="currency_yes">Sí</label>
+     
+         <input type="radio" id="currency_no" name="currency" value="False" >
+         <label for="currency_no">No</label>
+         {% endif %}
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4 text-end">
+          <a href="{% url 'download_order' order.id %}" class="btn btn-success btn-sm" >Descargar</a>
+          <button class="btn btn-success btn-sm">Guardar</button>
+        </div>
+    </div>
+
+{% else %}
+
+<form action="{% url 'create_order' %}" method="post">
+
+    {% csrf_token %}
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+          <label>¿Está en COP?</label>
+          {% if not order.currency %}
+         <input type="radio" id="currency_yes" name="currency" value="True">
+         <label for="currency_yes">Sí</label>
+         <input type="radio" id="currency_no" name="currency" value="False" checked>
+         <label for="currency_no">No</label>
+         {% else %}
+         <input type="radio" id="currency_yes" name="currency" value="True" checked>
+         <label for="currency_yes">Sí</label>
+     
+         <input type="radio" id="currency_no" name="currency" value="False" >
+         <label for="currency_no">No</label>
+         {% endif %}
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4 text-end">
+          <button class="btn btn-success btn-sm">Guardar</button>
+        </div>
+    </div>
+
+
+{% endif %}
+
+
+  <div class="row mb-4 ">
+
+    <div class="col-md-6">
+      
+
+      <table class="table table-light table-sm table-bordered">
+       
+        <tbody>
+         
+          <tr>
+            <td class="fw-bold">Tracking:</td>
+            <td><input type="text" class="form-control form-control-sm" value="{{order.tracking}}" name="tracking"></td>
+          </tr>
+          <tr>
+            <td class="fw-bold">PROVEEDOR/CONTRATISTA:</td>
+            <td><input type="text" class="form-control form-control-sm" value="{{order.supplier}}" name="supplier"></td>
+          </tr>
+          <tr>
+            <td class="fw-bold">NIT/C.C:</td>
+            <td><input type="text" class="form-control form-control-sm" value="{{order.nit}}" name="nit"></td>
+          </tr>
+          <tr>
+            <td class="fw-bold">DIRECCIÓN:</td>
+            <td><input type="text" class="form-control form-control-sm" value="{{order.address}}" name="address"></td>
+
+          </tr>
+          <tr>
+            <td class="fw-bold">TELEFONO:</td>
+            <td><input type="text" class="form-control form-control-sm" value="{{order.phone}}" name="phone"></td>
+          </tr>
+          <tr>
+            <td class="fw-bold">CLIENTE:</td>
+            <td><input type="text" class="form-control form-control-sm" value="{{order.customer}}" name="customer"></td>
+          </tr>
+
+        </tbody>
+      </table>
+
+
+    </div>
+
+ 
+   <div class="col-md-6">
+
+    <table class="table table-light table-sm table-bordered">
+       
+      <tbody>
+        <tr>
+          <td class="fw-bold">ORDEN DE COMPRA:</td>
+          <td><input type="text" class="form-control form-control-sm" value="{{order.code}}" name="code" disabled></td>
+        </tr>
+        <tr>
+          <td class="fw-bold">FECHA:</td>
+          <td><input type="text" class="form-control form-control-sm" value="{{order.date}}" name="date" disabled></td>
+        </tr>
+        <tr>
+          <td class="fw-bold">CENTRO DE COSTO:</td>
+          <td><input type="text" class="form-control form-control-sm" value="{{order.cost_center}}" name="cost_center"></td>
+
+        </tr>
+        <tr>
+          <td class="fw-bold">INTERVENTOR:</td>
+          <td><input type="text" class="form-control form-control-sm" value="{{order.inspector}}" name="inspector"></td>
+        </tr>
+        <tr>
+          <td class="fw-bold">SUPERVISOR:</td>
+          <td><input type="text" class="form-control form-control-sm" value="{{order.supervisor}}" name="supervisor"></td>
+        </tr>
+        <tr>
+          <td class="fw-bold">OBSERVACIÓN</td>
+          <td><input type="text" class="form-control form-control-sm" value="{{order.observation}}" name="observation"></td>
+        </tr>
+
+      </tbody>
+    </table>
+   
+   
+    
+   </div>
+
+</div>
+
+ </form>

@@ -1,0 +1,105 @@
+
+{% extends 'layout_with_folder_tree.html' %} {% block body %}{% load humanize  %}
+
+<div class="container bg-light p-5">
+      {% include 'components/alert.html'%}
+
+     <div class="row">
+      <h4 class="display-6">REMISIÓN: {{remission.number}}, PROYECTO: {{remission.project}}</h4>
+     </div>
+
+     {% include 'components/remission_comp.html' with from=from_show_remission %}
+
+
+    <div class="row">
+
+      
+      <div class="col-md-12">
+        <a href="{% url 'remissions' %}" class=" btn btn-primary btn-sm mb-2">Volver</a>
+        <a href="{% url 'carpage' %}" class=" btn btn-primary btn-sm mb-2">Ver Carrito</a>
+        <a href="{% url 'add_car_remission' remission.id %}" class=" btn btn-success btn-sm mb-2">Agregar del carrito</a>
+      
+    
+        <table class="table table-hover table-light">
+          <thead>
+            
+        
+            <tr>
+              
+              <th scope="col" id="table-titles-two">Nombre</th>
+              <th scope="col" id="table-titles-two">Modelo</th>
+              <th scope="col" id="table-titles-two">Cantidad</th>
+              <th scope="col" id="table-titles-two">Descripción</th>
+              <th scope="col" id="table-titles-two">Observación</th>
+              <th scope="col" id="table-titles-two"></th>
+            </tr>
+          
+          </thead>
+          <tbody>
+            <tr>
+              {% for product in products %}
+  
+           
+              <td id="table-columns">{{product.product.product_name}}</td>
+              <td id="table-columns">{{product.product.model}}</td>
+              <td id="table-columns">{{product.quantity}}</td>
+              <td id="table-columns">{{product.product.description}}</td>
+              <td id="table-columns">{{product.product.observation}}</td>
+              <td id="table-columns">
+                <a class="btn btn-danger btn-sm" href="{% url 'delete_remission_product' product.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar producto" onclick="return confirm_delete_remission_product()"> <i class="bi bi-trash"></i> </a>
+              </td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+    </div>
+     
+
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+
+        <div class="card">
+          <div class="card-header fw-bold">
+            ARCHIVOS RELACIONADOS
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover table-light">
+            <thead>
+              
+          
+              <tr>
+
+                <th scope="col">Nombre</th>
+                <th scope="col">Tiempo de carga</th>
+                <th ></th>
+              </tr>
+            
+            </thead>
+            <tbody>
+              <tr>
+                {% for file in remissionfiles %}
+    
+
+                <td>{{file.name}}</td>
+                <td>{{file.date|naturaltime}}</td>
+                 <th>
+                  <a href="{% url 'view_file' file.id 're' %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
+                  <a class="btn btn-danger btn-sm" href="{% url 'delete_remission_file' file.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return confirm_delete_remission()"> <i class="bi bi-trash"></i> </a>
+
+                 </th>
+              </tr>
+              {%endfor%}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+      <div class="col-md-6"></div>
+  
+    </div>
+  </div>
+
+{% endblock %}

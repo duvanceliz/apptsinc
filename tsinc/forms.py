@@ -246,7 +246,7 @@ class CreateInvoice(forms.Form):
                                     widget=forms.NumberInput(attrs={'class': 'form-control','min': '1'}),
                                     min_value=1
                                     )
-    
+ 
 
     
 

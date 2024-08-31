@@ -1,0 +1,153 @@
+
+{% extends 'layout_with_folder_tree.html' %} {% block body %}
+
+
+
+<div class="container">
+  <div class="row mb-2">
+
+     <div class="col-md-4"><a class="btn btn-primary" href="{% url 'create_project' %}"> Nuevo Proyecto</a></div>
+    <div class="col-md-8"></div>
+    
+  
+  </div>
+  <div class="row">
+    
+    <div class="col-md-12">
+      {% if messages %}
+          
+      {% for message in messages %}
+
+          {% if message.tags == 'success' %}
+          <div class="alert alert-success" role="alert">
+          {{ message }}
+          </div>
+          {% endif %}
+
+          {% if message.tags == 'info' %}
+          <div class="alert alert-warning" role="alert">
+          {{ message }}
+          </div>
+          {% endif %}
+          {% if message.tags == 'error' %}
+          <div class="alert alert-danger" role="alert">
+          {{ message }}
+          </div>
+          {% endif %}
+
+      {% endfor %}
+  
+  
+  {% endif %}
+      
+     
+      <table class="table table-hover table-light table-sm">
+        <thead>
+          <tr>
+            <th scope="col">user</th>
+            <th scope="col">Nombre del proyecto</th>
+            <th scope="col">Empresa</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Etapa del proyecto</th>
+            <th scope="col">Fecha</th>
+            <th scope="col"></th>
+          </tr>
+        
+        </thead>
+        <tbody>
+          
+          <tr>
+            {% for project in page_obj %}
+            <td>{{project.usersession}}</td>
+            <td>{{project.name}}</td>
+
+            <td>{{project.company_name}}</td>
+
+            <td>
+              {% if project.approved == False%}
+
+              <i class="bi bi-exclamation-square-fill text-warning"></i>
+    
+              {%else%}
+            
+    
+              <i class="bi bi-check-square-fill text-success"></i>
+              {% endif %}
+            </td>
+            <td>
+              <!-- {% if project.done == False%}
+
+              En proceso
+    
+              {%else%}
+              Finalizado
+    
+              {% endif %} -->
+              {% if project.progress == 100 %}
+              <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{project.progress}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{project.progress}}%</div>
+              </div>
+            </td>
+
+            {% else %}
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: {{project.progress}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{project.progress}}%</div>
+            </div>
+          </td>
+            {% endif %}
+
+           
+            <td>
+              {{project.date}}
+            </td>
+            <td>
+              
+              <div class="dropdown d-inline">
+                <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+                  <i class="bi bi-gear"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  <li><a class="dropdown-item" href="{% url 'tabs' project.id %}" >Ver Tableros</a></li>
+                  <li><a class="dropdown-item" href="/editproject/?id={{project.id}}" >Editar</a></li>
+                  <li><a class="dropdown-item" href="{% url 'download_points' project.id %}" >Descargar puntos</a></li>
+                  <li><a class="dropdown-item" href="{% url 'download_offer' project.id %}" >Descargar oferta</a></li>
+                  <li><a class="dropdown-item" href="{% url 'modify_points' project.id %}" >Editar Puntos</a></li>
+                  <li><a class="dropdown-item" href="" >Descargar</a></li>
+                  <li><a class="dropdown-item" href="{% url 'delete_obj' project.id %}" onclick="return verificar()">Eliminar</a></li>
+                </ul>
+              </div>
+           
+           
+            </td>
+          </tr>
+
+        
+            
+          {%endfor%}
+        </tbody>
+      </table>
+  
+      <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; Primero</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            {% endif %}
+    
+            <span class="current">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Último &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    </div>
+    
+  </div>
+</div>
+{% load static %}
+<script src="{% static 'js/confirm.js' %}"></script>
+{% endblock %}

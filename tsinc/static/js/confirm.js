@@ -100,3 +100,14 @@ function confirm_delete_product() {
     }
 
 }
+
+function confirm_delete_invoice() {
+
+    let resultado = window.confirm('¿Realmente quieres borrar la factura?');
+    if (resultado === true) {
+        return true
+    } else {
+        return false
+    }
+
+}

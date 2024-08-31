@@ -1,3 +1,4 @@
+
 #outer-dropzone {
   height: 80%;
 }
@@ -24,6 +25,8 @@ body{
   background: #e4e4e4;
   color: #202020;
   height: 100vh;
+  overflow-x: hidden; 
+  overflow-y: auto;   
 }
 
 .dropzone{
@@ -229,6 +232,7 @@ input.selected-group{
 
 ul {
   list-style-type: none;
+ 
 }
 ul ul {
   margin-left: 10px;
@@ -240,7 +244,7 @@ ul ul {
 }
 
 .workspace-nav{
-  height: 400px;
+  height: 800px;
   overflow-y: scroll; 
 }
 
@@ -249,6 +253,44 @@ ul ul {
   overflow-x: scroll;
   white-space: nowrap;
 }
+
+#tree {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+ 
+}
+
+#tree li {
+  margin-bottom: 10px;
+  padding: 4px;
+  border-left: 2px solid #838383; 
+  cursor: pointer;
+  
+}
+
+#tree ul {
+  margin-left: 10px;
+ 
+}
+
+
+#table-titles{
+
+  font-size: 0.8rem;
+
+}
+
+#table-columns{
+  font-size: 0.8rem;
+}
+
+#table-titles-two{
+
+  font-size: 0.6rem;
+
+}
+
 
 
 

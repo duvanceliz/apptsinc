@@ -1,0 +1,83 @@
+{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load static %} 
+
+<div class="container bg-light p-4">
+    <div class="row">
+        
+       <div class="col-md-12">
+            {% if messages %}
+                
+                {% for message in messages %}
+        
+                    {% if message.tags == 'success' %}
+                    <div class="alert alert-success" role="alert">
+                    {{ message }}
+                    </div>
+                    {% endif %}
+        
+                    {% if message.tags == 'info' %}
+                    <div class="alert alert-warning" role="alert">
+                    {{ message }}
+                    </div>
+                    {% endif %}
+                    {% if message.tags == 'error' %}
+                    <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                    </div>
+                    {% endif %}
+        
+                {% endfor %}
+            
+            
+            {% endif %}
+
+        <h4 class="display-6">FACTURA: {{invoice.number}}</h4>
+        <form action="{% url 'update_invoice' invoice.id %}"  method="post">
+            {% csrf_token %}
+            <div class="row mb-2">
+                <div class="col-4"></div>
+                <div class="col-4"></div>
+                <div class="col-4 text-end">
+                    <button class="btn btn-success btn-sm">Guardar</button>
+                </div>
+            </div>
+           
+        <table class="table table-light table-sm table-bordered">
+         
+            <tbody>
+              <tr>
+                <td class="fw-bold">FACTURA NO:</td>
+                <td><input type="0" value="{{invoice.number}}" class="form-control form-control-sm" name="number"></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">PRECION TOTAL:</td>
+                <td><input type="0" value="{{invoice.total_price}}" class="form-control form-control-sm" name="total_price"></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">IVA:</td>
+                <td><input type="0" value="{{invoice.iva}}" class="form-control form-control-sm" name="iva"></td>
+    
+              </tr>
+              <tr>
+                <td class="fw-bold">RETENCIÓN FUENTE:</td>
+                <td><input type="0" value="{{invoice.source_retention}}" class="form-control form-control-sm" name="source_retention"></td>
+              </tr>
+  
+              <tr>
+                <td class="fw-bold">RETENCIÓN ICA:</td>
+                <td><input type="0" value="{{invoice.ica_retention}}" class="form-control form-control-sm" name="ica_retention"></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">FECHA:</td>
+                <td>{{invoice.date}}</td>
+              </tr>
+          
+    
+            </tbody>
+          </table>
+        </form>
+
+       </div>
+    </div>
+</div>
+<script src="{% static 'js/workspace/navegation.js' %}"></script>
+{% endblock %}

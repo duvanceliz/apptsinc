@@ -1,15 +1,15 @@
 
-{% extends 'layout.html' %} {% block body %} {% load humanize%}
+{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load humanize%}
 
 <div class="container">
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
 
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
       <form id="form-search">
         <input id="input-search" type="text" name="search"/>
         <button id="btn-search" class="btn btn-primary m-2" type="submit">
@@ -22,46 +22,46 @@
    
        <div class="col-md-12">
 
-        {% if messages %}
+              {% if messages %}
+                
+              {% for message in messages %}
+        
+                  {% if message.tags == 'success' %}
+                  <div class="alert alert-success" role="alert">
+                  {{ message }}
+                  </div>
+                  {% endif %}
+        
+                  {% if message.tags == 'info' %}
+                  <div class="alert alert-warning" role="alert">
+                  {{ message }}
+                  </div>
+                  {% endif %}
+                  {% if message.tags == 'error' %}
+                  <div class="alert alert-danger" role="alert">
+                  {{ message }}
+                  </div>
+                  {% endif %}
+        
+              {% endfor %}
           
-        {% for message in messages %}
-  
-            {% if message.tags == 'success' %}
-            <div class="alert alert-success" role="alert">
-            {{ message }} <a href="{% url 'remission' %}">Ir a generar una remisón</a>
-            </div>
-            {% endif %}
-  
-            {% if message.tags == 'info' %}
-            <div class="alert alert-warning" role="alert">
-            {{ message }}
-            </div>
-            {% endif %}
-            {% if message.tags == 'error' %}
-            <div class="alert alert-danger" role="alert">
-            {{ message }}
-            </div>
-            {% endif %}
-  
-        {% endfor %}
-    
-    
-    {% endif %}
+          
+          {% endif %}
        
-        <div class="table-responsive">
+        
           <table class="table table-hover table-light">
             <thead>
               
           
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">Generada por:</th>
-                <th scope="col">Remisión#</th>
-                <th scope="col">Empresa</th>
-                <th scope="col">Ciudad</th>
-                <th scope="col">Proyecto/Obra</th>
-                <th scope="col">Archivos</th>
-                <th scope="col">Tiempo</th>
+                
+                <th scope="col" id="table-titles">Generada por:</th>
+                <th scope="col" id="table-titles">#</th>
+                <th scope="col" id="table-titles">Empresa</th>
+                <th scope="col" id="table-titles">Ciudad</th>
+                <th scope="col" id="table-titles">Proyecto/Obra</th>
+                <th scope="col" id="table-titles">Archivos</th>
+                <th scope="col" id="table-titles">Tiempo</th>
                 <th ></th>
               </tr>
             
@@ -70,32 +70,42 @@
               <tr>
                 {% for remission in remissions %}
     
-                <th scope="row">{{remission.id}}</th>
-                <th>{{remission.usersession}}</th>
-                <th>{{remission.number}}</th>
-                <th>{{remission.company}}</th>
-                <td>{{remission.city}}</td>
-                <td>{{remission.project}}</td>
+                
+                <td id="table-columns">{{remission.usersession}}</td>
+                <td id="table-columns"><a href="{% url 'show_remission' remission.id %}">{{remission.number}}</a></td>
+                <td id="table-columns">{{remission.company}}</td>
+                <td id="table-columns">{{remission.city}}</td>
+                <td id="table-columns">{{remission.contruction_site}}</td>
                 {% for file_info in remission_files_info %}
                 {%  if file_info.remission_id == remission.id  %}
-                <td>{{file_info.quantity}}<i class="bi bi-file-earmark-text"></i></td>
+                <td id="table-columns">{{file_info.quantity}}<i class="bi bi-file-earmark-text"></i></td>
                 {% endif %}
                 {% endfor %}
-                <td>{{remission.date|naturaltime}}</td>
+                <td id="table-columns">{{remission.date|naturaltime}}</td>
                 <td>
-                  <a class="btn btn-primary btn-sm" href="{% url 'product_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles de remisión"> <i class="bi bi-box-arrow-right"></i></a>
-                  <a class="btn btn-success btn-sm" href="{% url 'edit_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar remisión"><i class="bi bi-pencil-square"></i></a>
-                  <a class="btn btn-primary  btn-sm" href="{% url 'duplicate_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Duplicar remisión"><i class="bi bi-copy"></i></a>
-                  <a href="{% url 'upload_remission_file' remission.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Subir un archivo"><i class="bi bi-file-earmark-arrow-up"></i></a>
-                  <a href="{% url 'download_remission' remission.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar remisión"><i class="bi bi-arrow-down-circle"></i></a>
-                  <a class="btn btn-danger btn-sm" href="{% url 'delete_remission' remission.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return confirm_delete_remission()"> <i class="bi bi-trash"></i> </a>
-                  </td>
+                
+                  <div class="dropdown d-inline">
+                    <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+                      <i class="bi bi-gear"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item"  href="{% url 'show_remission' remission.id %}">Ver o Editar</a></li>
+                      <li><a class="dropdown-item" href="{% url 'duplicate_remission' remission.id %}">Duplicar</a></li>
+                      <li><a class="dropdown-item" href="{% url 'upload_remission_file' remission.id %}">Cargar archivo</a></li>
+                      <li><a class="dropdown-item" href="{% url 'download_remission' remission.id %}">Descargar</a></li>
+                      <li><a class="dropdown-item" href="{% url 'delete_remission' remission.id %}" onclick="return confirm_delete_remission()">Eliminar</a></li>
+                    </ul>
+                  </div>
+                
+                </td>
+
+
               </tr>
     
               {%endfor%}
             </tbody>
           </table>
-        </div>
+        
        </div>
        <div class="pagination">
         <span class="step-links">

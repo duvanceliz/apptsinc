@@ -1,5 +1,5 @@
 
-{% extends 'layout.html' %} {% block body %} {% load humanize %} {% load static %}
+{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load humanize %} {% load static %}
 
 <div class="container">
   <div class="row">
@@ -27,7 +27,7 @@
   
             {% if message.tags == 'success' %}
             <div class="alert alert-success" role="alert">
-            {{ message }} <a href="{% url 'remission' %}">Ir a generar una remisón</a>
+            {{ message }} <a href="#">Ir a generar una remisón</a>
             </div>
             {% endif %}
   
@@ -47,22 +47,22 @@
     
     {% endif %}
         <a href="{% url 'order_statictics' %}" class="btn btn-primary btn-sm mb-2"> Ver Estadísticas</a>
-        <div class="table-responsive">
+        
           <table class="table table-hover table-light">
             <thead>
               
           
               <tr>
                
-                <th scope="col">Creado por:</th>
-                <th scope="col">OP Code</th>
-                <th scope="col">Tracking</th>
-                <th scope="col">Proveedor</th>
-                <th scope="col">Precio(total)</th>
-                <th scope="col">Archivos</th>
-                <th scope="col">Facturación</th>
-                <th scope="col">Tiempo</th>
-                <th scope="col">Recibido</th>
+                <th scope="col" id="table-titles">Creado por:</th>
+                <th scope="col" id="table-titles">OP Code</th>
+                <th scope="col" id="table-titles">Tracking</th>
+                <th scope="col" id="table-titles">Proveedor</th>
+                <th scope="col" id="table-titles">Precio(total)</th>
+                <th scope="col" id="table-titles">Archivos</th>
+                <th scope="col" id="table-titles">Facturación</th>
+                <th scope="col" id="table-titles">Tiempo</th>
+                <th scope="col" id="table-titles">Recibido</th>
                 
                 <th></th>
               </tr>
@@ -73,22 +73,22 @@
                 {% for order in orders %}
     
            
-                <th>{{order.usersession}}</th>
-                <th>{{order.code}}</th>
-                <th>{{order.tracking}}</th>
-                <td>{{order.supplier}}</td>
+                <td id="table-columns">{{order.usersession}}</td>
+                <td id="table-columns"><a href="{% url 'order_product_info' order.id %}">{{order.code}}</a></td>
+                <td id="table-columns">{{order.tracking}}</td>
+                <td id="table-columns">{{order.supplier}}</td>
                 {% if  not order.currency %}
-                <td>(USD) {{order.total_price|intcomma}}</td>
+                <td id="table-columns">(USD) {{order.total_price|intcomma}}</td>
                 {% else %}
-                <td>(COP) {{order.total_price|intcomma}}</td>
+                <td id="table-columns">(COP) {{order.total_price|intcomma}}</td>
                 {% endif %}
                  {% for file in order_files_info  %}
                  {% if file.order_id == order.id  %}
-                 <td>{{file.quantity}}<i class="bi bi-file-earmark-text"></i> </td>
+                 <td id="table-columns">{{file.quantity}}<i class="bi bi-file-earmark-text"></i> </td>
                  {% endif %}
                 {%endfor%}
 
-                <td>
+                <td id="table-columns">
                   {% if order.paid %}
                   <i class="bi bi-check-square-fill text-success"></i>
                   {%else%}
@@ -96,7 +96,7 @@
                   {%endif%}
 
                 </td>
-                <td>{{order.date|naturaltime}}</td>
+                <td id="table-columns">{{order.date|naturaltime}}</td>
                 <td>
                   {% if order.progress == 100 %}
                   <div class="progress">
@@ -114,15 +114,21 @@
                 </td>
                 
                 <td>
-                  <a class="btn btn-primary btn-sm" href="{% url 'order_product_info' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles de orden de compra"> <i class="bi bi-box-arrow-right"></i></a>
-                  <a class="btn btn-success btn-sm" href="{% url 'edit_order' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar la orden de compra y sus productos"><i class="bi bi-pencil-square"></i></a>
-                  <a href="{% url 'create_order_entry' order.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver o editar las entradas"><i class="bi bi-envelope-arrow-up"></i></a>
-                  <a href="{% url 'upload_order_file' order.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Subir un archivo"><i class="bi bi-file-earmark-arrow-up"></i></a>
-                  <a href="{% url 'create_order_invoice' order.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Generar factura"><i class="bi bi-receipt"></i></a>
-                  <a href="{% url 'download_order' order.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar orden de compra"><i class="bi bi-arrow-down-circle"></i></a>
-                  <a class="btn btn-primary btn-sm" href="{% url 'duplicate_order'  order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Duplicar orden de compra"><i class="bi bi-copy"></i></a>
-                  <a class="btn btn-danger btn-sm" href="{% url 'delete_order' order.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar orden de compra" onclick="return confirm_delete_order()"> <i class="bi bi-trash"></i> </a>
-
+                  
+                  <div class="dropdown d-inline">
+                    <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+                      <i class="bi bi-gear"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item" href="{% url 'order_product_info' order.id %}" >Ver o Editar</a></li>
+                      <li><a class="dropdown-item" href="{% url 'duplicate_order'  order.id %}" >Duplicar</a></li>
+                      <li><a class="dropdown-item" href="{% url 'create_order_entry' order.id %}" >Registrar entrada</a></li>
+                      <li><a class="dropdown-item" href="{% url 'upload_order_file' order.id %}" >Cargar archivo</a></li>
+                      <li><a class="dropdown-item" href="{% url 'create_order_invoice' order.id %}" >Facturación</a></li>
+                      <li><a class="dropdown-item" href="{% url 'download_order' order.id %}" >Descargar</a></li>
+                      <li><a class="dropdown-item" href="{% url 'delete_order' order.id %}" onclick="return confirm_delete_order()">Eliminar</a></li>
+                    </ul>
+                  </div>
                 </td>
               </tr>
               
@@ -131,7 +137,7 @@
           </table>
         </div>
         
-       </div>
+      
        <div class="pagination">
         <span class="step-links">
             {% if orders.has_previous %}

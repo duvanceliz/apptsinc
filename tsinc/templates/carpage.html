@@ -1,18 +1,17 @@
 
-{% extends 'layout.html' %} {% block body %} {% load static %}
+{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load static %}
 
 <div class="container">
     <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
+        
+        <div class="col-md-12">
             <h4 class="display-6  text-center card p-2">CARRITO DE PRODUCTOS</h4>
         </div>
-        <div class="col-md-2"></div>
+        
     </div>
     <div class="row">
-       <div class="col-md-2">
-       </div>
-       <div class="col-md-8">
+      
+       <div class="col-md-12">
         
        
         <div class="notification-save">
@@ -21,7 +20,7 @@
 
         {% include 'components/car.html' %}
        </div>
-       <div class="col-md-2"></div>
+      
       
     </div>
   </div>

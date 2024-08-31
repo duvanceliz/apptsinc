@@ -34,11 +34,22 @@
               <a class="nav-link active fs-5" aria-current="page" href="{% url 'home' %}">Inicio</a>
               
               
-              {% if is_staff %}
-              <a class="nav-link fs-5 text-light" href="{% url 'overview' %}">Workspace</a>
+              {% if user.is_staff %}
 
-              <a class="nav-link fs-5 text-light" href="{% url 'product' %}">Inventario</a>
-              
+  
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle fs-5 text-light" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Utilidades
+                </a>
+                <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDarkDropdownMenuLink">
+                  <li><a class="dropdown-item" href="{% url 'overview' %}">Workspace</a></li>
+                  <li><a class="dropdown-item" href="{% url 'show_all_offers' %}">Ofertas</a></li>
+                  <li><a class="dropdown-item" href="{% url 'product' %}">Inventario</a></li>
+                  <li><a class="dropdown-item" href="{% url 'carpage' %}">Carrito</a></li>
+                  <li><a class="dropdown-item" href="/admin">Panel admin</a></li>
+                </ul>
+              </li>
+            
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle fs-5 text-light" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Remisiones
@@ -46,7 +57,6 @@
                 <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDarkDropdownMenuLink">
                   <li><a class="dropdown-item" href="{% url 'remissions' %}">Ver remisiones</a></li>
                   <li><a class="dropdown-item" href="{% url 'product_shipped' %}">Productos de remisones</a></li>
-                  <li><a class="dropdown-item" href="{% url 'remission' %}">Generar una remisión</a></li>
                 </ul>
               </li>
               <li class="nav-item dropdown">
@@ -66,7 +76,6 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDarkDropdownMenuLink">
                   <li><a class="dropdown-item" href="{% url 'invoices' %}">Ver facturas</a></li>
-                  <li><a class="dropdown-item" href="{% url 'create_invoice' %}">Generar una factura</a></li>
                 </ul>
               </li>
 
@@ -80,9 +89,6 @@
                 </ul>
               </li>
               
-              
-              <a class="nav-link fs-5 text-light" href="/admin">Panel Admin</a>
-              <a class="nav-link fs-5 text-light" href="{% url 'carpage' %}" ><i class="bi bi-cart3"></i></a>
               {% endif %}
 
               <form method="post" action="{% url 'logout' %}" class="d-flex align-items-center">

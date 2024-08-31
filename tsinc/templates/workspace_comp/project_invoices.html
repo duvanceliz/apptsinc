@@ -1,0 +1,49 @@
+{% load humanize %}
+<div class="card">
+    <div class="card-header">
+
+    
+        <div class="row">
+            <div class="col-6">
+                <h4>FACTURAS</h4>
+
+            </div>
+            <div class="col-6 text-end">
+                <a href="{% url 'create_invoice' project.id %}"  class="btn btn-success btn-sm"><i class="bi bi-plus-circle-dotted"></i> Nueva</a>
+            </div>
+        </div>
+
+    </div>
+       <div class="card-body p-0">
+        <table class="table table-hover table-light">
+          <thead>
+            
+        
+            <tr>
+              <th scope="col">Creado por:</th>
+              <th scope="col">Numero de factura</th>
+              <th scope="col">Precio total</th>
+              <th scope="col">Tiempo</th>
+              <th></th>
+            </tr>
+          
+          </thead>
+          <tbody>
+            <tr>
+              {% for invoice in invoices %}
+  
+              <td>{{invoice.usersession}}</td>
+              <td>{{invoice.number}}</td>
+              <td>{{invoice.total_price}}</td>
+              <td>{{invoice.date|naturaltime}}</td>
+              <td>
+     
+              </td>
+            </tr>
+            
+            {%endfor%}
+          </tbody>
+        </table>
+      
+       </div>
+</div>

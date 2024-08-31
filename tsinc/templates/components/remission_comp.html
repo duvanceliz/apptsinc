@@ -1,0 +1,102 @@
+
+{% if from %}
+<form action="{% url 'edit_remission' remission.id %}" method="post">
+    {% csrf_token %}
+    
+    <div class="row mb-3">
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4 text-end">
+          <a class="btn btn-success btn-sm" href="{% url 'download_remission' remission.id %}">Descargar</a>
+          <button class="btn btn-success btn-sm">Guardar</button>
+        
+      </div>
+    </div>
+{% else %}
+<form action="{% url 'create_remission' project.id %}" method="post">
+    {% csrf_token %}
+    <div class="row mb-3">
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4 text-end">
+          
+          <button class="btn btn-success btn-sm" id="btn-save">Guardar</button>
+        
+      </div>
+    </div>
+{% endif %}
+
+  <div class="row mb-4">
+              
+         
+
+        <div class="col-md-6">
+          <table class="table table-light table-sm table-bordered">
+       
+            <tbody>
+              <tr>
+                <td class="fw-bold">CIUDAD:</td>
+                <td><input type="text" class="form-control form-control-sm" name="city" id="" value="{{remission.city}}"></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">RAZON SOCIAL:</td>
+                <td><input type="text" class="form-control form-control-sm" name="company" id="" value="{{remission.company}}"></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">NIT:</td>
+                <td><input type="text" class="form-control form-control-sm" name="nit" id="" value="{{remission.nit}}"></td>
+    
+              </tr>
+              <tr>
+                <td class="fw-bold">LUGAR DE ENTREGA:</td>
+                <td><input type="text" class="form-control form-control-sm" name="location" id="" value="{{remission.location}}"></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">OBSERVACIÓN:</td>
+                <td><input type="text" class="form-control form-control-sm" name="observation" id="" value="{{remission.observation}}"></td>
+              </tr>
+              
+    
+            </tbody>
+          </table>
+
+        </div>
+       
+         <div class="col-md-6">
+          <table class="table table-light table-sm table-bordered">
+       
+            <tbody>
+              <tr>
+                <td class="fw-bold">REMISION NO:</td>
+                <td><input type="text" class="form-control form-control-sm" name="number" id="" value="{{remission.number}}" disabled></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">PROVEEDOR:</td>
+                <td><input type="text" class="form-control form-control-sm" name="supplier" id="" value="{{remission.supplier}}"></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">FECHA:</td>
+                <td><input type="text" class="form-control form-control-sm" name="date" id="" value="{{remission.date}}" disabled></td>
+    
+              </tr>
+              <tr>
+                <td class="fw-bold">PEDIDO:</td>
+                <td><input type="text" class="form-control form-control-sm" name="order_number" id="" value="{{remission.order_number}}"></td>
+              </tr>
+  
+              <tr>
+                <td class="fw-bold">OBRA:</td>
+                <td><input type="text" class="form-control form-control-sm" name="contruction_site" id="" value="{{remission.contruction_site}}"></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">INGENIERO RESPONSABLE:</td>
+                <td><input type="text" class="form-control form-control-sm" name="responsible" id="" value="{{remission.responsible}}"></td>
+              </tr>
+          
+    
+            </tbody>
+          </table>
+         </div>
+
+  </div>
+</form>

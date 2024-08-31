@@ -1,0 +1,50 @@
+<form action="{% url 'update_folder' folder.id %}" class="" method="post">
+    {% csrf_token %}
+     <div class="row">
+        <div class="col-4">
+           
+              
+            <div class="form-floating">
+                <input type="text" class="form-control form-control-sm" id="floatingInputValue1" value="{{folder.name}}" name="name">
+                <label for="floatingInputValue1">Nombre del folder</label>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="form-floating">
+                <select class="form-select" aria-label="Default select example" id="floatingInputValue2" name="project_id">
+                    <option selected value="{{folder.project.id}}">Actual - {{folder.project}} </option>
+                    {% if folder.project %}
+                    <option value="none">Ninguno</option>
+                    {% endif %}
+                    {% for project in projects %}
+                    
+                     
+                    <option value="{{project.id}}">{{project}}</option>
+            
+               
+                    {% endfor %}
+                    
+                </select>
+                <label for="floatingInputValue2">Proyecto relacionado</label>
+             </div>
+        </div>
+        <div class="col-1">
+            <div class="d-inline">
+
+                <input type="color" id="folder-color" name="color" value="{{folder.color}}"  />
+          
+            </div>
+
+        </div>
+        <div class="col-2">
+           
+            <button class="btn btn-success btn-sm"><i class="bi bi-floppy"></i></button>
+            
+
+        </div>
+
+     </div>
+ 
+     
+    
+</form>

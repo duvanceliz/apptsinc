@@ -1,0 +1,14 @@
+ul {
+    list-style-type: none;
+}
+
+.nav{
+    height: 400px;
+    overflow-y: scroll; 
+  }
+  
+.nav{
+    width: 100%; /* Establece el ancho máximo del contenedor */
+    overflow-x: scroll;
+    white-space: nowrap;
+}

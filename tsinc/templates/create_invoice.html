@@ -1,12 +1,12 @@
 
-{% extends 'layout.html' %} {% block body %} {% load static %}
+{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load static %}
 
 <div class="container">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
         
         </div>
-       <div class="col-md-4">
+       <div class="col-md-6">
         {% if messages %}
           
         {% for message in messages %}
@@ -36,7 +36,12 @@
        <div class="card">
         <div class="card-header">GENERAR UN FACTURA</div>
         <div class="card-body">
-            <form action="" method="POST">
+            <div class="mb-3">
+            <label for="projectlabel">Proyecto:</label>
+            <input type="text" class="form-control" id="projectlabel" value="{{project.name}}" disabled>
+            
+            </div>
+            <form action="{% url 'create_invoice' project.id %}" method="POST">
                 {% csrf_token %}
                 {{form.as_p}}
                 <button class="btn btn-primary mb-2 w-100">Guardar</button>
@@ -46,10 +51,10 @@
         </div>
        </div>
        </div>
-       <div class="col-md-4">
+  
+       <div class="col-md-3">
         
        </div>
-       
       
     </div>
   </div>

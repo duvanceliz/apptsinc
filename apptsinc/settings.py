@@ -45,14 +45,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'whitenoise.runserver_nostatic',
     'django.contrib.humanize',
+    'corsheaders',
+    'rest_framework',
+    'api',
     'tsinc',
-    'workspace',
-    'api'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -84,7 +86,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # 'tsinc.context_processors.breadcrumbs'
+                'tsinc.context_processors.folder_tree',
+                'tsinc.context_processors.get_user'
             ],
         },
     },
@@ -162,3 +165,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+# cors authorizations
+CORS_ALLOWED_ORIGINS = [
+     "http://localhost:5173"
+]
+

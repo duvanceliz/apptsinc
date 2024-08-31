@@ -1,0 +1,19 @@
+<div class="card">
+    <div class="card-header">
+         <h4>Folders recientes</h4>
+    </div>
+
+  
+
+    <div class="list-group">
+            {% for folder in children  %}
+            <div class="list-group-item">
+
+                <a href="{% url 'overview_folder' folder.id %}" class="btn btn btn-sm">{{folder.name}}</a>
+
+            </div>
+            {% endfor %}
+    </div>
+
+ 
+</div>

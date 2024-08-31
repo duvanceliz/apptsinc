@@ -1,4 +1,4 @@
-{% extends 'layout.html' %} {% block body %}  {% load static %}{% load humanize %}
+{% extends 'layout_with_folder_tree.html' %} {% block body %}  {% load static %}{% load humanize %}
 
 
 
@@ -37,9 +37,7 @@
       
       
       <div class="col-12">
-        
-
-
+      
 
         {% if messages %}
           
@@ -66,95 +64,116 @@
     
     
     {% endif %}
-  
-        <table class="table table-hover table-light ">
-          <thead>
-            
-        
-            <tr>
-              <th scope="col">Codigo</th>
-              <th scope="col">Producto</th>
-              <th scope="col">Modelo</th>
-              <th scope="col">Marca</th>
-           
-              <th scope="col">Cantidad</th>
+         <div class="table-reponsive">
+          <table class="table table-light table-sm ">
+            <thead>
               
-              <th scope="col">Precio(compra)</th>
-              <th scope="col">Precio(venta)</th>
-              <th scope="col">Archivos</th>
-              <th scope="col">Bandera</th>
-              <th scope="col"></th>
-              
-            </tr>
           
-          </thead>
-          <tbody>
-            <tr>
-              {% for product in page_obj %}
-              <td >
-                {{product.code}}
-              </td>
-              <td style="width: 50px;">{{product.product_name}}</td>
-              <td >
-                {{product.model}}
-              </td>
-              <td >
-                {{product.brand}}
-              </td>
+              <tr>
+                
+                <th scope="col" id="table-titles">Code</th>
+                <th scope="col" id="table-titles">Producto</th>
+                <th scope="col" id="table-titles">Modelo</th>
+                <th scope="col" id="table-titles">Marca</th>
+             
+                <th scope="col" id="table-titles"> # </th>
+                
+                <th scope="col" id="table-titles">Precio(compra)</th>
+                <th scope="col" id="table-titles">Precio(venta)</th>
+                <th scope="col" id="table-titles">files</th>
+                <th scope="col" id="table-titles">stock</th>
+                <th scope="col" id="table-titles"></th>
+                
+              </tr>
             
-              <td >
-                {{product.quantity}}
-              </td>
-
-              <td >
-                {{product.purcharse_price|intcomma}}
-              </td>
-              
-              <td >
-                {{product.sale_price|intcomma}}
-              </td>
-
-              {% for file_info in product_files_info %}
-                {%  if file_info.product_id == product.id  %}
-                <td>{{file_info.quantity}}<i class="bi bi-file-earmark-text"></i></td>
-                {% endif %}
-                {% endfor %}
-
-              <td>
+            </thead>
+            <tbody>
+              {% for product in page_obj %}
+                  
+              <tr id="table-column-pd" data-id="{{product.id}}">
                 
-                {% if product.quantity >= product.min_stock  %}
+                <td id="table-columns">
+                  {{product.code}}
+                </td>
+                <td id="table-columns" style="width: 200px;">
+                  <a href="{% url 'product_info' product.id %}">{{product.product_name}}</a>
+                </td>
+                <td id="table-columns">
+                  {{product.model}}
+                </td>
+                <td id="table-columns">
+                  {{product.brand}}
+                </td>
               
-                <span class="bg-success">
-                  <i class="bi bi-flag"></i>
-                </span>
+                <td id="table-columns">
+                  {{product.quantity}}
+                </td>
+  
+                <td id="table-columns">
+                  {{product.purcharse_price|intcomma}}
+                </td>
                 
-                {% else %}
-                <span class="bg-danger">
-                  <i class="bi bi-flag"></i>
+                <td id="table-columns">
+                  {{product.sale_price|intcomma}}
+                </td>
+  
+                {% for file_info in product_files_info %}
+                  {%  if file_info.product_id == product.id  %}
+                  <td id="table-columns" >{{file_info.quantity}}<i class="bi bi-file-earmark-text"></i></td>
+                  {% endif %}
+                  {% endfor %}
+  
+                <td id="table-columns">
+                  
+                  {% if product.quantity >= product.min_stock  %}
+                
+                  <span class="bg-success">
+                    <i class="bi bi-flag"></i>
                   </span>
-                {% endif %}
-               
+                  
+                  {% else %}
+                  <span class="bg-danger">
+                    <i class="bi bi-flag"></i>
+                    </span>
+                  {% endif %}
+                 
+                  
+                </td>
+   
                 
-              </td>
- 
+                <td >
+  
+                  <!-- <a class="btn btn-success btn-sm"    href="{% url 'edit_product' product.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar producto"><i class="bi bi-pencil-square"></i></a>
+                  <a href="{% url 'upload_product_file' product.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Subir un archivo"><i class="bi bi-file-earmark-arrow-up"></i></a>
+  
+                  <a class="btn btn-success btn-sm"    href="{% url 'add_product_to_box' product.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar al carrito"><i class="bi bi-plus-circle"></i></a>
+                  <a class="btn btn-danger btn-sm"   href="{% url 'delete_product' product.id %}" onclick="return confirm_delete_product()"> 
+                    <i class="bi bi-trash"></i>
+                  </a> -->
+                  <a class="btn btn-light btn-sm"    href="{% url 'add_product_to_box' product.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar al carrito"><i class="bi bi-cart-plus"></i></a>
+
+                  <div class="dropdown d-inline">
+                    <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+                      <i class="bi bi-gear"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item"  href="{% url 'product_info' product.id %}">Ver</a></li>
+                      <li><a class="dropdown-item"  href="{% url 'edit_product' product.id %}">Editar</a></li>
+                      <li><a class="dropdown-item" href="{% url 'upload_product_file' product.id %}">Cargar Archivo</a></li>
+                      <li><a class="dropdown-item" href="{% url 'delete_product' product.id %}" onclick="return confirm_delete_product()">Eliminar</a></li>
+                    </ul>
+                  </div>
+  
+                </td>
               
-              <td>
-                <a class="btn btn-primary btn-sm"  href="{% url 'product_info' product.id  %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles de producto"> <i class="bi bi-box-arrow-right"></i></a>
+              </tr>
+              {%endfor%}
+            </tbody>
+          </table>
 
-                <a class="btn btn-success btn-sm"    href="{% url 'edit_product' product.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar producto"><i class="bi bi-pencil-square"></i></a>
-                <a href="{% url 'upload_product_file' product.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Subir un archivo"><i class="bi bi-file-earmark-arrow-up"></i></a>
-
-                <a class="btn btn-success btn-sm"    href="{% url 'add_product_to_box' product.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar al carrito"><i class="bi bi-plus-circle"></i></a>
-                <a class="btn btn-danger btn-sm"   href="{% url 'delete_product' product.id %}" onclick="return confirm_delete_product()"> 
-                  <i class="bi bi-trash"></i>
-                </a>
-
-
-              </td>
-            </tr>
-            {%endfor%}
-          </tbody>
-        </table>
+         </div>
+  
+        
       
         <div class="pagination">
           <span class="step-links">

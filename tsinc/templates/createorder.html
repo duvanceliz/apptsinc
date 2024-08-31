@@ -1,40 +1,14 @@
 
-{% extends 'layout.html' %} {% block body %} {% load static %}
+{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load static %}
 
-<div class="container">
+<div class="container bg-light p-5">
+  {% include 'components/alert.html'%}
+
+   {% include 'components/order_comp.html' %}
+
     <div class="row">
           
-       <div class="col-md-4">
-        {% if messages %}
-          
-        {% for message in messages %}
-  
-            {% if message.tags == 'success' %}
-            <div class="alert alert-success" role="alert">
-            {{ message }} <a href="{% url 'remissions' %}">Ver todas las remisiones</a>
-            </div>
-            {% endif %}
-  
-            {% if message.tags == 'info' %}
-            <div class="alert alert-warning" role="alert">
-            {{ message }}
-            </div>
-            {% endif %}
-            {% if message.tags == 'error' %}
-            <div class="alert alert-danger" role="alert">
-            {{ message }}
-            </div>
-            {% endif %}
-  
-        {% endfor %}
-    
-    
-    {% endif %}
-      
-      {% include 'components/orderForm.html' %}
-    
-       </div>
-       <div class="col-md-8">
+       <div class="col-md-12">
         {% include 'components/car.html' %}
        </div>
        
