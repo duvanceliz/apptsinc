@@ -23,8 +23,10 @@
         </div>
         <div class="col-md-4"></div>
         <div class="col-md-4 text-end">
+          <a href="{% url 'upload_order_file' order.id %}" class="btn btn-success btn-sm">Cargar archivo</a>
           <a href="{% url 'download_order' order.id %}" class="btn btn-success btn-sm" >Descargar</a>
           <button class="btn btn-success btn-sm">Guardar</button>
+
         </div>
     </div>
 

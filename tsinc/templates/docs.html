@@ -1,0 +1,93 @@
+
+{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load humanize %} {% load static %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-4">
+      
+    </div>
+    <div class="col-md-4">
+      <form id="form-search">
+        <input id="input-search" type="text" name="search"/>
+        <button id="btn-search" class="btn btn-primary m-2" type="submit">
+          Buscar
+        </button>
+      </form>
+    </div>
+  </div>
+    <div class="row">
+   
+       <div class="col-md-12">
+        {% include 'components/alert.html' %}
+        
+          <table class="table table-hover table-light">
+            <thead>
+              
+          
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Cargado por:</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Fecha</th>
+                
+                <th></th>
+              </tr>
+            
+            </thead>
+            <tbody>
+              <tr>
+                {% for doc in docs %}
+    
+                <td scope="row">{{doc.id}}</td>
+                <td>{{doc.usersession}}</td>
+                <td>{{doc.name}}</td>
+                <td>{{doc.date|date:"d/m/Y"}}</td>
+
+               
+                <td>
+                  <div class="dropdown d-inline">
+                    <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+                      <i class="bi bi-gear"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item" href="{% url 'view_file' doc.id %}">Ver</a></li>
+                      <!-- <li><a class="dropdown-item" href="">Descargar</a></li> -->
+                      <li><a class="dropdown-item" href="{% url 'delete_file' doc.id %}" onclick="return confirm_delete_invoice()">Eliminar</a></li>
+                    </ul>
+                  </div>
+                
+                </td>
+              </tr>
+              
+              {%endfor%}
+            </tbody>
+          </table>
+    
+        
+       </div>
+       <div class="pagination">
+        <span class="step-links">
+            {% if docs.has_previous %}
+                <a href="?page=1">&laquo; Primero</a>
+                <a href="?page={{ docs.previous_page_number }}">Anterior</a>
+            {% endif %}
+    
+            <span class="current">
+                Página {{ docs.number }} de {{ docs.paginator.num_pages }}.
+            </span>
+    
+            {% if docs.has_next %}
+                <a href="?page={{ docs.next_page_number }}">Siguiente</a>
+                <a href="?page={{ docs.paginator.num_pages }}">Último &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+      
+    </div>
+  </div>
+
+  <script src="{% static 'js/confirm.js' %}"></script>
+{% endblock %}

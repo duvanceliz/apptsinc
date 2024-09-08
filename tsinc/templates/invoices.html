@@ -21,31 +21,7 @@
     <div class="row">
    
        <div class="col-md-12">
-        {% if messages %}
-          
-        {% for message in messages %}
-  
-            {% if message.tags == 'success' %}
-            <div class="alert alert-success" role="alert">
-            {{ message }} <a href="{% url 'remission' %}">Ir a generar una remisón</a>
-            </div>
-            {% endif %}
-  
-            {% if message.tags == 'info' %}
-            <div class="alert alert-warning" role="alert">
-            {{ message }}
-            </div>
-            {% endif %}
-            {% if message.tags == 'error' %}
-            <div class="alert alert-danger" role="alert">
-            {{ message }}
-            </div>
-            {% endif %}
-  
-        {% endfor %}
-    
-    
-    {% endif %}
+        {% include 'components/alert.html' %}
         <a href="{% url 'order_statictics' %}" class="btn btn-primary btn-sm mb-2"> Ver Estadísticas</a>
         
           <table class="table table-hover table-light">
@@ -60,7 +36,7 @@
                 <th scope="col">iva</th>
                 <th scope="col">Rete fuente</th>
                 <th scope="col">Rete ICA</th>
-                <th scope="col">Tiempo</th>
+                <th scope="col">Fecha</th>
                 <th></th>
               </tr>
             
@@ -72,22 +48,21 @@
                 <td scope="row">{{invoice.id}}</td>
                 <td>{{invoice.usersession}}</td>
                 <td>{{invoice.number}}</td>
-                <td>{{invoice.total_price}}</td>
-                <td>{{invoice.iva}}</th>
-                <td>{{invoice.source_retention}}</td>
-                <td>{{invoice.ica_retention}}</td>
-                <td>{{invoice.date}}</td>
+                <td>{{invoice.total_price|intcomma}}</td>
+                <td>{{invoice.iva|intcomma}}</th>
+                <td>{{invoice.source_retention|intcomma}}</td>
+                <td>{{invoice.ica_retention|intcomma}}</td>
+                <td>{{invoice.date|date:"d/m/Y"}}</td>
                 <td>
                   <div class="dropdown d-inline">
                     <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
                       <i class="bi bi-gear"></i>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li><a class="dropdown-item" href="{% url 'show_invoice' invoice.id %}">Ver</a></li>
-                      <li><a class="dropdown-item" href="">Editar</a></li>
-                      <li><a class="dropdown-item" href="">Duplicar</a></li>
-                      <li><a class="dropdown-item" href="">Cargar archivo</a></li>
-                      <li><a class="dropdown-item" href="">Descargar</a></li>
+                      <li><a class="dropdown-item" href="{% url 'show_invoice' invoice.id %}">Ver o Editar</a></li>
+                      <li><a class="dropdown-item" href="{% url 'duplicate_invoice' invoice.id %}">Duplicar</a></li>
+                      <li><a class="dropdown-item" href="{% url 'upload_invoice_file' invoice.id %}">Cargar archivo</a></li>
+                      <!-- <li><a class="dropdown-item" href="">Descargar</a></li> -->
                       <li><a class="dropdown-item" href="{% url 'delete_invoice' invoice.id %}" onclick="return confirm_delete_invoice()">Eliminar</a></li>
                     </ul>
                   </div>

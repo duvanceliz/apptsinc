@@ -1,5 +1,5 @@
 
-{% extends 'layout.html' %} {% block body %}
+{% extends 'layout.html' %} {% block body %} {% load static %}
 
 <div class="container">
   <!-- <div class="row mb-2">
@@ -35,52 +35,59 @@
           </div>
 
         </div>
-      <div class="col-md-6">
-        <div class="table-responsive">
-        <table class="table table-hover table-light">
-          <thead>
-            
+      <div class="col-md-9">
         
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">TABLERO</th>
-              <th scope="col">TIPO</th>
-              <th scope="col">SOLUCIÓN</th>
-              <th scope="col"></th>
-            </tr>
-          
-          </thead>
-          <tbody>
-            <tr>
-              {% for tab in tabs %}
-  
-                <th scope="row">{{tab.id}}</th>
-              <td>{{tab.tab_name}}</td>
-              {% if tab.chest_type %}
-              <td>Controlador</td>
-              {% else %}
-              <td>Supervisor</td>
-              {% endif %}
+    <div class="row row-cols-4">
 
-              <td>{{tab.controller}}</td>
-              <td>
-                <a class="btn btn-primary btn-sm" href="{% url 'create_page' tab.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Entrar a las página"> <i class="bi bi-box-arrow-right"></i></a>
-                <a class="btn btn-success btn-sm"  href="/edittab/?id={{tab.id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar parametros del tablero"><i class="bi bi-pencil-square"></i></a>
-                <a class="btn btn-danger btn-sm" href="{% url 'delete_tab' tab.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borra el tablero" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
-              </td>
-            </tr>
-  
+      {% for tab in tabs %}
+       
+         <div class="card" id="tab" data-id="{{tab.id}}" onclick="handleclick(this.dataset.id)">
+          <div class="card-header d-flex justify-content-between">
+
+            <span class="fs-6">
+              {{tab.tab_name}}
+            </span>
+            <span>
+              <a class="btn btn-primary btn-sm"  href="/edittab/?id={{tab.id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar parametros del tablero"><i class="bi bi-pencil-square"></i></a>
+              <a class="btn btn-danger btn-sm" href="{% url 'delete_tab' tab.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borra el tablero" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
+            </span>
+          
+          </div>
+          <div class="card-body p-2">
+            
+            <div class="card d-flex justify-content-center align-items-center" id="tab-body">
+
               
-            {%endfor%}
-          </tbody>
-        </table>
-      </div>
-      </div>
-      <div class="col-md-3">
-        <a href="{% url 'home'  %}" class=" btn btn-primary btn-sm">Volver</a>
+              <img src="{% static 'img/electric_symbol_100.png' %}" alt="" style="width: 50px;">
+              {% if tab.chest_type %}
+              <span id="tab-title">Controlador</span>
+              {% else %}
+              <span id="tab-title">Supervisor</span>
+              {% endif %}
+              <span id="tab-title">Solucion:</span>
+              <span id="tab-title">{{tab.controller}}</span>
+
+            </div>
+            
+            
+          </div>
+           
+         </div>
+       
+      {% endfor %}
+
+    </div>
       </div>
       
+      
     </div>
+
   </div>
+
+  <script>
+    function handleclick(id){
+        window.location.href = "/createpage/"+id
+    }
+  </script>
 
 {% endblock %}

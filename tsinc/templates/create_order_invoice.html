@@ -7,64 +7,55 @@
 
         <div class="col-4">
              <div class="card">
-                <div class="card-header text-center">
-                    GENERAR UNA FACTURA
+                <div class="card-header text-center bg-primary text-white">
+                    GENERAR UN ABONO
                 </div>
                 <div class="card-body">
-                    {% if messages %}
-          
-                        {% for message in messages %}
-
-                            {% if message.tags == 'success' %}
-                            <div class="alert alert-success" role="alert">
-                            {{ message }}
-                            </div>
-                            {% endif %}
-
-                            {% if message.tags == 'info' %}
-                            <div class="alert alert-warning" role="alert">
-                            {{ message }}
-                            </div>
-                            {% endif %}
-                            {% if message.tags == 'error' %}
-                            <div class="alert alert-danger" role="alert">
-                            {{ message }}
-                            </div>
-                            {% endif %}
-
-                        {% endfor %}
-                    
-                    
-                    {% endif %}
+                    {% include 'components/alert.html' %}
                      <form method="post">
                         {% csrf_token %}
 
                            <div class="row g-3">
-                             <div class="col-6">
-                              <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Orden de compra</label>
-                                <input type="text" class="form-control" id="exampleFormControlInput1" value="{{order.code}}" name="code" disabled>
-                              </div>
-                             </div>
-                             <div class="col-6">
-                              <div class="mb-3">
-                                <label for="exampleFormControlInput3" class="form-label">Valor total(OC)</label>
-                                <input type="number" class="form-control" id="exampleFormControlInput3" value="{{order.total_price}}" name="total_price" disabled>
-                              </div> 
+
+                             <div class="col-12 p-0">
+
+                              <table class="table table-bordered">
+                              
+                                <tbody>
+                                  <tr class="bg-light">
+                                    
+                                    <th id="table-titles">ORDEN</th>
+                                    <th id="table-titles">VALOR TOTAL(OC)</th>
+                                    
+                                  </tr>
+                                  <tr>
+                                    
+                                    <td>{{order.code}}</td>
+                                    <td>{{order.total_price|floatformat:1}}</td>
+                                    
+                                  </tr>
+                                  <tr class="bg-light">
+                                    
+                                    <th id="table-titles">VALOR PAGADO</th>
+                                    <th id="table-titles">VALOR RESTANTE</th>
+                                    
+                                  </tr>
+                                  <tr>
+                                    
+                                    <td>{{total_invoice.total_value|floatformat:1}}</td>
+                                    <td>{{total_invoice.total_leftover|floatformat:1}}</td>
+                                    
+                                  </tr>
+                                 
+                                </tbody>
+                              </table>
+
+                              
+
                              </div>
 
-                             <div class="col-6">
-                              <div class="mb-3">
-                                <label for="exampleFormControlInput3" class="form-label">Valor Pagado</label>
-                                <input type="number" class="form-control" id="exampleFormControlInput3" value="{{total_invoice.total_value}}" name="value_paid" min="0" step="any" disabled>
-                              </div> 
-                             </div>
-                             <div class="col-6">
-                              <div class="mb-3">
-                                <label for="exampleFormControlInput3" class="form-label">Valor restante</label>
-                                <input type="number" class="form-control" id="exampleFormControlInput3" value="{{total_invoice.total_leftover}}" name="leftover_value" min="0" step="any" disabled>
-                              </div> 
-                             </div>
+                             
+                            
                              <div class="col-6">
 
                               <div class="mb-3">
@@ -74,13 +65,13 @@
                              </div>
                              <div class="col-6">
                               <div class="mb-3">
-                                <label for="exampleFormControlInput3" class="form-label">Rentencion en la fuente</label>
+                                <label for="exampleFormControlInput3" class="form-label">Rete fuente</label>
                                 <input type="number" class="form-control" id="exampleFormControlInput3" value="{{total_invoice.ica_rete}}" name="source_retention" min="0" step="any">
                               </div>
                              </div>
                              <div class="col-6">
                               <div class="mb-3">
-                                <label for="exampleFormControlInput3" class="form-label">Retencion ICA</label>
+                                <label for="exampleFormControlInput3" class="form-label">Rete ICA</label>
                                 
                                 <input type="number" class="form-control" id="exampleFormControlInput3" value="{{total_invoice.source_rete}}" name="ica_retention" min="0" step="any">
                               </div> 
@@ -111,54 +102,104 @@
 
         </div>
         <div class="col-md-8">
+
+
             <a href="{% url 'purcharse_order' %}" class=" btn btn-primary btn-sm">Volver</a>
             <a href="{% url 'order_product_info' order.id %}" class=" btn btn-primary btn-sm">Ver Resumen</a>
-
-            <div class="table-responsive">
-                <table class="table table-hover table-light">
-                  <thead>
+            <div class="accordion accordion-flush" id="accordionHVAC">
+              {% for invoice in invoices %}
+              
+              
+              <div class="accordion-item">
+                <div class="accordion-header d-flex" id="flush-heading{{invoice.id}}">
+                  <button class="accordion-button collapsed p-0 " type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{invoice.id}}" aria-expanded="false" aria-controls="flush-collapse{{invoice.id}}">
                     
-                
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Generada por:</th>
-                      <th scope="col">Orden de compra</th>
-                      <th scope="col">Precio pagado</th>
-                      <th scope="col">Valor iva</th>
-                      <th scope="col">Rete fuente</th>
-                      <th scope="col">rete ICA</th>
-                      <th scope="col">Fecha</th>
-                      <th></th>
-      
-                    </tr>
-                  
-                  </thead>
-                  <tbody>
-                    <tr>
-                      {% for invoice in invoices %}
-          
-                      <th scope="row">{{invoice.id}}</th>
-                      <td>{{invoice.usersession}}</td>
-                      <td>{{invoice.order.code}}</td>
-                      <td>{{invoice.value_paid|intcomma}}</td>
-                      <td>{{invoice.iva|intcomma}}</td>
-                      <td>{{invoice.source_retention|intcomma}}</td>
-                      <td>{{invoice.ica_retention|intcomma}}</td>
-                      <td>{{invoice.date}}</td>
-                      <td>
-                       
-                        <a class="btn btn-danger btn-sm" href="{% url 'delete_order_invoice' invoice.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return confirm_delete_entry()"> <i class="bi bi-trash"></i> </a>
-                      </td>
-                    </tr>
-          
-                    {%endfor%}
-                  </tbody>
-                </table>
+                    
+    
+                        <table class="table table-light table-sm ">
+    
+                          <thead>
+                            <tr>
+                              
+                              <th scope="col" id="table-titles-two">Creada por:</th>
+                              <th scope="col" id="table-titles-two">Orden</th>
+                              <th scope="col" id="table-titles-two">Precio pagado</th>
+                              <th scope="col" id="table-titles-two">Valor iva</th>
+                              <th scope="col" id="table-titles-two">Rete fuente</th>
+                              <th scope="col" id="table-titles-two">rete ICA</th>
+                              <th scope="col" id="table-titles-two">Fecha</th>
+                              <th></th>
+              
+                            </tr>
+                          </thead>
+                          
+             
+                          <tbody>
+                            <tr>
+                              
+                                
+                                <td id="table-columns">{{invoice.usersession}}</td>
+                                <td id="table-columns">{{invoice.order.code}}</td>
+                                <td id="table-columns">{{invoice.value_paid|intcomma|floatformat:1}}</td>
+                                <td id="table-columns">{{invoice.iva|intcomma}}</td>
+                                <td id="table-columns">{{invoice.source_retention|intcomma}}</td>
+                                <td id="table-columns">{{invoice.ica_retention|intcomma}}</td>
+                                <td id="table-columns">{{invoice.date}}</td>
+                                
+                         
+                            </tr>
+                          </tbody>
+                        </table>
+    
+                 
+                    
+                  </button>
+                  <div class="dropdown d-inline">
+                    <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+                      <i class="bi bi-gear"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item" href="{% url 'upload_order_invoice_file' invoice.id %}" >Cargar Archivo</a></li>
+                      <li><a class="dropdown-item" onclick="return confirm_delete_entry()" href="{% url 'delete_order_invoice' invoice.id %}" >Eliminar</a></li>
+                    </ul>
+                  </div>
+    
               </div>
+                <div id="flush-collapse{{invoice.id}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{invoice.id}}" data-bs-parent="#accordionHVAC">
+                  <div class="accordion-body p-0">
+                      <ul class="list-group">
+                      {% for file in order_invoice_files %}
+                      {% if invoice.id == file.order_invoice.id %}
+                      
+                          <li class="list-group-item d-flex justify-content-between ">
+                              <span>Nombre: {{file.name}}</span>
+                              <span>fecha: {{file.date}}</span>
+                              <a href="{% url 'view_file' file.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
+                              <a class="btn btn-danger btn-sm" href="{% url 'delete_file' file.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return confirm_delete_remission()"> <i class="bi bi-trash"></i> </a>                               
+    
+                              </span>
+    
+                              
+                          </li>
+                      
+    
+                    {% endif %}
+                    {% endfor %}
+                  </ul>
+                  </div>
+                </div>
+              </div>
+             
+             
+            {% endfor %}
+            </div>
+
+          
         </div>
            
          
     </div>
+
 </div>
 <script src="{% static 'js/confirm.js' %}"></script>
 

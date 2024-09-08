@@ -7,7 +7,9 @@
         <div class="col-md-4"></div>
         <div class="col-md-4"></div>
         <div class="col-md-4 text-end">
+          <a href="{% url 'upload_remission_file' remission.id %}" class="btn btn-success btn-sm">Cargar archivo</a>
           <a class="btn btn-success btn-sm" href="{% url 'download_remission' remission.id %}">Descargar</a>
+
           <button class="btn btn-success btn-sm">Guardar</button>
         
       </div>

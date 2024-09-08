@@ -1,42 +1,20 @@
-{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load static %} 
+{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load static %} {% load humanize %} 
 
 <div class="container bg-light p-4">
     <div class="row">
         
        <div class="col-md-12">
-            {% if messages %}
-                
-                {% for message in messages %}
-        
-                    {% if message.tags == 'success' %}
-                    <div class="alert alert-success" role="alert">
-                    {{ message }}
-                    </div>
-                    {% endif %}
-        
-                    {% if message.tags == 'info' %}
-                    <div class="alert alert-warning" role="alert">
-                    {{ message }}
-                    </div>
-                    {% endif %}
-                    {% if message.tags == 'error' %}
-                    <div class="alert alert-danger" role="alert">
-                    {{ message }}
-                    </div>
-                    {% endif %}
-        
-                {% endfor %}
-            
-            
-            {% endif %}
-
-        <h4 class="display-6">FACTURA: {{invoice.number}}</h4>
+         
+            {% include 'components/alert.html' %}
+        <h4 class="display-6">FACTURA: {{invoice.number}}, PROYECTO: {{invoice.project}}</h4>
         <form action="{% url 'update_invoice' invoice.id %}"  method="post">
             {% csrf_token %}
             <div class="row mb-2">
                 <div class="col-4"></div>
                 <div class="col-4"></div>
                 <div class="col-4 text-end">
+                  <a href="{% url 'upload_invoice_file' invoice.id %}" class="btn btn-success btn-sm">Cargar archivo</a>
+
                     <button class="btn btn-success btn-sm">Guardar</button>
                 </div>
             </div>
@@ -76,6 +54,48 @@
           </table>
         </form>
 
+       </div>
+
+       <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header fw-bold">
+              ARCHIVOS RELACIONADOS
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover table-light">
+              <thead>
+                
+            
+                <tr>
+  
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Tiempo de carga</th>
+                  <th ></th>
+                </tr>
+              
+              </thead>
+              <tbody>
+                <tr>
+                  {% for file in invoice_files %}
+      
+  
+                  <td>{{file.name}}</td>
+                  <th>{{file.date|naturaltime}}</th>
+                   <th>
+                    <a href="{% url 'view_file' file.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
+                    <a class="btn btn-danger btn-sm" href="{% url 'delete_file' file.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return confirm_delete_remission()"> <i class="bi bi-trash"></i> </a>
+  
+                   </th>
+                </tr>
+                {%endfor%}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-md-6"></div>
+      
        </div>
     </div>
 </div>

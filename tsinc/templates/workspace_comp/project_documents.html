@@ -1,8 +1,47 @@
 <div class="card">
     <div class="card-header">
-      Documentos
+      <h4>DOCUMENTOS</h4>
     </div>
-    <div class="card-header">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla, unde.
+    <div class="card-body p-0">
+      <table class="table table-hover table-light table-sm">
+        <thead>
+          
+      
+          <tr>
+          <th scope="col">Creado por:</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Fecha</th>
+            <th ></th>
+          </tr>
+        
+        </thead>
+        <tbody>
+          <tr>
+            {% for file in files %}
+
+            <td>{{file.user}}</td>
+            <td>{{file.name}}</td>
+            <td>{{file.date}}</td>
+           
+            <td>
+               
+              <div class="dropdown d-inline">
+                <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+                  <i class="bi bi-gear"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  <li><a class="dropdown-item" href="{% url 'view_file' file.id %}">Ver</a></li>
+                  <!-- <li><a class="dropdown-item" href="">Descargar</a></li> -->
+                  <li><a class="dropdown-item" href="{% url 'delete_file' file.id %}" onclick="return confirm_delete_invoice()">Eliminar</a></li>
+                </ul>
+              </div>
+            
+            
+            </td>
+          </tr>
+  
+          {%endfor%}
+        </tbody>
+      </table>   
     </div>
 </div>

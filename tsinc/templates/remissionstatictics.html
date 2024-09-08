@@ -1,4 +1,4 @@
-{% extends 'layout3.html' %} {% block body %}{% load humanize %}
+{% extends 'layout_with_folder_tree.html' %} {% block body %}{% load humanize %}
 
 
 <div class="container">
@@ -27,7 +27,7 @@
                             <p class="fw-bold m-0">Fecha:</p> {{remission.date|naturaltime}}
                         </div>
                         <div class="col-4 text-end">
-                            <a href="{% url 'product_remission' remission.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
+                            <a href="{% url 'show_remission' remission.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
 
                         </div>
                     </div>
@@ -65,7 +65,7 @@
 
                         </div>
                         <div class="col-4 text-end">
-                            <a href="{% url 'product_remission' p.remission.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
+                            <a href="{% url 'show_remission' p.remission.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
 
                         </div>
                      </div>

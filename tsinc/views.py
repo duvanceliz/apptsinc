@@ -38,6 +38,13 @@ def paginator(request, obj, number):
 
 @login_required
 def home(request):
+
+    is_staff = staff_required(request.user) # Verifica si el usuario es administrador
+
+    if is_staff:
+        return redirect("/show_all_offers/0")
+
+    
     projects = Project.objects.filter(usersession=request.user)
     tabs = Tabs.objects.filter(project__in=projects)
     pages = Dasboard.objects.filter(tab__in=tabs)
@@ -45,9 +52,8 @@ def home(request):
     page_obj = paginator(request,projects,5)
     user = request.user  # El usuario actualmente autenticado
     session_key = request.session.session_key 
-    is_staff = staff_required(user) # Verifica si el usuario es administrador
                        
-    return render(request, 'home.html',{'page_obj': page_obj, 'username':user.username, 'session_key':session_key, 'is_staff':is_staff, 'tabs':tabs, 'pages':pages})
+    return render(request, 'home.html',{'page_obj': page_obj, 'username':user.username, 'session_key':session_key, 'tabs':tabs, 'pages':pages})
 
 @login_required
 def delete_project(request, id):
@@ -56,13 +62,40 @@ def delete_project(request, id):
     object.delete()
     return redirect(referer)
 
+def increase_offer_code():# incrementa el consecutivo de la oferta
+    code = OfferCode.objects.filter(name = "offer").first()
+    
+    if code:
+        code_splited = code.code.split("-")
+
+        new_code = int(code_splited[-1]) + 1
+
+        code.code = f"{code_splited[0]}-{code_splited[1]}-{new_code}"
+
+        code.save()
+    else: # si el consecutivo de la oferta no existe entonce lo crea
+        code = OfferCode.objects.create(name = "offer", code="C-1-100")
+        code_splited = code.code.split("-")
+
+        new_code = int(code_splited[-1]) + 1
+
+        code.code = f"{code_splited[0]}-{code_splited[1]}-{new_code}"
+
+        code.save()
+
+
+    return code
+
 @login_required
 def create_project(request):
     referer = request.META.get('HTTP_REFERER')
     if request.method == 'GET':
        return render(request, 'createproject.html',{'form': CreateProject()})
     else:
+
+        offer_code = increase_offer_code()
         project = Project.objects.create(name = request.POST['name'], 
+                                         code = offer_code.code,
                                          company_name = request.POST['company_name'],
                                          nit=request.POST['nit'], 
                                          asesor = request.POST['asesor'], 
@@ -94,10 +127,12 @@ def replace_cero(value):
         value = 1
     return value
 
-def seve_stat_prod(products):
+def save_stat_prod(products):
     # products = Product.objects.all()
-    
+    product_stats = []
     for product in products:
+
+        info_dict = {}
         
         orderproduct = OrderProduct.objects.filter(product=product).all()
         total_entrys = OrderEntry.objects.filter(product__in= orderproduct).count()
@@ -120,15 +155,25 @@ def seve_stat_prod(products):
 
         rotations = rotations
 
+        info_dict['product'] = product
+        info_dict['out_stock'] = out_stock
+        info_dict['rotations'] = rotations
+
+        product_stats.append(info_dict)
+
+
+    return product_stats
+    
         # print(f"producto:{product.model}--Rotaciones:{rotations}--Fuera stock:{out_stock}")
-        prod_stat_exist = ProductStatictics.objects.filter(product = product).exists()
-        if prod_stat_exist:
-            prod_stat = ProductStatictics.objects.filter(product = product).first()
-            prod_stat.rotations = rotations
-            prod_stat.out_stock = out_stock
-            prod_stat.save()
-        else:   
-            ProductStatictics.objects.create(product=product, rotations = rotations, out_stock = out_stock)
+        # prod_stat = ProductStatictics.objects.filter(product = product).first()
+        # if prod_stat:
+        #     prod_stat.rotations = rotations
+        #     prod_stat.out_stock = out_stock
+        #     prod_stat.save()
+        # else:   
+        #     ProductStatictics.objects.create(product=product, rotations = rotations, out_stock = out_stock)
+
+
    
 
 
@@ -140,12 +185,12 @@ def product(request):
     currency = Trm.objects.filter(currency = "usd").first()
     
     if search:
-        page_obj = Product.objects.filter(Q(product_name__icontains= search) | Q(model__icontains= search))
+        page_obj = Product.objects.filter(Q(product_name__icontains= search) | Q(model__icontains= search) | Q(code__icontains= search))
     else:
         page_obj = Product.objects.all()
         # page_obj = Product.objects.filter(product_name__icontains= search)
 
-    product_files = ProductFile.objects.all()
+    product_files = File.objects.filter(product__isnull = False)
     products = Product.objects.all()
 
     product_files_info = [
@@ -173,11 +218,22 @@ def dashboard(request, id):
     tabs = project.tabs.all()
     pages = Dasboard.objects.filter(tab__in=tabs).select_related('tab')
     panelitems = PanelItems.objects.all()
-    categorys = Category.objects.all()
-    subcategorys = Subcategory.objects.all()
+    # categorys = Category.objects.all()
+    # subcategorys = Subcategory.objects.all()
     items = Items.objects.all()
     labels = Labels.objects.all()
-    return render(request, 'dashboard.html',{'tab':tab, 'panelitems':panelitems, 'items': items, 'dashboard':dashboard, 'labels':labels, 'categorys':categorys, 'subcategorys':subcategorys, 'pages':pages, 'form':SearchForm()})
+    categorys = Category.objects.filter(parent__isnull = True)
+    subcategorys = Category.objects.filter(parent__isnull = False)
+   
+    return render(request, 'dashboard.html',{'tab':tab, 
+                                             'panelitems':panelitems, 
+                                             'items': items,
+                                             'dashboard':dashboard,
+                                             'labels':labels, 
+                                             'categorys':categorys, 
+                                             'subcategorys':subcategorys, 
+                                             'pages':pages, 
+                                             'form':SearchForm()})
 
 @login_required
 def product_search(request):
@@ -382,21 +438,28 @@ def download_products(request):
     return response
 
 
+
 @login_required
 def tabs(request, id):
     if request.method == 'GET':
         project = Project.objects.get(id=id)
         tabs = project.tabs.all()
+        
         # tabs = offer.tabs.all()
-        return render(request,'tabs.html',{'tabs': tabs, 'form': CreateTab(), 'project':project})
+        return render(request,'tabs.html',{'tabs': tabs, 
+                                           'form': CreateTab(), 
+                                           'project':project
+                                           })
     else:
         
         project = Project.objects.get(id=id)
+
         chest_type = True
         if request.POST['chest_type'] == "2":
             chest_type = False 
-        Tabs.objects.create(tab_name = request.POST['tab_name'], chest_type = chest_type, controller= request.POST['controller'], project= project)
-        return redirect("/project/tabs/{}/".format(id))
+        tab = Tabs.objects.create(tab_name = request.POST['tab_name'], chest_type = chest_type, controller= request.POST['controller'], project= project)
+        
+        return redirect(f"/project/tabs/{id}/")
 
 @login_required
 def delete_tab(request, id):
@@ -476,8 +539,8 @@ def download_points(request,id):
 
         workbook.save(response)
         return response
-    except:
-        messages.error(request,"¡Ha ocurrido un error al momento de generar el archivo!, asegurese de haber creado tableros, paginas y equipos en la dashboard. si el problema persiste contacte a la empresa.")
+    except TypeError as e:
+        messages.error(request,f"¡Ha ocurrido un error al momento de generar el archivo! {e}, asegurese de haber creado tableros, paginas y equipos en la dashboard. si el problema persiste contacte a la empresa.")
         return redirect('/')
     
 
@@ -670,7 +733,7 @@ def upload_svg(request):
             if not exist:# si no existe el folder entra y lo crea
                 folder = Folders.objects.create(
                         name= folder_name,
-                        path = f'img/{folder_name}'
+                        path = f'items/{folder_name}'
                     )
             else:# De lo contrario lo busca en la base de datos
 
@@ -679,27 +742,26 @@ def upload_svg(request):
             def save_panelitem(file):
                 
                 # product = get_object_or_404(Product,model=file.name.split(".")[0])
-                product_exist = Product.objects.filter(model=file.name.split(".")[0]).exists()
+                product = Product.objects.filter(model=file.name.split(".")[0]).first()# busca en la tabla de prodcutos, por el nombre de producto en el svg
 
-                if product_exist:
-                    product = Product.objects.get(model=file.name.split(".")[0])
+                if product:
                     panelitem = PanelItems(name=file.name,  
-                                        img=f'img/{folder_name}/{file.name}', 
+                                        img=f'items/{folder_name}/{file.name}', 
                                         tag=tag, product=product, folder= folder)
                     panelitem.save()
                 else:
                     panelitem = PanelItems(name=file.name,  
-                                        img=f'img/{folder_name}/{file.name}', 
+                                        img=f'items/{folder_name}/{file.name}', 
                                         tag=tag,folder= folder)
                     panelitem.save()
                     
                 return panelitem
                     
-            saved_panelitem = list(map(save_panelitem,files))
+            saved_panelitem = list(map(save_panelitem,files))# guarda informacion de los archivos en la base de datos
 
-            panelitem_names = [ item.name for item in saved_panelitem]
+            panelitem_names = [ item.name for item in saved_panelitem] #lista de elementos guardados
             
-            def filter_no_porduct(panelitem):
+            def filter_no_porduct(panelitem):# función para filtrar lo que no tienen un producto asignado
                 if not panelitem.product:
                     return panelitem
 
@@ -709,11 +771,10 @@ def upload_svg(request):
         # print(os.path.join(settings.BASE_DIR, 'tsinc','static', 'img', folder_name))        
             for file in files:
                 # Define la ruta donde quieres guardar los archivos
-                upload_dir = os.path.join(settings.BASE_DIR, 'tsinc','static', 'img', folder_name)
+                upload_dir = os.path.join(settings.MEDIA_ROOT, 'items', folder_name)
                 os.makedirs(upload_dir, exist_ok=True)  # Crea la carpeta si no existe
                 file_path = os.path.join(upload_dir, file.name)
                 handle_uploaded_file(file, file_path)
-           
            
            
             messages.success(request, f"{', '.join(panelitem_names)} Elementos subidos exitosamente.")
@@ -749,16 +810,15 @@ def files_folders(request):
 
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
-def delete_file(request, id):
+def delete_file_item(request, id):
 
     try:
         panelitem = PanelItems.objects.get(id=id)
     except ObjectDoesNotExist:
         panelitem = None
     
-    file_path = os.path.join(settings.BASE_DIR, 'tsinc','static', os.path.normpath(panelitem.img) )
+    file_path = os.path.join(settings.MEDIA_ROOT, os.path.normpath(panelitem.img) )
 
-  
     if panelitem and os.path.exists(file_path):
         panelitem.delete()
         os.remove(file_path)
@@ -772,14 +832,14 @@ def delete_file(request, id):
 
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
-def delete_folder(request, id):
+def delete_folder_item(request, id):
     
     try:
         folder = Folders.objects.get(id=id)
     except ObjectDoesNotExist:
         folder = None
     
-    folder_path = os.path.join(settings.BASE_DIR, 'tsinc','static', os.path.normpath(folder.path) )
+    folder_path = os.path.join(settings.MEDIA_ROOT,os.path.normpath(folder.path))
 
   
     if folder and os.path.exists(folder_path):
@@ -937,14 +997,23 @@ def download_offer(request,id):
         # path = os.path.join(settings.BASE_DIR, 'tsinc','static', 'points','Points.xlsx')
         # workbook.save(path)
 
-        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename=Oferta.xlsx'
+        path = os.path.join(settings.MEDIA_ROOT, 'offers', f"{project.id}")
 
+        # Crea la carpeta si no existe
+        os.makedirs(path, exist_ok=True)
+
+        file_path = os.path.join(path,f"offer_{project.code}.xlsx")
+        
+        workbook.save(file_path)
+
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename=Oferta_{project.code}.xlsx'
+        
         workbook.save(response)
 
         return response
-    except:
-        messages.error(request,"¡Ha ocurrido un error al momento de generar el archivo!, asegurese de haber creado tableros, paginas y equipos en la dashboard. si el problema persiste contacte a la empresa.")
+    except TypeError as e:
+        messages.error(request,f"¡Ha ocurrido un error al momento de generar el archivo!{e}, asegurese de haber creado tableros, paginas y equipos en la dashboard. si el problema persiste contacte a la empresa.")
         return redirect('/')
 
 
@@ -1138,7 +1207,7 @@ def create_remission(request,id):
             product.quantity -= productsent.quantity
             product.save()
         
-        seve_stat_prod(products)
+        # seve_stat_prod(products)
 
         messages.success(request,f"La remisión ha sido generada correctamente.")
 
@@ -1160,7 +1229,7 @@ def remissions(request):
     if search:
         remissions = Remission.objects.filter(Q(company__icontains= search) | Q(nit__icontains= search) | Q(number__icontains= search))
     
-    remission_files = RemissionFile.objects.all()
+    remission_files = File.objects.filter(remission__isnull = False)
     
     remission_files_info = [
     {'remission_id': remission.id, 
@@ -1171,10 +1240,7 @@ def remissions(request):
 
     remissions = paginator(request,remissions,10)
 
-    is_staff = staff_required(request.user)
-
     return render(request,'remissions.html',{'remissions':remissions, 
-                                             'is_staff':is_staff,
                                              'remission_files_info':remission_files_info
                                              })
 
@@ -1197,7 +1263,7 @@ def delete_remission(request,id):
 def show_remission(request,id):  
     remission = Remission.objects.filter(id=id).first()
     products = ProductSent.objects.filter(remission= remission).all()
-    remissionfiles = RemissionFile.objects.filter(remission = remission).all()
+    remissionfiles = File.objects.filter(remission = remission).all()
     from_show_remission = True
     return render(request,'show_remission.html',{'products':products, 
                                                    'remission':remission, 
@@ -1216,7 +1282,7 @@ def product_shipped(request):
     is_staff = staff_required(request.user)   
     return render(request,'productshipped.html',{'products':products_shipped,'is_staff':is_staff})
 
-def calc_t_quantity_price(order):
+def calc_t_quantity_price(order):# calcula la cantidad total y el precio total de la orden de compra
     
     orderproducts = OrderProduct.objects.filter(order = order).all()
     t_quantity = 0
@@ -1224,7 +1290,7 @@ def calc_t_quantity_price(order):
 
     for product in orderproducts:
         t_quantity += product.quantity 
-        t_price += product.price * product.quantity
+        t_price += round(product.price * product.quantity,1)
 
     order.total_quantity = t_quantity
     order.total_price = t_price
@@ -1357,19 +1423,32 @@ def purcharse_order(request):
 
     orders = paginator(request,orders,10)
 
-    order_files = OrderFile.objects.all()
+    order_files = File.objects.filter(order__isnull = False)
 
-    order_files_info = [
+    order_files_info = [ # calcula la cantidad de archivos que pertenecen a la orden
     {'order_id': order.id, 
      'quantity': sum(1 for file in order_files if file.order.id == order.id)
     } 
     for order in orders
     ] 
 
-    is_staff = staff_required(request.user)
+    order_invoices = OrderInvoice.objects.all()
+    
+    billing = [ #calcula el pregreso en porcentaje de facturación
+    {
+        'order_id': order.id,
+        'progress': round(
+            sum(invoice.value_paid for invoice in order_invoices if order.id == invoice.order.id) * 100 / replace_cero(order.total_price),
+            1
+        )
+    }
+    for order in orders
+    ]
+
+    
     return render(request,'purcharseorders.html',{'orders':orders, 
-                                                  'is_staff':is_staff,
-                                                  'order_files_info':order_files_info
+                                                  'order_files_info':order_files_info,
+                                                  'billing':billing
                                                   })
 
 @user_passes_test(staff_required,login_url='/accessdenied/')
@@ -1407,7 +1486,7 @@ def order_product_info(request,id):
     order = PurcharseOrder.objects.filter(id=id).first()
     products = OrderProduct.objects.filter(order= order).all()
     orderentry = OrderEntry.objects.filter(order = order).all()
-    orderfiles = OrderFile.objects.filter(order = order).all()
+    orderfiles = File.objects.filter(order = order).all()
     
     most_recent_entry = OrderEntry.objects.filter(order = order).order_by("-date").first()
     
@@ -1645,7 +1724,7 @@ def create_order_entry(request,id):
             product.quantity += int(orderentry.quantity)
             product.save()
             calc_progress(order)
-            seve_stat_prod([product])
+            # seve_stat_prod([product])
             messages.success(request,f"La entrada ha sido creada correctamente")
 
         else:
@@ -1780,9 +1859,9 @@ def product_info(request,id):
     else:
         rotations = total_shippeds
 
-    product_files = ProductFile.objects.filter(product = product).all()
+    product_files = File.objects.filter(product = product).all()
  
-    is_staff = staff_required(request.user)
+    
     return render(request,"productinfo.html",{'product':product, 
                                               'orderentry':orderentry, 
                                               'products_shipped':products_shipped, 
@@ -1790,7 +1869,6 @@ def product_info(request,id):
                                               'total_shippeds':total_shippeds,
                                               'rotations':rotations,
                                               'product_files':product_files,
-                                              'is_staff':is_staff
                                               })
 
 @login_required
@@ -1829,7 +1907,10 @@ def product_statictics(request):
     expensive_prod = Product.objects.order_by("-sale_price")[:10]
     cheaper_prod = Product.objects.order_by("sale_price")[:10]
 
-    seve_stat_prod(products)
+    product_stats = save_stat_prod(products)
+
+    product_out_stock_ = sorted(product_stats, key=lambda x: x['out_stock'])[:10]
+    prod_rotations_ = sorted(product_stats, key=lambda x: x['rotations'], reverse=True)[:10]
 
     total_inventory = 0
     total_inventory_cop = 0
@@ -1840,20 +1921,20 @@ def product_statictics(request):
     
     total_inventory = round(total_inventory,2)
     total_inventory_cop = round(total_inventory_cop,2)
-    return render(request,"productstatictics.html",{'prod_out_stock':prod_out_stock,
-                                                    'prod_rotations':prod_rotations,
+    return render(request,"productstatictics.html",{
                                                     'total_inventory':total_inventory,
                                                     'total_inventory_cop':total_inventory_cop,
                                                     'exp_prod':expensive_prod,
-                                                    'cheaper_prod':cheaper_prod
-                                                    
+                                                    'cheaper_prod':cheaper_prod,
+                                                    'product_out_stock_':product_out_stock_,
+                                                    'prod_rotations_':prod_rotations_
                                                     })
 
 @user_passes_test(superuser_required,login_url='/accessdenied/')
 @login_required
 def remission_statictics(request):
-    remissions = Remission.objects.order_by('-date')[:10]
-    prod_remission = ProductSent.objects.order_by('-remission__date')[:10]
+    remissions = Remission.objects.order_by('-date')[:5]
+    prod_remission = ProductSent.objects.order_by('-remission__date')[:5]
 
     return render(request,"remissionstatictics.html",{'remissions':remissions,'prod':prod_remission})
 
@@ -1882,7 +1963,7 @@ def add_car_remission(request,id):
         product.quantity -= productsent.quantity
         product.save()
     
-    seve_stat_prod(products)
+    # seve_stat_prod(products)
 
     return redirect(referer)
     
@@ -2002,149 +2083,156 @@ def save_trm(request):
     return redirect("/product/")
 
 
+def upload_file(file,file_without_space,path):
+    upload_dir = os.path.join(settings.MEDIA_ROOT, path)
+    os.makedirs(upload_dir, exist_ok=True)
+    file_path = os.path.join(upload_dir, file_without_space)
+    handle_uploaded_file(file, file_path)
+
+
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def upload_remission_file(request,id):
     remission = Remission.objects.filter(id = id).first()
     if request.method == "POST":
-        form = UploadRemissionFile(request.POST, request.FILES)
+        form = UploadFile(request.POST, request.FILES)
         if form.is_valid():
             file = request.FILES['file']
             file_without_space = file.name.replace(" ", "_")
 
-            remission_file_exists = RemissionFile.objects.filter(name=file_without_space,remission = remission).exists()
+            remission_file = File.objects.filter(name=file_without_space,remission = remission).first()
+            folder_name = "remission_files"
 
-            if remission_file_exists:
-                remission_file = RemissionFile.objects.filter(name=file_without_space).first()
+            if remission_file:
 
-                upload_dir = os.path.join(settings.MEDIA_ROOT, "remission_files", f"{remission.number}")
-                os.makedirs(upload_dir, exist_ok=True)
-                file_path = os.path.join(upload_dir, file_without_space)
-                handle_uploaded_file(file, file_path)
-
+                upload_file(file,file_without_space,remission_file.path)
+           
                 messages.info(request,f"El archivo {remission_file.name} ya existe, ha sido reemplazado")
                 return redirect(f"/uploadremissionfile/{remission.id}")
-            
             else:
-                remission_file = RemissionFile.objects.create(name = file_without_space,
+                remission_file = File.objects.create(name = file_without_space,
+                                                            path=f"{folder_name}/{remission.number}",
                                                             remission=remission,
                                                             usersession = request.user
                                                             )  
             
-            upload_dir = os.path.join(settings.MEDIA_ROOT, "remission_files", f"{remission.number}")
-            os.makedirs(upload_dir, exist_ok=True)
-            file_path = os.path.join(upload_dir, file_without_space)
-            handle_uploaded_file(file, file_path)
-
-
+            upload_file(file,file_without_space,remission_file.path)
             
             messages.success(request,f"El archivo {remission_file.name} ha sido cargado correctamente")
 
         return redirect(f"/uploadremissionfile/{remission.id}")
     
-    is_staff = staff_required(request.user)
     
-    return render(request,"uploadremissionfile.html",{'form':UploadRemissionFile, 'is_staff':is_staff, 'remission':remission})
+    
+    return render(request,"uploadremissionfile.html",{'form':UploadFile, 'remission':remission})
 
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
-def view_file(request,id,code):
-
-    is_staff = staff_required(request.user)
-
-    if code == "re":
-        remission_file = get_object_or_404(RemissionFile,id=id)
+def view_file(request,id):
+    file = get_object_or_404(File,id=id)
         # Construir la URL del archivo
-        file_url = os.path.join(settings.MEDIA_URL, "remission_files", f"{remission_file.remission.number}", remission_file.name)
-
-        return render(request, "view_file.html", {"file_url": file_url, 
-                                                  "file_name": remission_file.name,
-                                                  "is_staff":is_staff
+    file_url = os.path.join(settings.MEDIA_URL, file.path, file.name)
+    
+    return render(request, "view_file.html", {"file_url": file_url, 
+                                                  "file_name": file.name,
                                                   })
-    elif code == "oc":
-            
-        order_file = get_object_or_404(OrderFile,id=id)
-         # Construir la URL del archivo
-        file_url = os.path.join(settings.MEDIA_URL, "order_files", f"{order_file.order.code}", order_file.name)
-
-        return render(request, "view_file.html", {"file_url": file_url, 
-                                                  "file_name": order_file.name,
-                                                  "is_staff":is_staff
-                                                  })
-    elif code == "p":
-            
-        product_file = get_object_or_404(ProductFile,id=id)
-         # Construir la URL del archivo
-        file_url = os.path.join(settings.MEDIA_URL, "product_files", f"{product_file.product.id}", product_file.name)
-
-        return render(request, "view_file.html", {"file_url": file_url, 
-                                                  "file_name": product_file.name,
-                                                  "is_staff":is_staff
-                                                  })
-
+    
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
-def delete_remission_file(request,id):
-    remission_file = get_object_or_404(RemissionFile,id=id)
-    file_path = os.path.join(settings.MEDIA_ROOT, "remission_files", f"{remission_file.remission.number}", remission_file.name)
+def delete_file(request,id):
+    referer = request.META.get("HTTP_REFERER")
+    file = get_object_or_404(File,id=id)
+    file_path = os.path.join(settings.MEDIA_ROOT, file.path, file.name)
     
     if os.path.exists(file_path):
         os.remove(file_path) 
     
-    remission_file.delete()
+    file.delete()
 
-    return redirect(f"/productremission/{remission_file.remission.id}")
+    return redirect(referer)
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def upload_order_file(request,id):
     order = PurcharseOrder.objects.filter(id = id).first()
     if request.method == "POST":
-        form = UploadOrderFile(request.POST, request.FILES)
+        form = UploadFile(request.POST, request.FILES)
         if form.is_valid():
             file = request.FILES['file']
             file_without_space = file.name.replace(" ", "_")
-            order_file_exists = OrderFile.objects.filter(name=file_without_space,order = order).exists()
-
-            if order_file_exists:
-                order_file = OrderFile.objects.filter(name=file_without_space).first()
-
-                upload_dir = os.path.join(settings.MEDIA_ROOT, "order_files", f"{order.code}")
-                os.makedirs(upload_dir, exist_ok=True)
-                file_path = os.path.join(upload_dir, file_without_space)
-                handle_uploaded_file(file, file_path)
+            order_file = File.objects.filter(name=file_without_space,order = order).first()
+            folder_name = "order_files"
+            if order_file:
+                
+                
+                upload_file(file,file_without_space,folder_name,f"{order.code}")
 
                 messages.info(request,f"El archivo {order_file.name} ya existe, ha sido reemplazado")
                 return redirect(f"/uploadorderfile/{order.id}")
             
             else:
-                order_file = OrderFile.objects.create(name = file_without_space,
+                order_file = File.objects.create(name = file_without_space,
                                                             order=order,
                                                             usersession = request.user
                                                             )  
             
-            upload_dir = os.path.join(settings.MEDIA_ROOT, "order_files", f"{order.code}")
-            os.makedirs(upload_dir, exist_ok=True)
-            file_path = os.path.join(upload_dir, file_without_space)
-            handle_uploaded_file(file, file_path)
-
+            upload_file(file,file_without_space,folder_name,f"{order.code}")
 
             messages.success(request,f"El archivo {order_file.name} ha sido cargado correctamente")
 
         return redirect(f"/uploadorderfile/{order.id}")
     
-    is_staff = staff_required(request.user)
-    
-    return render(request,"uploadorderfile.html",{'form':UploadOrderFile, 
-                                                      'is_staff':is_staff, 
+    return render(request,"uploadorderfile.html",{'form':UploadFile,  
                                                       'order':order})
+
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def upload_invoice_file(request,id):
+    invoice = Invoice.objects.filter(id = id).first()
+    referer = request.META.get("HTTP_REFERER")
+    if request.method == "POST":
+        form = UploadFile(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
+            file_without_space = file.name.replace(" ", "_")
+
+            invoice_file = File.objects.filter(name=file_without_space,invoice = invoice).first()
+
+            folder_name = "invoice_files"
+            folder_id = f"{invoice.id}"
+
+            if invoice_file:
+                
+                
+                upload_file(file,file_without_space,invoice_file.path)
+
+                messages.info(request,f"El archivo {invoice_file.name} ya existe, ha sido reemplazado")
+                return redirect(referer)
+            
+            else:
+                invoice_file = File.objects.create(name = file_without_space,
+                                                            invoice=invoice,
+                                                            path = f"{folder_name}/{folder_id}",
+                                                            usersession = request.user
+                                                            )  
+            
+            upload_file(file,file_without_space,invoice_file.path)
+
+            messages.success(request,f"El archivo {invoice_file.name} ha sido cargado correctamente")
+
+        return redirect(referer)
+    
+    return render(request,"upload_invoice_file.html",{'form':UploadFile,  
+                                                      'invoice':invoice})
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required   
 def delete_order_file(request,id):
-    order_file = get_object_or_404(OrderFile,id=id)
+    order_file = get_object_or_404(File,id=id)
+    referer = request.META.get("HTTP_REFERER")
     file_path = os.path.join(settings.MEDIA_ROOT, "order_files", f"{order_file.order.code}", order_file.name)
     
     if os.path.exists(file_path):
@@ -2152,7 +2240,7 @@ def delete_order_file(request,id):
     
     order_file.delete()
 
-    return redirect(f"/orderproductinfo/{order_file.order.id}")
+    return redirect(referer)
 
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
@@ -2160,33 +2248,29 @@ def delete_order_file(request,id):
 def upload_product_file(request,id):
     product = Product.objects.filter(id = id).first()
     if request.method == "POST":
-        form = UploadProductFile(request.POST, request.FILES)
+        form = UploadFile(request.POST, request.FILES)
         if form.is_valid():
             file = request.FILES['file']
             file_without_space = file.name.replace(" ", "_")
-            product_file_exists = ProductFile.objects.filter(name=file_without_space,product = product).exists()
+            
+            product_file = File.objects.filter(name=file_without_space,product = product).first()
+            folder_name = "product_files"
+            if product_file:
+                
+                upload_file(file,file_without_space,product_file.path)
 
-            if product_file_exists:
 
-                product_file = ProductFile.objects.filter(name=file_without_space).first()
-                upload_dir = os.path.join(settings.MEDIA_ROOT, "product_files", f"{product.id}")
-                os.makedirs(upload_dir, exist_ok=True)
-                file_path = os.path.join(upload_dir, file_without_space)
-                handle_uploaded_file(file, file_path)
                 messages.info(request,f"El archivo {product_file.name} ya existe, ha sido reemplazado")
                 return redirect(f"/uploadproductfile/{product.id}")
             
             else:
-                product_file = ProductFile.objects.create(name = file_without_space,
+                product_file = File.objects.create(name = file_without_space,
                                                             product=product,
+                                                            path=f"{folder_name}/{product.id}",
                                                             usersession = request.user
                                                             )  
             
-            upload_dir = os.path.join(settings.MEDIA_ROOT, "product_files", f"{product.id}")
-            os.makedirs(upload_dir, exist_ok=True)
-            file_path = os.path.join(upload_dir, file_without_space)
-            handle_uploaded_file(file, file_path)
-
+            upload_file(file,file_without_space,product_file.path)
 
             messages.success(request,f"El archivo {product_file.name} ha sido cargado correctamente")
 
@@ -2194,14 +2278,15 @@ def upload_product_file(request,id):
     
     is_staff = staff_required(request.user)
     
-    return render(request,"uploadproductfile.html",{'form':UploadOrderFile, 
+    return render(request,"uploadproductfile.html",{'form':UploadFile, 
                                                       'is_staff':is_staff, 
                                                       'product':product})
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required    
 def delete_product_file(request,id):
-    product_file = get_object_or_404(ProductFile,id=id)
+    product_file = get_object_or_404(File,id=id)
+    referer = request.META.get("HTTP_REFERER")
     file_path = os.path.join(settings.MEDIA_ROOT, "product_files", f"{product_file.product.id}", product_file.name)
     
     if os.path.exists(file_path):
@@ -2209,7 +2294,7 @@ def delete_product_file(request,id):
     
     product_file.delete()
 
-    return redirect(f"/productinfo/{product_file.product.id}")
+    return redirect(referer)
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
@@ -2287,6 +2372,8 @@ def create_order_invoice(request,id):
 
     total_invoice = calc_total_invoice(invoices,order)
 
+    order_invoice_files = File.objects.filter(order_invoice__in= invoices )
+
     if request.method == "POST":
         
         value_paid = request.POST.get('amount_to_pay')
@@ -2312,7 +2399,8 @@ def create_order_invoice(request,id):
     return render(request,"create_order_invoice.html",{
         'order':order,
         'invoices':invoices,
-        'total_invoice':total_invoice
+        'total_invoice':total_invoice,
+        'order_invoice_files':order_invoice_files
     })
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
@@ -2324,17 +2412,36 @@ def delete_order_invoice(request,id):
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
-def show_all_offers(request):
-    offers = Project.objects.all()
-    tabs = Tabs.objects.filter(project__in=offers)
-    pages = Dasboard.objects.filter(tab__in=tabs)
+def show_all_offers(request,approved):
 
+    
+
+    if not approved:
+        offers = Project.objects.filter(approved = False).all()
+    
+        search = request.GET.get('search')
+
+        if search:
+            offers = Project.objects.filter(Q(code__icontains= search) | Q(name__icontains= search) | Q(company_name__icontains= search), approved=False)
+        
+        approved = False
+    else:
+        
+        offers = Project.objects.filter(approved = True).all()
+    
+        search = request.GET.get('search')
+
+        if search:
+            offers = Project.objects.filter(Q(code__icontains= search) | Q(name__icontains= search) | Q(company_name__icontains= search), approved=True)
+        approved = True
+    
     page_obj = paginator(request,offers,10)
-    user = request.user  # El usuario actualmente autenticado
-    session_key = request.session.session_key 
-    is_staff = staff_required(user) # Verifica si el usuario es administrador
+
+  
                        
-    return render(request,"show_all_offers.html",{'page_obj':page_obj, 'is_staff':is_staff})
+    return render(request,"show_all_offers.html",{'page_obj':page_obj, 'approved':approved})
+
+
 
 def move_to_running_project(project):
     project_running = Folder.objects.filter(name__icontains = "PROYECTOS EN EJECUCION").first()
@@ -2402,22 +2509,20 @@ def folder_tree_func():
    
     return folders
 
-
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def overview(request):
     
 
     folder_tree = folder_tree_func()
-
-    is_staff = staff_required(request.user)
     
     context = {
         'folders': folder_tree, 
-        'is_staff':is_staff 
     }
 
     return render(request,"workspace.html",context)
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def overview_folder(request,id):
     folder = Folder.objects.filter(id = id).first()
@@ -2427,33 +2532,57 @@ def overview_folder(request,id):
 
 
     projects = Project.objects.filter(folder__isnull=True)
+    
+    def sorted_files(files):
+
+        files = [
+            {
+                'id':file.id,
+                'name':file.name,
+                'date':file.date,
+                'user':file.usersession
+
+            }
+            for file in files
+        ]
+        files = sorted(files,key=lambda x:x['date'], reverse=True)[:10]
+
+        return files 
 
     if folder.project:
         project = Project.objects.filter(id = folder.project.id).first()
         remissions = Remission.objects.filter(project  = project).all()
         invoices = Invoice.objects.filter(project = project).all()
+        remission_files = File.objects.filter(remission__project = project)[:5]
+        invoice_file = File.objects.filter(invoice__project = project)[:5]
+    
+        files = sorted_files(remission_files)
+        files += sorted_files(invoice_file)
+
     else:
         project = None
         remissions = None
         invoices = None
+        folder_file = File.objects.filter(folder = folder).all()
+        files = sorted_files(folder_file)
 
     if not folder.project:
         children = folder.children.all().order_by('date')[:5]
     else:
         children = None
 
-
+    
+    
     folder_tree = folder_tree_func()
-    is_staff = staff_required(request.user)
 
     context = {
         'folders': folder_tree, 
         'folder': folder,
-        'is_staff':is_staff,
         'projects':projects,
         'remissions':remissions,
         'invoices':invoices,
-        'children':children
+        'children':children,
+        'files':files
     }
     
     return render(request,'overview_folder.html',context)
@@ -2488,7 +2617,8 @@ def update_tree_order(request):
         return JsonResponse({'status': 'success'})
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-    
+
+@user_passes_test(staff_required,login_url='/accessdenied/')   
 @login_required
 def delete_folder(request,id):
     referer = request.META.get('HTTP_REFERER')
@@ -2496,6 +2626,7 @@ def delete_folder(request,id):
     folder.delete()
     return redirect(referer)
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def new_folder(request):
     referer = request.META.get('HTTP_REFERER')
@@ -2505,6 +2636,7 @@ def new_folder(request):
     return redirect(referer)
 
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def update_folder(request,id):
     referer = request.META.get('HTTP_REFERER')
@@ -2524,13 +2656,22 @@ def update_folder(request,id):
         
     return redirect(referer)
 
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def show_invoice(request, id):
     invoice = Invoice.objects.filter(id=id).first()
+    invoice_files = File.objects.filter(invoice= invoice).all()
 
-    return render(request,"show_invoice.html",{'invoice':invoice})
+    return render(request,"show_invoice.html",{'invoice':invoice,
+                                               'invoice_files':invoice_files
+                                               })
 
 
+
+
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def delete_invoice(request,id):
     referer = request.META.get('HTTP_REFERER')
@@ -2538,7 +2679,7 @@ def delete_invoice(request,id):
     invoice.delete()
     return redirect(referer)
 
-
+@user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def update_invoice(request,id):
     invoice = Invoice.objects.filter(id = id).first()
@@ -2564,5 +2705,161 @@ def update_invoice(request,id):
         messages.error(request,"Algo ha salido mal y no se ha guardado")
     
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required   
+def delete_invoice_file(request,id):
+    invoice_file = get_object_or_404(File,id=id)
+    referer = request.META.get("HTTP_REFERER")
+    file_path = os.path.join(settings.MEDIA_ROOT, "invoice_files", f"{invoice_file.invoice.id}", invoice_file.name)
+    
+    if os.path.exists(file_path):
+        os.remove(file_path) 
+    
+    invoice_file.delete()
 
+    return redirect(referer)
+
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def duplicate_invoice(request,id):
+    invoice = Invoice.objects.filter(id = id).first()
+    referer = request.META.get('HTTP_REFERER')
+    try:
+    
+        Invoice.objects.create(
+            number = invoice.number,
+            total_price = invoice.total_price,
+            iva = invoice.iva,
+            source_retention = invoice.source_retention,
+            ica_retention = invoice.ica_retention,
+            usersession = request.user,
+            project = invoice.project
+        )
+        messages.success(request,"La remisión se ha duplicado con éxito")
+    except TypeError as e:
+         messages.error(request,f"Se ha presentado el siguiente error: {e}")
+    return redirect(referer)
+
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def upload_folder_file(request,id):
+    folder = Folder.objects.filter(id = id).first()
+    referer = request.META.get('HTTP_REFERER')
+
+    if request.method == "POST":
+        form = UploadFile(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
+            file_without_space = file.name.replace(" ", "_")
+
+            folder_file = File.objects.filter(name=file_without_space,folder = folder).first()
+            folder_name = "folder_files"
+
+            if folder_file:
+
+                upload_file(file,file_without_space,folder_file.path)
+           
+                messages.info(request,f"El archivo {folder_file.name} ya existe, ha sido reemplazado")
+                return redirect(referer)
+            else:
+                folder_file = File.objects.create(name = file_without_space,
+                                                            path=f"{folder_name}/{folder.name}",
+                                                            folder=folder,
+                                                            usersession = request.user
+                                                            )  
+            
+            upload_file(file,file_without_space,folder_file.path)
+            
+            messages.success(request,f"El archivo {folder_file.name} ha sido cargado correctamente")
+
+        return redirect(referer)
+    return render(request,"upload_folder_file.html",{'form':UploadFile,  
+                                                      'folder':folder})
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def upload_order_invoice_file(request,id):
+    order_invoice = OrderInvoice.objects.filter(id = id).first()
+    referer = request.META.get('HTTP_REFERER')
+    if request.method == "POST":
+        form = UploadFile(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
+            file_without_space = file.name.replace(" ", "_")
+            order_invoice_file = File.objects.filter(name=file_without_space, order_invoice = order_invoice).first()
+            folder_name = "order_invoice_files"
+            if order_invoice_file:
+                
+                upload_file(file,file_without_space,order_invoice_file.path)
+
+                messages.info(request,f"El archivo {order_invoice_file.name} ya existe, ha sido reemplazado")
+                return redirect(referer)
+            
+            else:
+                order_invoice_file = File.objects.create(name = file_without_space,
+                                                            order_invoice=order_invoice,
+                                                            path=f"{folder_name}/{order_invoice.id}",
+                                                            usersession = request.user
+                                                            )  
+            
+            upload_file(file,file_without_space,order_invoice_file.path)
+
+            messages.success(request,f"El archivo {order_invoice_file.name} ha sido cargado correctamente")
+
+        return redirect(referer)
+    
+    return render(request,"upload_order_invoice_file.html",{'form':UploadFile,  
+                                                      'order_invoice':order_invoice})
+
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def docs(request):
+    
+    docs = File.objects.filter().order_by('-date').all()
+    search = request.GET.get('search')
+    if search:
+        docs = File.objects.filter(Q(name__icontains= search))
+    
+    
+    docs = paginator(request,docs,10)
+
+    return render(request,"docs.html",{
+        'docs':docs
+    })
+
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def edit_offer(request,id):
+    project = Project.objects.filter(id=id).first()
+    tabs = project.tabs.all()
+    generated_offer = GeneratedOffer.objects.filter(project= project)
+    
+    return render(request,"edit_offer.html",{'project':project,
+                                             'generated_offer':generated_offer,
+                                             'tabs':tabs
+                                             })
+
+def delete_offer_item(request,id):
+    referer = request.META.get("HTTP_REFERER")
+    item = GeneratedOffer.objects.filter(id=id).first()
+    if item:
+        item.delete()
+    return redirect(referer)
+
+def save_offer_item(request,id):
+    referer = request.META.get("HTTP_REFERER")
+    item = GeneratedOffer.objects.filter(id=id).first()
+    if request.method == "POST":
+        quantity = request.POST.get("quantity")
+        unit_value = request.POST.get("unit_value")
+        if item:
+            item.quantity = quantity
+            item.unit_value = unit_value
+            item.save()
+    return redirect(referer)
+    
 

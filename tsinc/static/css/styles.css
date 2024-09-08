@@ -291,6 +291,33 @@ ul ul {
 
 }
 
+#tab{
+
+  box-shadow: 10px 10px 5px -4px rgba(103, 101, 101, 0.49);
+  height: 16rem;
+  background: #e8e8e8;
+  margin: 8px;
+  border: 2px solid #c3c3c3;
+  cursor: pointer;
+
+}
+#tab:hover{
+  background: #d9d8d8;
+
+}
+
+#tab-title{
+  font-size: 0.6rem;
+}
+#tab-body{
+  height: 100%;
+  background: #e8e8e8;
+  border: 2px solid #8a8a8a;
+
+
+}
+
+
 
 
 

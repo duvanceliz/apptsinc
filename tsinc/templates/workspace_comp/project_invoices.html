@@ -37,6 +37,19 @@
               <td>{{invoice.total_price}}</td>
               <td>{{invoice.date|naturaltime}}</td>
               <td>
+
+                <div class="dropdown d-inline">
+                  <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+                    <i class="bi bi-gear"></i>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="{% url 'show_invoice' invoice.id %}">Ver o Editar</a></li>
+                    <li><a class="dropdown-item" href="{% url 'duplicate_invoice' invoice.id %}">Duplicar</a></li>
+                    <li><a class="dropdown-item" href="{% url 'upload_invoice_file' invoice.id %}">Cargar archivo</a></li>
+                    <!-- <li><a class="dropdown-item" href="">Descargar</a></li> -->
+                    <li><a class="dropdown-item" href="{% url 'delete_invoice' invoice.id %}" onclick="return confirm_delete_invoice()">Eliminar</a></li>
+                  </ul>
+                </div>
      
               </td>
             </tr>

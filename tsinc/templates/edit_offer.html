@@ -1,0 +1,315 @@
+{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load static %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+      <table class="table bg-light table-bordered">
+      
+        <tbody>
+          <tr>
+            <th>OFERTA COMERCIAL:</th>
+            <td>{{project.code}}</td>
+          </tr>
+          <tr>
+            <th>CLIENTE:</th>
+            <td>{{project.company_name}}</td>
+          </tr>
+          <tr>
+            <th>NIT:</th>
+            <td>{{project.nit}}</td>
+          </tr>
+          <tr>
+            <th>FECHA:</th>
+            <td>{{project.date}}</td>
+          </tr>
+       
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-4"></div>
+    <div class="col-md-4 text-end align-items-end" >
+
+
+      <a href="" class="btn btn-success">Descargar</a>
+
+      <button class="btn btn-success" id="btn-offer-save">Guardar</button>
+        
+    </div>
+</div>
+    <div class="row">
+        
+       <div class="col-md-12">
+        
+        {% for tab in tabs %}
+        <div class="card-header text-center bg-light">
+           CONTROLADORES / SUPERVISORES / EXPANSIONES
+        </div>
+        <div class="card-header text-center bg-light">
+          {{tab.tab_name}}
+        </div>
+        <table class="table bg-light table-bordered">
+          
+          <thead>
+            <tr>
+              <th>MODELO</th>
+              <th>DESCRIPCIÓN</th>
+              <th>UNIDAD</th>
+              <th>CANTIDAD</th>
+              <th>VALOR UNITARIO</th>
+              <th>VALOR TOTAL</th>
+            </tr>
+          </thead>
+          
+          <tbody>
+            {% for item in generated_offer %}
+            {% if tab.id == item.tab.id %}
+            {% if item.section == 0 %}
+            <tr>
+              <td style="width: 200px;">{{item.product.model}}</td>
+              <td style="width: 400px;">{{item.product.description}}</td>
+              <td>{{item.measure}}</td>
+              <td  style="width: 80px;">
+                <input type="number" value="{{item.quantity}}" class="form-control form-control-sm" data-id="{{item.id}}" name="quantity">
+              </td>
+              <td>
+                <input type="number" value="{{item.unit_value}}" class="form-control form-control-sm" data-id="{{item.id}}" name="unit_value">
+
+              </td>
+              <td>
+                <input type="number" value="{{item.total_value}}" class="form-control form-control-sm" data-id="{{item.id}}" name="total_value">
+
+              </td>
+              <td> 
+                <a href="{% url 'delete_offer_item' item.id %}" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a>
+              </td>
+            </tr>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+            
+          </tbody>
+          </table>
+          {% endfor %}
+
+       </div>
+       <div class="col-md-12">
+        
+        {% for tab in tabs %}
+        <div class="card-header text-center bg-light">
+           INSTRUMENTOS / COFRES
+        </div>
+        <div class="card-header text-center bg-light">
+          {{tab.tab_name}}
+        </div>
+        <table class="table bg-light table-bordered">
+          
+          <thead>
+            <tr>
+              <th>MODELO</th>
+              <th>DESCRIPCIÓN</th>
+              <th>UNIDAD</th>
+              <th>CANTIDAD</th>
+              <th>VALOR UNITARIO</th>
+              <th>VALOR TOTAL</th>
+            </tr>
+          </thead>
+          
+          <tbody>
+            {% for item in generated_offer %}
+            {% if tab.id == item.tab.id %}
+            {% if item.section == 1 %}
+            <tr>
+              <td style="width: 200px;">{{item.product.model}}</td>
+              <td style="width: 400px;">{{item.product.description}}</td>
+              <td>{{item.measure}}</td>
+              <td style="width: 80px;">
+                <input type="number" value="{{item.quantity}}" class="form-control form-control-sm" data-id="{{item.id}}" name="quantity">
+
+              </td>
+              <td>
+                <input type="number" value="{{item.unit_value}}" class="form-control form-control-sm" data-id="{{item.id}}" name="unit_value">
+
+              </td>
+              <td>
+                <input type="number" value="{{item.total_value}}" class="form-control form-control-sm" data-id="{{item.id}}" name="total_value">
+
+              </td>
+              <td>
+                <a href="{% url 'delete_offer_item' item.id %}" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a>
+
+              </td>
+            </tr>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+            
+          </tbody>
+          </table>
+          {% endfor %}
+
+       </div>
+
+       <div class="col-md-12">
+        
+       
+        <div class="card-header text-center bg-light">
+          INGENIERÍA / PROGRAMACIÓN / PUESTA EN OPERACIÓN
+        </div>
+        
+        <table class="table bg-light table-bordered">
+          
+          <thead>
+            <tr>
+              <th>MODELO</th>
+              <th>DESCRIPCIÓN</th>
+              <th>UNIDAD</th>
+              <th>CANTIDAD</th>
+              <th>VALOR UNITARIO</th>
+              <th>VALOR TOTAL</th>
+            </tr>
+          </thead>
+          
+          <tbody>
+            {% for item in generated_offer %}
+            
+            {% if item.section == 2 %}
+            <tr>
+              <td style="width: 200px;">{{item.product.model}}</td>
+              <td style="width: 400px;">{{item.product.description}}</td>
+              <td>{{item.measure}}</td>
+              <td style="width: 80px;">
+                <input type="number" value="{{item.quantity}}" class="form-control form-control-sm" data-id="{{item.id}}" name="quantity">
+
+              </td>
+              <td>
+                <input type="number" value="{{item.unit_value}}" class="form-control form-control-sm" data-id="{{item.id}}" name="unit_value">
+
+              </td>
+              <td>
+                <input type="number" value="{{item.total_value}}" class="form-control form-control-sm" data-id="{{item.id}}" name="total_value">
+
+              </td>
+              <td>
+                <a href="{% url 'delete_offer_item' item.id %}" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a>
+
+              </td>
+            </tr>
+            {% endif %}
+         
+            {% endfor %}
+            
+          </tbody>
+          </table>
+      
+
+       </div>
+       <div class="col-md-12">
+        
+       
+        <div class="card-header text-center bg-light">
+          SUBTOTAL
+        </div>
+        
+        <table class="table bg-light table-bordered">
+          
+         
+          
+          <tbody>
+            {% for item in generated_offer %}
+            
+            {% if item.section == 3 %}
+            <tr>
+              <td>{{item.measure}}</td>
+              <td style="width: 80px;">
+                <input type="number" 
+                value="{{item.porcent}}" 
+                class="form-control form-control-sm"
+                >
+               
+              </td>
+              <td>{{item.total_value}}</td>
+            </tr>
+            {% endif %}
+         
+            {% endfor %}
+            
+          </tbody>
+          </table>
+      
+
+       </div>
+    </div>
+</div>
+<script>
+
+  const form_controls = document.querySelectorAll(".form-control")
+  const btn_offer_save = document.getElementById("btn-offer-save")
+
+  
+  form_controls.forEach((form)=>{
+
+      form.addEventListener("keyup",(e)=>{
+
+
+        console.log(form.parentElement.parentElement)
+
+
+      })
+
+     
+       
+      
+             
+      })
+  
+  btn_offer_save.addEventListener("click",()=>{
+
+    const items = []
+    const ids = new Set()
+
+
+
+    form_controls.forEach((form)=>{
+       
+      if(form.dataset.id){
+
+        ids.add(form.dataset.id)
+      }
+            
+    })
+    for(const id of ids){
+      const obj ={}
+
+          form_controls.forEach((form)=>{
+
+            if( form.dataset.id){
+            
+                if(id === form.dataset.id ){
+
+                    obj.id = id
+                    if(form.name === "quantity"){
+                      
+                      obj.quantity = form.value
+
+                    }
+                    
+                    if(form.name === "unit_value"){
+                      obj.unit_value = form.value
+
+                    }
+                  }
+
+                }
+                
+              })
+        items.push(obj)
+    }
+
+     console.log(items)
+  
+
+  })
+  
+  
+</script>
+{% endblock %}

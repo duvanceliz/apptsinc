@@ -47,7 +47,7 @@
                        {{folder.name}}
                       
                     </button>
-                    <a class="btn btn-link" href="{% url 'delete_folder' folder.id %}" onclick="return confirm_delete_folder()">Borrar</i> </a>
+                    <a class="btn btn-link" href="{% url 'delete_folder_item' folder.id %}" onclick="return confirm_delete_folder()">Borrar</i> </a>
                 </div>
                   <div id="flush-collapse{{folder.name}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{folder.name}}" data-bs-parent="#accordionHVAC">
                     <div class="accordion-body p-0">
@@ -57,10 +57,9 @@
                         
                             <li class="list-group-item d-flex justify-content-between ">
                                 <span>{{panelitem.name}}</span>
-                                <a class="btn btn-danger btn-sm" href=" {% url 'delete_file' panelitem.id %} " onclick="return confirm_delete_file()"> <i class="bi bi-trash"></i> </a>
+                                <a class="btn btn-danger btn-sm" href=" {% url 'delete_file_item' panelitem.id %} " onclick="return confirm_delete_file()"> <i class="bi bi-trash"></i> </a>
                             </li>
-                        
-    
+                            
                       {% endif %}
                       {% endfor %}
                     </ul>

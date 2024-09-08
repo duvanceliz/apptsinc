@@ -1,0 +1,30 @@
+{% extends 'layout_with_folder_tree.html' %} {% block body %}
+
+<div class="container">
+  <div class="row m-4">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+           {% include 'components/alert.html' %}
+          <div class="card">
+            <div class="card-header text-center">
+              <h2>Subir archivo de Factura</h2>
+            </div>
+            <div class="card-body p-4">
+
+              <form method="post" enctype="multipart/form-data" class="d-flex flex-column p-4">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Subir</button>
+              </form>
+
+              <a href="{% url 'overview_folder' folder.id %}">Ver Folder</a>
+
+            </div>
+      </div>
+      
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+</div>
+
+{% endblock %}

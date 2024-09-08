@@ -1,4 +1,4 @@
-{% extends 'layout3.html' %} {% block body %}{% load humanize %}
+{% extends 'layout_with_folder_tree.html' %} {% block body %}{% load humanize %}
 
 
 <div class="container">
@@ -50,7 +50,7 @@
             <div class="card-body">
 
                 <ul class="list-group d-flex justify-content-between">
-                    {% for prod_s in prod_out_stock %}
+                    {% for prod_s in product_out_stock_ %}
                     
                     <li class="list-group-item d-flex justify-content-between">
                     <span class="fw-bold">Model:</span> {{prod_s.product.model}} 
@@ -85,7 +85,7 @@
             <div class="card-body">
 
                 <ul class="list-group d-flex justify-content-between">
-                    {% for prod_r in prod_rotations %}
+                    {% for prod_r in prod_rotations_ %}
 
                     <li class="list-group-item d-flex justify-content-between">
                     <span class="fw-bold">Model:</span> {{prod_r.product.model}} 
@@ -100,7 +100,6 @@
         </div>
     </div>
    </div>
-
 
 
    <div class="row">

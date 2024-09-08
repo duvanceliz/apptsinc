@@ -17,7 +17,8 @@
     
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    
     
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css_w/styles_workspace.css' %}">
@@ -53,7 +54,7 @@
 
                   <li><form method="post" action="{% url 'logout' %}" class="d-flex align-items-center">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-link text-white fs-6">Salir</button>
+                    <button type="submit" class="btn btn-link fs-6 text-dark" style="text-decoration: none;">Salir</button>
                   </form>
                 </li>
                 </ul>
@@ -125,13 +126,21 @@
             <div class="col-md">
 
               <ul class="nav nav-tabs justify-content-center mb-4">
-              
-                <li class="nav-item">
-                  <a class="nav-link text-dark text-center" href="{% url 'show_all_offers' %}">
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle text-center text-dark" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
                     <i class="bi bi-buildings d-block"></i>
                     Ofertas
                   </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'show_all_offers' 0 %}">
+                      Pendientes</a></li>
+                    <li><a class="dropdown-item" href="{% url 'show_all_offers' 1 %}">
+                      Aprobadas</a></li>
+                   
+                  </ul>
                 </li>
+              
+      
                 <li class="nav-item">
                   <a class="nav-link text-dark text-center" href="{% url 'product' %}">
                     <i class="bi bi-table d-block"></i>
@@ -165,13 +174,24 @@
                     
                   </ul>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link text-dark text-center" href="{% url 'invoices' %}">
+
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle text-center text-dark" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
                     <i class="bi bi-receipt d-block"></i>
                     Facturas
+                  
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'invoices' %}">Ventas</a></li>
+                    <li><a class="dropdown-item" href="#">Compra</a></li>                    
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-dark text-center" href="{% url 'docs' %}">
+                    <i class="bi bi-file-earmark-text d-block"></i>
+                    Docs
                   </a>
                 </li>
-
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle text-center text-dark" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
                     <i class="bi bi-image d-block"></i>
@@ -184,12 +204,19 @@
                     
                   </ul>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link text-dark text-center" href="{% url 'order_statictics' %}">
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle text-center text-dark" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
                     <i class="bi bi-graph-up-arrow d-block"></i>
                     Estadísticas 
                   </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'order_statictics' %}">Ordenes</a></li>
+                    <li><a class="dropdown-item" href="{% url 'remission_statictics' %}">Remisiones</a></li>
+                    <li><a class="dropdown-item" href="{% url 'product_statictics' %}">Productos</a></li>
+
+                  </ul>
                 </li>
+              
                 <li class="nav-item">
                   <a class="nav-link text-dark text-center" href="{% url 'carpage' %}">
                     <i class="bi bi-cart4 d-block"></i>

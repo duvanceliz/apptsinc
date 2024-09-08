@@ -31,28 +31,103 @@
     
   </div>
 
+  <div class="row">
+    <div class="col-md-12">
+
+      <table class="table table-bordered">
+
+        <tbody>
+          <tr>
+            <td  class="fw-bold">CODIGO:</td>
+            <td>{{product.code}}</td>
+            <td  class="fw-bold">STOCK MIN:</td>
+            <td>{{product.min_stock}}</td>
+            <td class="fw-bold">PRECIO DE COMPRA(USD):</td>
+            <td>{{product.purcharse_price|intcomma}}</td>
+          </tr>
+          <tr>
+            <td class="fw-bold">NOMBRE:</td>
+            <td>{{product.product_name}}</td>
+            <td class="fw-bold">CANTIDAD:</td>
+            <td>{{product.quantity}}</td>
+            <td class="fw-bold">PRECIO DE COMPRA(COP):</td>
+            <td>{{product.purcharse_price_cop|intcomma}}</td>
+          </tr>
+          <tr>
+            <td class="fw-bold">MODELO:</td>
+            <td>{{product.model}}</td>
+            <td class="fw-bold">PUNTOS:</td>
+            <td>{{product.point}}</td>
+            <td class="fw-bold">DESCRIPCIÓN:</td>
+            <td>{{product.description}}</td>
+          </tr>
+          <tr>
+            <td class="fw-bold">MARCA:</td>
+            <td>{{product.model}}</td>
+            <td class="fw-bold">PRECIO DE VENTA(USD):</td>
+            <td>{{product.sale_price|intcomma}}</td>
+            <td class="fw-bold">OBSERVACIÓN:</td>
+            <td>{{product.observation}}</td>
+            
+          </tr>
+          <tr>
+            <td class="fw-bold">UBICACIÓN:</td>
+            <td>{{product.location}}</td>
+            <td class="fw-bold">PRECIO DE VENTA(COP):</td>
+            <td>{{product.sale_price_cop|intcomma}}</td>
+            <td class="fw-bold">IVA</td>
+            <td>{{product.iva}}</td>
+          </tr>
+
+          
+          
+        </tbody>
+      </table>
+
+
+    </div>
+  </div>
+
  <div class="row mb-4">
     
     <div class="col-md-4">
-        <ul class="list-group">
-               
-            <li class="list-group-item"><strong>Codigo: </strong>{{product.code}}</li>
-            <li class="list-group-item"><strong>Nombre: </strong>{{product.product_name}}</li>
-            <li class="list-group-item"><strong>Modelo: </strong>{{product.model}}</li>
-            <li class="list-group-item"><strong>Marca: </strong>{{product.brand}}</li>
-            <li class="list-group-item"><strong>Ubicación: </strong>{{product.location}}</li>
-            <li class="list-group-item"><strong>Stock minimo: </strong>{{product.min_stock}}</li>
-            <li class="list-group-item"><strong>Cantidad: </strong>{{product.quantity}}</li>
-            <li class="list-group-item"><strong>Puntos: </strong>{{product.point}}</li>
-            <li class="list-group-item"><strong>Precio de venta (USD): </strong>{{product.sale_price|intcomma}}</li>
-            <li class="list-group-item"><strong>Precio de venta (COP): </strong>{{product.sale_price_cop|intcomma}}</li>
-            <li class="list-group-item"><strong>Precio de compra (USD): </strong>{{product.purcharse_price|intcomma}}</li>
-            <li class="list-group-item"><strong>Precio de compra (COP): </strong>{{product.purcharse_price_cop|intcomma}}</li>
-            <li class="list-group-item"><strong>Descripción: </strong>{{product.description}}</li>
-            <li class="list-group-item"><strong>Observacion: </strong>{{product.observation}}</li>
-            <li class="list-group-item"><strong>IVA: </strong>{{product.iva}}</li>
-         
-          </ul>
+
+      <div class="card">
+        <div class="card-header fw-bold">
+          ARCHIVOS RELACIONADOS
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover table-light">
+          <thead>
+            
+        
+            <tr>
+  
+              <th scope="col">Nombre</th>
+              <th scope="col">Tiempo de carga</th>
+              <th ></th>
+            </tr>
+          
+          </thead>
+          <tbody>
+            <tr>
+              {% for file in product_files %}
+  
+  
+              <td>{{file.name}}</td>
+              <th>{{file.date|naturaltime}}</th>
+               <th>
+                <a href="{% url 'view_file' file.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
+                <a class="btn btn-danger btn-sm" href="{% url 'delete_file' file.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return confirm_delete_remission()"> <i class="bi bi-trash"></i> </a>
+  
+               </th>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+      </div> 
+        
     </div>
     <div class="col-md-4">
       <div class="card">
@@ -131,7 +206,7 @@
               <td>{{product.quantity}}</td>
               <td>(USD) {{product.price|intcomma}}</td>
               <td>{{product.remission.date|naturaltime}}</td>
-              <td><a href="{% url 'product_remission' product.remission.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a></td>
+              <td><a href="{% url 'show_remission' product.remission.id %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a></td>
             </tr>
             {%endfor%}
           </tbody>
@@ -142,41 +217,7 @@
  <div class="row">
   <div class="col-md-4">
 
-    <div class="card">
-      <div class="card-header fw-bold">
-        ARCHIVOS RELACIONADOS
-      </div>
-    </div>
-    <div class="table-responsive">
-      <table class="table table-hover table-light">
-        <thead>
-          
-      
-          <tr>
-
-            <th scope="col">Nombre</th>
-            <th scope="col">Tiempo de carga</th>
-            <th ></th>
-          </tr>
-        
-        </thead>
-        <tbody>
-          <tr>
-            {% for file in product_files %}
-
-
-            <td>{{file.name}}</td>
-            <th>{{file.date|naturaltime}}</th>
-             <th>
-              <a href="{% url 'view_file' file.id 'p' %}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
-              <a class="btn btn-danger btn-sm" href="{% url 'delete_product_file' file.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar la remisión" onclick="return confirm_delete_remission()"> <i class="bi bi-trash"></i> </a>
-
-             </th>
-          </tr>
-          {%endfor%}
-        </tbody>
-      </table>
-    </div>
+    
 
   </div>
   <div class="col-md-6"></div>

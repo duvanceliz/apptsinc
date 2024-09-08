@@ -6,6 +6,7 @@ from django.core.validators import MaxLengthValidator
 from django.utils import timezone
 
 class Project(models.Model):
+    code = models.CharField(max_length=200, null=True)
     name = models.CharField(max_length=200, default=None)
     company_name = models.CharField(max_length=200, default=None)
     nit = models.CharField(max_length=200,null=True)
@@ -13,6 +14,8 @@ class Project(models.Model):
     verified = models.BooleanField(default=False)
     approved = models.BooleanField(default=False)
     progress = models.IntegerField(default=0)
+    delivery_date = models.DateField(default=datetime.date.today)
+    closing_date = models.DateField(default=datetime.date.today)
     date = models.DateField(default=datetime.date.today)
     usersession = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
@@ -111,14 +114,8 @@ class Labels(models.Model):
 
 class Category(models.Model):
     name= models.CharField(max_length=100, default=None)
-    def __str__(self):
-        return self.name
-
-
-class Subcategory(models.Model):
-    name = models.CharField(max_length=100, default=None)
-    tag = models.CharField(max_length=100, default=None)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='subcategory')
+    tag = models.CharField(max_length=100, null=True, blank=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     def __str__(self):
         return self.name
 
@@ -274,6 +271,8 @@ class ProductFile(models.Model):
     date = models.DateTimeField(default=timezone.now)
     usersession = models.ForeignKey(User,on_delete=models.SET_NULL,null=True, blank=True)
 
+
+
 class Invoice(models.Model):
     number = models.CharField(max_length=100)
     total_price = models.FloatField(default=0)
@@ -300,14 +299,6 @@ class OrderInvoice(models.Model):
     date = models.DateTimeField(default=timezone.now)
 
 
-# class Folder(models.Model):
-#     name = models.CharField(max_length=200)
-#     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-#     def __str__(self):
-#         return self.name
-#     class Meta:
-#         verbose_name = "Carpeta"
-#         verbose_name_plural = "Carpetas"
 
 
 class Folder(models.Model):
@@ -325,3 +316,38 @@ class Folder(models.Model):
         verbose_name = "Carpeta"
         verbose_name_plural = "Carpetas"
         ordering = ['order']
+
+
+class File(models.Model):
+    name = models.CharField(max_length=200)
+    path = models.CharField(max_length=200, null=True)
+    project = models.ForeignKey(Project,on_delete=models.CASCADE, null=True, blank = True)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE, null=True, blank = True)
+    remission = models.ForeignKey(Remission,on_delete=models.CASCADE, null=True, blank = True)
+    order = models.ForeignKey(PurcharseOrder,on_delete=models.CASCADE, null=True, blank = True)
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, null=True, blank = True)
+    folder = models.ForeignKey(Folder,on_delete=models.CASCADE, null=True, blank = True)
+    order_invoice = models.ForeignKey(OrderInvoice,on_delete=models.CASCADE, null=True, blank = True)
+    date = models.DateTimeField(default=timezone.now)
+    usersession = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
+
+
+class GeneratedOffer(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE, null=True, blank = True)
+    measure = models.CharField(max_length=200,  null=True, blank=True)
+    quantity = models.IntegerField(default=0, null=True, blank=True)
+    unit_value = models.FloatField(default=0, null=True, blank=True)
+    total_value = models.FloatField(default=0,  null=True, blank=True)
+    porcent = models.FloatField(default=0,null=True, blank=True)
+    tab = models.ForeignKey(Tabs,on_delete=models.CASCADE, null=True, blank = True)
+    project = models.ForeignKey(Project,on_delete=models.CASCADE, null=True, blank = True)
+    section = models.IntegerField(default=0)
+
+
+
+    
+
+
+
+
+

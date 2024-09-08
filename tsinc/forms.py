@@ -18,6 +18,8 @@ class CreateProject(forms.Form):
                           max_length=200,
                           widget=forms.TextInput(attrs={'class': 'form-control'})
                           )
+    delivery_date = forms.DateField(label='Fecha de entrega',widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}))
+    closing_date = forms.DateField(label='Fecha de cierre',widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}))
     OPCIONES_CHOICES = [
         ('Roberto Bravo', 'Roberto Bravo'),
         ('Edwin Serrano', 'Edwin Serrano'),
@@ -74,7 +76,7 @@ class UploadProducts(forms.Form):
 class CreateTab(forms.Form):
     tab_name = forms.CharField(label="Nombre del tablero", 
                                max_length=200,
-                               widget=forms.TextInput(attrs={'class': 'form-control'})
+                               widget=forms.TextInput(attrs={'class': 'form-control','value':'TAB CONT 01'})
 
                                )
     OPCIONS_CHOICES_TAB = [
@@ -103,7 +105,7 @@ class CreateTab(forms.Form):
 class CreatePage(forms.Form):
     name = forms.CharField(label="Nombre de página", 
                            max_length=100,
-                           widget=forms.TextInput(attrs={'class': 'form-control'})
+                           widget=forms.TextInput(attrs={'class': 'form-control','value':'pag-1'})
 
                            )
 
@@ -215,14 +217,7 @@ class CreateOrder(forms.Form):
         initial=False  # Establece "No" como valor predeterminado
     )
 
-class UploadRemissionFile(forms.Form):
-    file = forms.FileField() 
-
-
-class UploadOrderFile(forms.Form):
-    file = forms.FileField() 
-    
-class UploadProductFile(forms.Form):
+class UploadFile(forms.Form):
     file = forms.FileField() 
 
 class CreateInvoice(forms.Form):

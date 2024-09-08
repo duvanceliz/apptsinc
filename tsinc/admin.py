@@ -12,7 +12,6 @@ models_ = [ Project,
             Items,
             Labels,
             Category,
-            Subcategory,
             Folders,
             Sheet,
             Points,
@@ -34,6 +33,8 @@ models_ = [ Project,
             ProductFile,
             Invoice,
             OrderInvoice,
-            Folder
+            Folder,
+            File,
+            GeneratedOffer          
            ]
 admin.site.register(models_)

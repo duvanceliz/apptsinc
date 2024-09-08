@@ -28,10 +28,12 @@
             {% include 'workspace_comp/form_update_folder.html' with  folder=folder project=folder.project %}
 
            </div>
-           <div class="col-md-2">
+           <div class="col-md-6 text-end">
+
+            <a href="{% url 'upload_folder_file' folder.id %}" class="btn btn-success btn-sm">Cargar archivo</a>
           
            </div>
-           <div class="col-md-2"></div>
+
         </div>
 
         {% if folder.project %}
@@ -61,18 +63,12 @@
                 </div>
               
             </div>
-            <div class="row mb-4">
-
-                <div class="col-md-6">
-                    
-                    {% include 'workspace_comp/project_documents.html' %}
-
-                </div>
-              
-            </div>
+           
             
 
         {% endif %}
+
+        
         
         {% if children %}
         <div class="row mb-4">
@@ -86,6 +82,15 @@
         </div>
 
         {% endif %}
+        <div class="row mb-4">
+
+            <div class="col-md-12">
+                
+                {% include 'workspace_comp/project_documents.html' with files=files %}
+
+            </div>
+          
+        </div>
 
    
    

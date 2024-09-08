@@ -21,32 +21,7 @@
     <div class="row">
    
        <div class="col-md-12">
-        {% if messages %}
-          
-        {% for message in messages %}
-  
-            {% if message.tags == 'success' %}
-            <div class="alert alert-success" role="alert">
-            {{ message }} <a href="#">Ir a generar una remisón</a>
-            </div>
-            {% endif %}
-  
-            {% if message.tags == 'info' %}
-            <div class="alert alert-warning" role="alert">
-            {{ message }}
-            </div>
-            {% endif %}
-            {% if message.tags == 'error' %}
-            <div class="alert alert-danger" role="alert">
-            {{ message }}
-            </div>
-            {% endif %}
-  
-        {% endfor %}
-    
-    
-    {% endif %}
-        <a href="{% url 'order_statictics' %}" class="btn btn-primary btn-sm mb-2"> Ver Estadísticas</a>
+        {% include 'components/alert.html' %}
         
           <table class="table table-hover table-light">
             <thead>
@@ -61,8 +36,8 @@
                 <th scope="col" id="table-titles">Precio(total)</th>
                 <th scope="col" id="table-titles">Archivos</th>
                 <th scope="col" id="table-titles">Facturación</th>
-                <th scope="col" id="table-titles">Tiempo</th>
                 <th scope="col" id="table-titles">Recibido</th>
+                <th scope="col" id="table-titles">Fecha</th>
                 
                 <th></th>
               </tr>
@@ -78,25 +53,42 @@
                 <td id="table-columns">{{order.tracking}}</td>
                 <td id="table-columns">{{order.supplier}}</td>
                 {% if  not order.currency %}
-                <td id="table-columns">(USD) {{order.total_price|intcomma}}</td>
+                <td id="table-columns">(USD) {{order.total_price|intcomma|floatformat:2}}</td>
                 {% else %}
-                <td id="table-columns">(COP) {{order.total_price|intcomma}}</td>
+                <td id="table-columns">(COP) {{order.total_price|intcomma|floatformat:2}}</td>
                 {% endif %}
                  {% for file in order_files_info  %}
                  {% if file.order_id == order.id  %}
-                 <td id="table-columns">{{file.quantity}}<i class="bi bi-file-earmark-text"></i> </td>
+                 {% if file.quantity == 0 %}
+                 <td id="table-columns">{{file.quantity}}<i class="bi bi-file-earmark-text bg-danger rounded-3 text-white"></i> </td>
+                 {% else %}
+                 <td id="table-columns">{{file.quantity}}<i class="bi bi-file-earmark-text bg-success rounded-3 text-white"></i> </td>
+
+                 {% endif %}
                  {% endif %}
                 {%endfor%}
 
-                <td id="table-columns">
-                  {% if order.paid %}
-                  <i class="bi bi-check-square-fill text-success"></i>
-                  {%else%}
-                  <i class="bi bi-x-square-fill text-danger"></i>
-                  {%endif%}
-
+                
+                <td>
+                  {% for bi in billing %}
+                  {% if bi.order_id == order.id %}
+                  {% if bi.progress == 100 %}
+                  <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{bi.progress}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{bi.progress}}%</div>
+                  </div>
+                  {% elif bi.progress >= 50 and bi.progress < 100 %}
+                  <div class="progress">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: {{bi.progress}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{bi.progress}}%</div>
+                  </div>
+                  {% else %}
+                  <div class="progress">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: {{bi.progress}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{bi.progress}}%</div>
+                  </div>
+                  {% endif %}
+                  {% endif %}
+                  {% endfor %}
                 </td>
-                <td id="table-columns">{{order.date|naturaltime}}</td>
+
                 <td>
                   {% if order.progress == 100 %}
                   <div class="progress">
@@ -112,6 +104,7 @@
                   </div>
                   {% endif %}
                 </td>
+                <td id="table-columns">{{order.date|date:"d/m/Y"}}</td>
                 
                 <td>
                   
