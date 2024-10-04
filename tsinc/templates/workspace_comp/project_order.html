@@ -1,0 +1,60 @@
+{% load humanize %}
+<div class="card">
+    <div class="card-header">
+        
+
+         <div class="row">
+            <div class="col-6"><h4>ORDENES</h4></div>
+            <div class="col-6 text-end" >
+                <a href="{% url 'create_order' project.id %}" class="btn btn-success btn-sm"><i class="bi bi-plus-circle-dotted"></i> Nueva</a>
+            </div>
+         </div>
+    </div>
+    
+        <table class="table table-hover table-light table-sm">
+          <thead>
+            
+        
+            <tr>
+            <th scope="col">Creado por:</th>
+              <th scope="col">Orden#</th>
+              <th scope="col">Tiempo</th>
+              <th ></th>
+            </tr>
+          
+          </thead>
+          <tbody>
+            <tr>
+              {% for order in orders %}
+              <td>{{order.usersession}}</td>
+              <td>{{order.code}}</td>
+              {% for file_info in order_files_info %}
+              {%  if file_info.order_id == order.id  %}
+              <td>{{file_info.quantity}}<i class="bi bi-file-earmark-text"></i></td>
+              {% endif %}
+              {% endfor %}
+              <td>{{order.date|naturaltime}}</td>
+              <td>
+                <div class="dropdown d-inline">
+                  <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+                    <i class="bi bi-gear"></i>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="{% url 'order_product_info' order.id %}" >Ver o Editar</a></li>
+                    <li><a class="dropdown-item" href="{% url 'duplicate_order'  order.id %}" >Duplicar</a></li>
+                    <li><a class="dropdown-item" href="{% url 'create_order_entry' order.id %}" >Registrar entrada</a></li>
+                    <li><a class="dropdown-item" href="{% url 'upload_order_file' order.id %}" >Cargar archivo</a></li>
+                    <li><a class="dropdown-item" href="{% url 'create_order_invoice' order.id %}" >Facturación</a></li>
+                    <li><a class="dropdown-item" href="{% url 'download_order' order.id %}" >Descargar</a></li>
+                    <li><a class="dropdown-item" href="{% url 'delete_order' order.id %}" onclick="return confirm_delete_order()">Eliminar</a></li>
+                  </ul>
+                </div>
+              
+              </td>
+            </tr>
+    
+            {%endfor%}
+          </tbody>
+        </table>
+      
+</div>

@@ -32,6 +32,7 @@
                 
                 <th scope="col" id="table-titles">Generada por:</th>
                 <th scope="col" id="table-titles">#</th>
+                <th scope="col" id="table-titles">Proyecto</th>
                 <th scope="col" id="table-titles">Empresa</th>
                 <th scope="col" id="table-titles">Ciudad</th>
                 <th scope="col" id="table-titles">Proyecto/Obra</th>
@@ -48,6 +49,7 @@
                 
                 <td id="table-columns">{{remission.usersession}}</td>
                 <td id="table-columns"><a href="{% url 'show_remission' remission.id %}">{{remission.number}}</a></td>
+                <td id="table-columns">{{remission.project.name}}</td>
                 <td id="table-columns">{{remission.company}}</td>
                 <td id="table-columns">{{remission.city}}</td>
                 <td id="table-columns">{{remission.contruction_site}}</td>
@@ -56,7 +58,6 @@
                 {% if file_info.quantity == 0 %}
                 <td id="table-columns" >{{file_info.quantity}}<i class="bi bi-file-earmark-text bg-danger text-white rounded-3"></i></td>
                 {% else %}
-
                 <td id="table-columns">{{file_info.quantity}}<i class="bi bi-file-earmark-text bg-success text-white rounded-3"></i></td>
 
                 {% endif %}

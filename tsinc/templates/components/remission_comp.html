@@ -15,15 +15,13 @@
       </div>
     </div>
 {% else %}
-<form action="{% url 'create_remission' project.id %}" method="post">
+<form action="{% url 'create_remission' project_from_offer.id %}" method="post">
     {% csrf_token %}
     <div class="row mb-3">
         <div class="col-md-4"></div>
         <div class="col-md-4"></div>
         <div class="col-md-4 text-end">
-          
           <button class="btn btn-success btn-sm" id="btn-save">Guardar</button>
-        
       </div>
     </div>
 {% endif %}
@@ -36,6 +34,42 @@
           <table class="table table-light table-sm table-bordered">
        
             <tbody>
+
+              <tr>
+                <td class="fw-bold">PROYECTO</td>
+                <td>
+                  {% if from %}
+  
+                  <select class="form-select" aria-label="Default select example" name="project_id">
+                    {% if remission %}
+                    <option selected value="{{project_from_offer.id}}">{{remission.project.name}}</option>
+                    {% endif %}
+                    {% for project in projects %}
+                    {% if not project.id == remission.project.id %}
+                    <option value="{{project.id}}" >{{project.name}}</option>
+                    {% endif %}
+                    {% endfor %}
+
+                  </select>
+                          
+    
+                  {% else %}
+                <select class="form-select" aria-label="Default select example" name="project_id">
+                  
+                  {% if project_from_offer %}
+                  <option selected value="{{project_from_offer.id}}">{{project_from_offer.name}}</option>
+                  {% endif %}
+                  {% for project in projects %}
+                   {% if not project.id == project_from_offer.id %}
+                  <option value="{{project.id}}" >{{project.name}}</option>
+                  {% endif %}
+                  {% endfor %}
+    
+                </select>
+                
+                {% endif %}
+              </td>
+              </tr>
               <tr>
                 <td class="fw-bold">CIUDAD:</td>
                 <td><input type="text" class="form-control form-control-sm" name="city" id="" value="{{remission.city}}"></td>

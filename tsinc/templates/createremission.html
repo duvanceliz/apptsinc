@@ -5,7 +5,7 @@
 
     <div class="row">
       <div class="col-md-8">
-        <h4 class="display-6">NUEVA REMISIÓN, PARA {{project.name}}</h4>
+        <h4 class="display-6">NUEVA REMISIÓN, PARA {{project_from_offer.name}}</h4>
       </div>
       <div class="col-md-4"></div>
      
@@ -13,32 +13,8 @@
    
     <div class="row">
     
-      {% if messages %}
-          
-      {% for message in messages %}
-
-          {% if message.tags == 'success' %}
-          <div class="alert alert-success" role="alert">
-          {{ message }}
-          </div>
-          {% endif %}
-
-          {% if message.tags == 'info' %}
-          <div class="alert alert-warning" role="alert">
-          {{ message }}
-          </div>
-          {% endif %}
-          {% if message.tags == 'error' %}
-          <div class="alert alert-danger" role="alert">
-          {{ message }}
-          </div>
-          {% endif %}
-
-      {% endfor %}
-  
-  
-  {% endif %}
-       {% include 'components/remission_comp.html' with project=project %}
+      {% include 'components/alert.html'%}
+      {% include 'components/remission_comp.html' with project=project %}
 
        
        

@@ -70,7 +70,49 @@
       <table class="table table-light table-sm table-bordered">
        
         <tbody>
-         
+
+
+
+          <tr>
+            <td class="fw-bold">PROYECTO</td>
+            <td>
+              {% if from %}
+
+              <select class="form-select" aria-label="Default select example" name="project_id">
+              
+                {% if order %}
+                <option selected value="{{project_from_offer.id}}">{{order.project.name}}</option>
+                {% endif %}
+                {% for project in projects %}
+                 {% if not project.id == project_from_offer.id%}
+                <option value="{{project.id}}" >{{project.name}}</option>
+                {% endif %}
+                {% endfor %}
+  
+              </select>
+                      
+
+
+              {% else %}
+            <select class="form-select" aria-label="Default select example" name="project_id">
+              
+              {% if project_from_offer %}
+              <option selected value="{{project_from_offer.id}}">{{project_from_offer.name}}</option>
+              {% endif %}
+              {% for project in projects %}
+               {% if not project.id == project_from_offer.id%}
+              <option value="{{project.id}}" >{{project.name}}</option>
+              {% endif %}
+              {% endfor %}
+
+            </select>
+            
+            {% endif %}
+          </td>
+          </tr>
+
+          <tr>
+            
           <tr>
             <td class="fw-bold">Tracking:</td>
             <td><input type="text" class="form-control form-control-sm" value="{{order.tracking}}" name="tracking"></td>

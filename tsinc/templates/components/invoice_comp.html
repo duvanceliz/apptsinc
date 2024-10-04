@@ -1,0 +1,64 @@
+
+
+{% if from %}
+<form action="{% url 'update_invoice' invoice.id %}"  method="post">
+    {% csrf_token %}
+    <div class="row mb-2">
+        <div class="col-4"></div>
+        <div class="col-4"></div>
+        <div class="col-4 text-end">
+          <a href="{% url 'upload_invoice_file' invoice.id %}" class="btn btn-success btn-sm">Cargar archivo</a>
+
+            <button class="btn btn-success btn-sm">Guardar</button>
+        </div>
+    </div>
+
+{% else %}
+
+<form action="{% url 'create_invoice' project.id %}"  method="post">
+    {% csrf_token %}
+    <div class="row mb-2">
+        <div class="col-4"></div>
+        <div class="col-4"></div>
+        <div class="col-4 text-end">
+            <button class="btn btn-success btn-sm">Guardar</button>
+        </div>
+    </div>
+
+
+{% endif %}
+   
+<table class="table table-light table-sm table-bordered">
+ 
+    <tbody>
+      <tr>
+        <td class="fw-bold">FACTURA NO:</td>
+        <td><input type="0" value="{{invoice.number}}" class="form-control form-control-sm" name="number"></td>
+      </tr>
+      <tr>
+        <td class="fw-bold">PRECION TOTAL:</td>
+        <td><input type="0" value="{{invoice.total_price}}" class="form-control form-control-sm" name="total_price"></td>
+      </tr>
+      <tr>
+        <td class="fw-bold">IVA:</td>
+        <td><input type="0" value="{{invoice.iva}}" class="form-control form-control-sm" name="iva"></td>
+
+      </tr>
+      <tr>
+        <td class="fw-bold">RETENCIÓN FUENTE:</td>
+        <td><input type="0" value="{{invoice.source_retention}}" class="form-control form-control-sm" name="source_retention"></td>
+      </tr>
+
+      <tr>
+        <td class="fw-bold">RETENCIÓN ICA:</td>
+        <td><input type="0" value="{{invoice.ica_retention}}" class="form-control form-control-sm" name="ica_retention"></td>
+      </tr>
+      <tr>
+        <td class="fw-bold">FECHA:</td>
+        <td>{{invoice.date}}</td>
+      </tr>
+  
+
+    </tbody>
+  </table>
+</form>

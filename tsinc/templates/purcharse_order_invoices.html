@@ -32,8 +32,8 @@
                 <th scope="col">#</th>
                 <th scope="col">Creado por:</th>
                 <th scope="col">Proyecto</th>
-                <th scope="col">Numero de factura</th>
-                <th scope="col">Precio total</th>
+                <th scope="col">Orden</th>
+                <th scope="col">Precio Pagado</th>
                 <th scope="col">iva</th>
                 <th scope="col">Rete fuente</th>
                 <th scope="col">Rete ICA</th>
@@ -44,13 +44,13 @@
             </thead>
             <tbody>
               <tr>
-                {% for invoice in invoices %}
+                {% for invoice in order_invoices %}
     
                 <td scope="row">{{invoice.id}}</td>
                 <td>{{invoice.usersession}}</td>
-                <td>{{invoice.project}}</td>
-                <td>{{invoice.number}}</td>
-                <td>{{invoice.total_price|intcomma}}</td>
+                <td>{{invoice.order.project}}</td>
+                <td>{{invoice.order}}</td>
+                <td>{{invoice.value_paid}}</td>
                 <td>{{invoice.iva|intcomma}}</th>
                 <td>{{invoice.source_retention|intcomma}}</td>
                 <td>{{invoice.ica_retention|intcomma}}</td>
@@ -61,11 +61,8 @@
                       <i class="bi bi-gear"></i>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li><a class="dropdown-item" href="{% url 'show_invoice' invoice.id %}">Ver o Editar</a></li>
-                      <li><a class="dropdown-item" href="{% url 'duplicate_invoice' invoice.id %}">Duplicar</a></li>
-                      <li><a class="dropdown-item" href="{% url 'upload_invoice_file' invoice.id %}">Cargar archivo</a></li>
+                      <li><a class="dropdown-item" href="{% url 'create_order_invoice' invoice.order.id %}">Ver o Editar</a></li>
                       <!-- <li><a class="dropdown-item" href="">Descargar</a></li> -->
-                      <li><a class="dropdown-item" href="{% url 'delete_invoice' invoice.id %}" onclick="return confirm_delete_invoice()">Eliminar</a></li>
                     </ul>
                   </div>
                 

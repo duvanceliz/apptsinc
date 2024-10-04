@@ -123,6 +123,7 @@ class Category(models.Model):
 class Sheet(models.Model):
     name = models.CharField(max_length=100, default=None)
     project = models.ForeignKey(Project,on_delete=models.CASCADE, related_name='sheet')
+    tab = models.ForeignKey(Tabs,on_delete=models.CASCADE, related_name='tab', null=True)
     def __str__(self):
         return self.name
 
@@ -143,7 +144,7 @@ class License(models.Model):
     description = models.CharField(max_length=200, default=None)
     sheet = models.ForeignKey(Sheet,on_delete=models.CASCADE, related_name='license', null=True)
     def __str__(self):
-        return self.ref
+        return self.name
 
 
 class Divice(models.Model):
@@ -193,6 +194,8 @@ class ProductSent(models.Model):
     quantity = models.IntegerField(default=0)
     price = models.FloatField(default=0)
     remission = models.ForeignKey(Remission,on_delete=models.CASCADE,null=True)
+    tab = models.ForeignKey(Tabs,on_delete=models.CASCADE, null=True, blank = True)
+    section = models.IntegerField(default=0)
     discounted = models.BooleanField(default=False)
     def __str__(self):
         return self.product.product_name
@@ -202,6 +205,8 @@ class ProductBox(models.Model):
     quantity = models.IntegerField(default=0)
     price = models.FloatField(default=0)
     usersession = models.ForeignKey(User,on_delete=models.SET_NULL,null=True, blank=True)
+    tab = models.ForeignKey(Tabs,on_delete=models.CASCADE, null=True, blank = True)
+    section = models.IntegerField(default=0)
     def __str__(self):
         return self.product.product_name
 
@@ -222,6 +227,7 @@ class PurcharseOrder(models.Model):
     total_price = models.FloatField(default=0)
     total_quantity = models.IntegerField(default=0)
     usersession = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
+    project = models.ForeignKey(Project,on_delete=models.CASCADE, null=True, blank=True)
     progress = models.IntegerField(default=0)
     date = models.DateTimeField(default=timezone.now)
     def __str__(self):
@@ -288,6 +294,16 @@ class Invoice(models.Model):
         verbose_name = "Factura"
         verbose_name_plural = "Facturas"
 
+
+class ProductInvoice(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=0)
+    price = models.FloatField(default=0)
+    invoice = models.ForeignKey(Invoice,on_delete=models.CASCADE)
+    def __str__(self):
+        return self.product.product_name
+
+
 class OrderInvoice(models.Model):
     order = models.ForeignKey(PurcharseOrder,on_delete=models.CASCADE, null=True)
     value_paid = models.FloatField(default=0)
@@ -297,9 +313,6 @@ class OrderInvoice(models.Model):
     usersession = models.ForeignKey(User,on_delete=models.SET_NULL,
                                      null=True)
     date = models.DateTimeField(default=timezone.now)
-
-
-
 
 class Folder(models.Model):
     name = models.CharField(max_length=200)
@@ -339,9 +352,14 @@ class GeneratedOffer(models.Model):
     unit_value = models.FloatField(default=0, null=True, blank=True)
     total_value = models.FloatField(default=0,  null=True, blank=True)
     porcent = models.FloatField(default=0,null=True, blank=True)
+    to_purcharse_order = models.BooleanField(default=False)
     tab = models.ForeignKey(Tabs,on_delete=models.CASCADE, null=True, blank = True)
     project = models.ForeignKey(Project,on_delete=models.CASCADE, null=True, blank = True)
     section = models.IntegerField(default=0)
+
+
+
+    
 
 
 

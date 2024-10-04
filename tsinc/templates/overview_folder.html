@@ -1,4 +1,4 @@
-{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load static %} 
+{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load static %} {% load humanize %}
 
 <div class="container">
    
@@ -30,13 +30,27 @@
            </div>
            <div class="col-md-6 text-end">
 
+
+            {% if folder.project %}
+            <a href="{% url 'tabs' folder.project.id %}" class="btn btn-primary btn-sm">Ver Tableros</a>
+           
+            <a href="{% url 'generate_offer' folder.project.id %}" class="btn btn-primary btn-sm">Generar oferta</a>
+
+         
+            <a href="{% url 'edit_offer' folder.project.id %}" class="btn btn-primary btn-sm">Ver oferta</a>
+            {% endif %}
+
             <a href="{% url 'upload_folder_file' folder.id %}" class="btn btn-success btn-sm">Cargar archivo</a>
           
            </div>
 
         </div>
 
+        
+
         {% if folder.project %}
+
+        
 
             <div class="row mb-4">
 
@@ -45,21 +59,53 @@
                     {% include 'workspace_comp/project_info.html' with project=folder.project %}
         
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-4">
+             
+                </div>
+
+                <div class="col-md-4">
+                    
                 </div>
 
 
             </div>
+
+
+
+            {% include 'workspace_comp/info_total_offer.html' %}
+
+
+            
+
+
             <div class="row mb-4">
 
                 <div class="col-md-6">
                     
                     {% include 'workspace_comp/project_remissions.html' with remissions=remissions project=folder.project %}
-        
+
                 </div>
                 <div class="col-md-6">
                     {% include 'workspace_comp/project_invoices.html' with invoices=invoices project=folder.project %}
 
+                </div>
+              
+            </div>
+
+            <div class="row mb-4">
+
+                <div class="col-md-6">
+                    
+                    {% include 'workspace_comp/project_order.html' with orders=orders project=folder.project %}
+        
+                </div>
+                <div class="col-md-6">
+
+                   
+                
+                        {% include 'workspace_comp/project_documents.html' with files=files %}
+        
+                 
                 </div>
               
             </div>
@@ -78,21 +124,42 @@
                 {% include 'overview_comp/summary_folders.html' with children=children %}
     
             </div>
+            
           
         </div>
+
+        {% include 'workspace_comp/info_total_offer.html' %}
+
 
         {% endif %}
-        <div class="row mb-4">
-
-            <div class="col-md-12">
-                
-                {% include 'workspace_comp/project_documents.html' with files=files %}
-
-            </div>
-          
-        </div>
-
-   
+    
    
 </div>
+
+<script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const data = {
+  labels: [
+    'Total Facturado',
+    'Total Restante',
+  ],
+  datasets: [{
+    label: 'Total Facturado vs Restante',
+    data: [{{offer_info.total_invoiced}}, {{offer_info.total_value_remaining}}],
+    backgroundColor: [
+      '#1ca568',
+      '#d0b514',
+    ],
+    hoverOffset: 4
+  }]
+};
+
+
+const config = {
+  type: 'doughnut',
+  data: data,
+};
+new Chart(ctx, config);
+</script>
+
 {% endblock %}

@@ -25,12 +25,12 @@
         
           <table class="table table-hover table-light">
             <thead>
-              
-          
+            
               <tr>
                
                 <th scope="col" id="table-titles">Creado por:</th>
                 <th scope="col" id="table-titles">OP Code</th>
+                <th scope="col" id="table-titles">Proyecto</th>
                 <th scope="col" id="table-titles">Tracking</th>
                 <th scope="col" id="table-titles">Proveedor</th>
                 <th scope="col" id="table-titles">Precio(total)</th>
@@ -50,6 +50,7 @@
            
                 <td id="table-columns">{{order.usersession}}</td>
                 <td id="table-columns"><a href="{% url 'order_product_info' order.id %}">{{order.code}}</a></td>
+                <td id="table-columns">{{order.project.name}}</td>
                 <td id="table-columns">{{order.tracking}}</td>
                 <td id="table-columns">{{order.supplier}}</td>
                 {% if  not order.currency %}

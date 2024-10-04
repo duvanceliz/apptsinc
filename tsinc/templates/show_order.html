@@ -6,7 +6,8 @@
    {% include 'components/alert.html'%}
 
     <div class="row mb-4">
-      <h4 class="display-6">ORDEN DE COMPRA: {{order.code}}</h4>
+      <h4 class="display-6">ORDEN DE COMPRA: {{order.code}}, PROYECTO: <a href="{% url 'overview_folder' folder.id %}">{{order.project}}</a></h4>
+
     </div>
   <div class="row mb-4">
        <div class="col-md-2 text-center">
@@ -104,7 +105,6 @@
         <div class="accordion accordion-flush" id="accordionHVAC">
           {% for product in products %}
           
-          
           <div class="accordion-item">
             <div class="accordion-header d-flex" id="flush-heading{{product.product.model}}">
               <button class="accordion-button collapsed p-0 " type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{product.product.model}}" aria-expanded="false" aria-controls="flush-collapse{{product.product.model}}">
@@ -121,11 +121,9 @@
                           <th id="table-titles-two">Precio(und)</th>
                           <th id="table-titles-two">Entragado</th>
                           <th id="table-titles-two">Restante</th>
-
                         </tr>
                       </thead>
                       
-         
                       <tbody>
                         <tr>
                           

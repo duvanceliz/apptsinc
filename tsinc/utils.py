@@ -366,7 +366,7 @@ def count_value_row(sheet,col, start, end):
 
 def print_data(data,tab,sheet,project):
     
-    sheet_model = Sheet.objects.create(name = sheet.title, project = project)
+    sheet_model = Sheet.objects.create(name = sheet.title, project = project, tab=tab)
     divices = Divice.objects.filter(tab = tab, project = project).all()
     divices.delete()
     config_style_titles1 = {
@@ -859,7 +859,7 @@ def print_calc_supervirsor(sheet,tab,c_quantity,project):
                             'fill_color':"DAD7D7"
                         }
     
-    sheet_model = Sheet.objects.create(name= sheet.title, project = tab.project )
+    sheet_model = Sheet.objects.create(name= sheet.title, project = tab.project, tab=tab )
     
     total_points_model = Total_points.objects.filter(project = project).all()
         
@@ -879,7 +879,7 @@ def print_calc_supervirsor(sheet,tab,c_quantity,project):
     print_column(sheet,title,5,2,config_style_titles1)
     
     def save_licenses(licenses):
-        sheet_model = Sheet.objects.filter(name="Supervisor", project = tab.project).first()
+        sheet_model = Sheet.objects.filter(name="Supervisor", project = tab.project, tab=tab).first()
         for ls in licenses:
             License.objects.create(name=ls.model, description=ls.description, sheet=sheet_model)
 
@@ -1110,7 +1110,6 @@ def style_cells(cells, config=None):
 
 #funcion que guarda los item generado en la oferta
 def save_offer_product(tab_obj, project, product, measure, quantity, sale_price_usd, total_value, section, porcent=0):
-    
 
     if product and project or tab_obj: 
         generateoffer = GeneratedOffer.objects.filter(product=product, tab=tab_obj, project= project).first()
@@ -1119,7 +1118,6 @@ def save_offer_product(tab_obj, project, product, measure, quantity, sale_price_
 
 
     if generateoffer:
-
         generateoffer.product = product
         generateoffer.measure = measure
         generateoffer.quantity = quantity
@@ -1129,11 +1127,8 @@ def save_offer_product(tab_obj, project, product, measure, quantity, sale_price_
         generateoffer.project = project
         generateoffer.section = section
         generateoffer.porcent = porcent
-
-
+        generateoffer.save()
     else:
-
-        
         GeneratedOffer.objects.create(product=product,
                                         measure = measure,
                                         quantity=quantity,
@@ -1145,10 +1140,7 @@ def save_offer_product(tab_obj, project, product, measure, quantity, sale_price_
                                         porcent = porcent
                                         )
         
-
-
-
-def print_offer(sheet,project):
+def generate_offer_(project):
 
     sheets = Sheet.objects.filter(project = project).all()
     modules = Points.objects.filter(sheet__in = sheets)
@@ -1156,13 +1148,273 @@ def print_offer(sheet,project):
     divices = Divice.objects.filter(tab__in = tabs).all()
     licenses = License.objects.filter(sheet__in = sheets).all()
      
-
-    def clean_modules(modules):# quita el fila con "TOTAL_POINTS"
+    def clean_modules(modules):# quita la fila con "TOTAL_POINTS"
         return [ module for module in modules if not module.name == "TOTAL_POINTS"]
-
-    modules_cleaned = clean_modules(modules)
     
-    modules_cleaned += licenses
+
+    modules_cleaned = clean_modules(modules) # lista de modulos sin total_points
+
+
+
+    modules_cleaned += licenses #Agrega las licencias a los modulos controaldores/expansiones/supervisores
+
+    
+
+    def count_elements(data): # cuenta los elementos
+        return Counter(data)
+
+    modules_per_tab = [{ # organiza los modulos controaldores/expansiones/supervisores por tablero
+        "tab":sheet.tab.tab_name,
+        "related_items":set([module.name for module in modules_cleaned if sheet.id == module.sheet.id]),
+        "counter": count_elements([module.name for module in modules_cleaned if sheet.id == module.sheet.id])
+    }
+    for sheet in sheets
+    ]
+
+
+    divices_per_tab = [ # organiza los instrumentos sensores actuadores por tablero
+        {"tab":tab.tab_name,
+         "related_divices":set([ divice.model for divice in divices if tab.id == divice.tab.id ]),
+         "counter":count_elements([ divice.model for divice in divices if tab.id == divice.tab.id ])
+         }
+     for tab in tabs 
+    ]
+
+
+
+    measure = "UND"
+    len_item = 0
+
+    subtotal_usd_modules = 0
+    subtotal_usd_inst = 0
+    subtotal_usd_ipp = 0
+
+
+    # genera los controladores/expansiones/supervisores
+    for dict in modules_per_tab:
+        count = 0
+        tab_obj = Tabs.objects.filter(tab_name = dict.get('tab'),project=project ).first()
+    
+        for item in dict['related_items']:
+            
+            product = Product.objects.filter(model=item).first()
+
+            quantity = dict["counter"][f"{item}"]
+
+            sale_price_usd =  product.sale_price 
+
+            total_value = sale_price_usd * quantity
+
+            subtotal_usd_modules += total_value 
+
+            if tab_obj:
+                save_offer_product(tab_obj,project,product,measure,quantity,sale_price_usd,total_value,0)# guarda los datos generados en la base de datos
+    
+    subtotal_modules = GeneratedOffer.objects.filter(
+                                  measure = "SUBTOTAL CONTROLES/EXPANSIONES/SUPERVISOR",
+                                  project = project
+                                                              ).first()
+    if subtotal_modules:
+
+        subtotal_modules.total_value = subtotal_usd_modules
+        subtotal_modules.save()
+    
+    else:
+        GeneratedOffer.objects.create(
+                                  measure = "SUBTOTAL CONTROLES/EXPANSIONES/SUPERVISOR",
+                                  total_value = subtotal_usd_modules,
+                                  project = project,
+                                  section = 10
+                                  )
+    
+    # genera la los dispositivos sensores/ actuadores
+    for dict in divices_per_tab:
+     
+        tab_obj = Tabs.objects.filter(tab_name = dict.get('tab'),project=project ).first()
+
+        for item in dict['related_divices']:
+          
+            product = Product.objects.filter(model=item).first()  
+        
+            quantity = dict["counter"][f"{item}"]
+               
+            sale_price_usd =  product.sale_price
+
+            total_value = sale_price_usd * quantity
+
+            subtotal_usd_inst += total_value 
+                        
+            if tab_obj:
+                save_offer_product(tab_obj,project,product,measure,quantity,sale_price_usd,total_value,1)# guarda los datos generados en la base de datos
+
+    subtotal_inst = GeneratedOffer.objects.filter(
+                                  measure = "SUBTOTAL INSTRUMENTOS/COFRES",
+                                  project = project,
+                                  ).first()
+    
+    if subtotal_inst:
+
+        subtotal_inst.total_value = subtotal_usd_inst
+        subtotal_inst.save()
+    
+    else:
+        GeneratedOffer.objects.create(
+                                  measure = "SUBTOTAL INSTRUMENTOS/COFRES",
+                                  total_value = subtotal_usd_inst,
+                                  project = project,
+                                  section = 20
+                                  )
+
+    engi_pro = Product.objects.filter(code = "IP").first()
+    startup = Product.objects.filter(code="PO").first()
+    
+    engi_pro_startup = [engi_pro,startup]
+
+    subtotal_usd_offer = subtotal_usd_modules + subtotal_usd_inst
+
+    engi_pro_price_usd = subtotal_usd_offer * 0.1
+    
+    startup_price_usd = subtotal_usd_offer * 0.15
+    
+
+    for item in engi_pro_startup:
+   
+        product = Product.objects.filter(model=item.model).first()  
+               
+        quantity = 1
+
+        if item.code == "IP":
+            sale_price_usd = round(engi_pro_price_usd,2)
+        else:
+            sale_price_usd = round(startup_price_usd,2)
+
+
+        total_value = sale_price_usd * quantity
+        subtotal_usd_ipp += total_value
+        
+        
+        save_offer_product(None,project,product,measure,quantity,sale_price_usd,total_value,2)# guarda los datos generados en la base de datos
+
+    subtotal_ipp = GeneratedOffer.objects.filter(
+                                  measure = "SUBTOTAL INGENIERIA/PROGRAMACIÓN/PUESTA EN OPERACIÓN",
+                                  project = project,
+                                  ).first()
+    
+    if subtotal_ipp:
+
+        subtotal_ipp.total_value = subtotal_usd_ipp
+        subtotal_ipp.save()
+    
+    else:
+        GeneratedOffer.objects.create(
+                                  measure = "SUBTOTAL INGENIERIA/PROGRAMACIÓN/PUESTA EN OPERACIÓN",
+                                  total_value = subtotal_usd_ipp,
+                                  project = project,
+                                  section = 30
+                                  )
+    
+    subtotal = subtotal_usd_modules+subtotal_usd_inst+subtotal_usd_ipp
+
+    discount = round(subtotal * 0,2)
+    subtotal_d = subtotal - discount 
+    admi = round(subtotal_d*0.07,2)
+    unexpected = round(subtotal_d*0.03,2)
+    utility = round(subtotal_d*0.08,2)
+    new_subtotal = subtotal_d + admi + unexpected + utility 
+    iva = (new_subtotal * 0.19)
+    total_value =  round(new_subtotal + iva,2)
+
+    subtotals = [{
+        'title':"SUBTOTAL SUMINISTROS Y DESARROLLO ( USD )",
+        'value':subtotal,
+        'porcen':None
+    },
+    {
+        'title':"DESCUENTO",
+        'value':discount,
+        'porcen':"0%"
+    },
+    {
+        'title':"SUBTOTAL MENOS (-) DESCUENTO",
+        'value':subtotal_d,
+        'porcen':None
+    },
+    {
+        'title':"ADMINISTRACIÓN",
+        'value':admi,
+        'porcen':"7%"
+    },
+
+     {
+        'title':"IMPREVISTROS",
+        'value':unexpected,
+        'porcen':"3%"
+    },
+
+     {
+        'title':"UTILIDADES",
+        'value':utility,
+        'porcen':"8%"
+    },
+     {
+        'title':"SUBTOTAL COSTO DIRECTO + INDIRECTO",
+        'value':new_subtotal,
+        'porcen':None
+    },
+    {
+        'title':"IVA/UTILIDAD",
+        'value':iva,
+        'porcen':"19%"
+    },
+
+    {
+        'title':"VALOR TOTAL (USD) DÓLAR ESTADOUNIDENSE",
+        'value':total_value,
+        'porcen':None
+    },
+
+    ]
+
+    def convert_to_integer(string):
+        total = ''
+        if string != None :
+            for s in string:
+                if s.isdigit():
+                    total += s
+
+            total = int(total)        
+        else:
+            total = 0 
+            
+            
+        return total
+
+    def print_subtotals(array):
+        for item in array:
+            save_offer_product(None,project,None,item['title'],0,0,item['value'],3,convert_to_integer(item['porcen']))
+                     
+    print_subtotals(subtotals)
+
+
+
+
+def print_offer(sheet,project):
+
+    sheets = Sheet.objects.filter(project = project).all()
+    # modules = Points.objects.filter(sheet__in = sheets)
+    tabs = Tabs.objects.filter(project = project).all()
+    items_offer = GeneratedOffer.objects.filter(project = project, tab__isnull = False).all()
+    engi_pro_startup = GeneratedOffer.objects.filter(section = 2,project = project).all()
+    # divices = Divice.objects.filter(tab__in = tabs).all()
+    # licenses = License.objects.filter(sheet__in = sheets).all()
+    # def clean_modules(modules):# quita el fila con "TOTAL_POINTS"
+    #     return [ module for module in modules if not module.name == "TOTAL_POINTS"]
+    
+    # modules_cleaned = clean_modules(modules)
+    
+    # modules_cleaned += licenses
+
+
 
     cell_dimension = ["C","D","E","F","G","H","I"]
 
@@ -1191,7 +1443,6 @@ def print_offer(sheet,project):
                    "Fecha"
                    ]
    
-
     client_info_values = [
                     project.code,
                     # None,
@@ -1270,32 +1521,46 @@ def print_offer(sheet,project):
                 'fill': False,
                 'fill_color': "DAD7D7",
             })
+    
     print_column(sheet,["CONTROLADORES / EXPANSIONES / SUPERVISORES"],8,3,config_style_titles1)
     sheet.merge_cells('C8:I8')
     sheet.row_dimensions[8].height = 25
 
     def count_elements(data):
         return Counter(data)
+    
+    # modules_per_tab = []
+
+
+    # for tab in tabs:
+    #     tab_dict = {}
+    #     tab_dict['tab'] = tab
+    #     items = []
+    #     for item in items_offer:
+    #         if tab.id == item.tab.id:
+    #             if item.section == 0:
+    #                 items.append(item)
+    #     tab_dict['related_items'] = items
+    #     modules_per_tab.append(tab_dict)
+
 
     modules_per_tab = [{
-        "tab":sheet.name,
-        "related_items":set([module.name for module in modules_cleaned if sheet.id == module.sheet.id]),
-        "counter": count_elements([module.name for module in modules_cleaned if sheet.id == module.sheet.id])
+        "tab":tab,
+        "related_items":[item for item in items_offer if tab.id == item.tab.id and item.section == 0 ],
+        # "counter": count_elements([item for item in items_offer if tab.id == item.tab.id])
     }
-    for sheet in sheets
+    for tab in tabs
     ]
-
     
-
     divices_per_tab = [
-        {"tab":tab.tab_name,
-         "related_divices":set([ divice.model for divice in divices if tab.id == divice.tab.id ]),
-         "counter":count_elements([ divice.model for divice in divices if tab.id == divice.tab.id ])
+        {"tab":tab,
+        "related_items":[item for item in items_offer if tab.id == item.tab.id and item.section == 1 ],
+        #  "counter":count_elements([ divice.model for divice in divices if tab.id == divice.tab.id ])
          }
      for tab in tabs 
     ]
 
-    
+
     sheet.column_dimensions["E"].width = 60
     sheet.column_dimensions["C"].width = 5
     
@@ -1303,53 +1568,44 @@ def print_offer(sheet,project):
     len_item = 0
     for dict in modules_per_tab:
         count = 0
-        cell = sheet.cell(row=9+len_item, column=3, value=dict.get('tab')) #imprime el tablero
-        tab_obj = Tabs.objects.filter(tab_name = dict.get('tab'),project=project ).first()
+        cell = sheet.cell(row=9+len_item, column=3, value=(dict['tab']).tab_name) #imprime el tablero
+        # tab_obj = Tabs.objects.filter(tab_name = dict.get('tab'),project=project ).first()
         sheet.merge_cells(f"C{9+len_item}:I{9+len_item}")
         style_cells([cell],config_style_titles2)#le da estilo a la celda de tab
         print_column(sheet,titles,10+len_item,3,config_style_titles3)#imprime los titulos
+        # for i,item in enumerate(item['related_items'], start=11+len_item):
         for i,item in enumerate(dict['related_items'], start=11+len_item):
-            count+=1
-
          
+            count+=1
             cell_item = sheet.cell(row=i, column=3, value=count)#imprime el consecutivo
             style_cells([cell_item],config_style_titles3)
-            cell_model = sheet.cell(row=i, column=4, value=item)#imprime el modelo del producto
-
-            product = Product.objects.filter(model=item).first()
-
-            
-           
-            cell_description = sheet.cell(row=i, column=5, value=product.description)#imprime la descripción del producto
-           
+            cell_model = sheet.cell(row=i, column=4, value=item.product.model)#imprime el modelo del producto
+        #     # product = Product.objects.filter(model=item).first()
+            cell_description = sheet.cell(row=i, column=5, value=item.product.description)#imprime la descripción del producto
+        
             cell_und = sheet.cell(row=i, column=6, value="UND")# imprime la unidad de medida
             
-            quantity = dict["counter"][f"{item}"]
+            # quantity = item.quantity
 
-            cell_quantity = sheet.cell(row=i, column=7, value=quantity)# imprime la cantidad
-               
-            sale_price_usd =  product.sale_price 
-
-            cell_price_usd = sheet.cell(row=i, column=8, value=sale_price_usd)#imprime el valor del producto
+            cell_quantity = sheet.cell(row=i, column=7, value=item.quantity)# imprime la cantidad
             
-            total_value = sale_price_usd * quantity
+            # sale_price_usd =  item.unit_value
 
-            cell_total_value_usd = sheet.cell(row=i, column=9, value=total_value)#imprime el valor total de los producto
+            cell_price_usd = sheet.cell(row=i, column=8, value=item.unit_value)#imprime el valor del producto
             
-            if tab_obj:
-                
-                save_offer_product(tab_obj,project,product,measure,quantity,sale_price_usd,total_value,0)# guarda los datos generados en la base de datos
-        
+            # total_value = sale_price_usd * quantity
+
+            cell_total_value_usd = sheet.cell(row=i, column=9, value=item.total_value)#imprime el valor total de los producto
+            
             style_cells([cell_model,
-                         cell_description,
-                         cell_und,
-                         cell_quantity,
-                         cell_price_usd,
-                         cell_total_value_usd,
-        
-                         ],config_style_titles4)# le da estilos a las celdas
+                        cell_description,
+                        cell_und,
+                        cell_quantity,
+                        cell_price_usd,
+                        cell_total_value_usd,
+                        ],config_style_titles4)# le da estilos a las celdas
             
-        len_item += len(dict.get('related_items')) + 2     
+        len_item += len(dict['related_items']) + 2     
      
     subtotal_usd_modules = count_value_row(sheet,9,11,9 + len_item)
 
@@ -1361,7 +1617,6 @@ def print_offer(sheet,project):
                         None,
                         subtotal_usd_modules],9 + len_item,3,config_style_titles3)
     
-
     len_item_two = len_item + 3
 
     sheet.row_dimensions[9 + len_item_two-1].height = 25
@@ -1371,44 +1626,42 @@ def print_offer(sheet,project):
 
     for dict in divices_per_tab:
         count = 0
-        cell_tab = sheet.cell(row=9+len_item_two, column=3, value=dict.get('tab'))
+        cell_tab = sheet.cell(row=9+len_item_two, column=3, value=(dict.get('tab')).tab_name)
         sheet.merge_cells(f"C{9+len_item_two}:I{9+len_item_two}")
-        tab_obj = Tabs.objects.filter(tab_name = dict.get('tab'),project=project ).first()
-
+        # tab_obj = Tabs.objects.filter(tab_name = dict.get('tab'),project=project ).first()
         style_cells([cell_tab],config_style_titles2)
         print_column(sheet,titles,9+len_item_two+1,3,config_style_titles3)
-        for i,item in enumerate(dict['related_divices'], start=11+len_item_two):
+        for i,item in enumerate(dict['related_items'], start=11+len_item_two):
             count+=1
          
             cell_item = sheet.cell(row=i, column=3, value=count)
 
             style_cells([cell_item],config_style_titles3)
 
-            product = Product.objects.filter(model=item).first()  
-            divice = Divice.objects.filter(model=item).first() 
+            # product = Product.objects.filter(model=item).first()  
+            # divice = Divice.objects.filter(model=item).first() 
             # if not (item == "AI" or item == "BI" or item == "AO" or item == "BO"):
             
-            cell_model = sheet.cell(row=i, column=4, value=item)
+            cell_model = sheet.cell(row=i, column=4, value=item.product.model) # imprime el modelo del dispositivo
             
-            cell_description = sheet.cell(row=i, column=5, value=product.product_name)
+            cell_description = sheet.cell(row=i, column=5, value=item.product.product_name) # Imprime la descripción
            
-            cell_und = sheet.cell(row=i, column=6, value="UND")
+            cell_und = sheet.cell(row=i, column=6, value="UND") # imprime la unidad de medida
            
-            quantity = dict["counter"][f"{item}"]
+            # quantity = dict["counter"][f"{item}"]
 
-            cell_quantity = sheet.cell(row=i, column=7, value=quantity)
+            # quantity = item.quantity # cantidad del producto
+
+            cell_quantity = sheet.cell(row=i, column=7, value=item.quantity) # imprime la cantidad
                
-            sale_price_usd =  product.sale_price
+            # sale_price_usd =  item.product.sale_price # precio del producto
 
-            cell_price_usd = sheet.cell(row=i, column=8, value=sale_price_usd)
+            cell_price_usd = sheet.cell(row=i, column=8, value=item.unit_value)
 
-            total_value = sale_price_usd * quantity
+            # total_value = sale_price_usd * quantity # precio total 
             
-            cell_total_value_usd = sheet.cell(row=i, column=9, value=total_value)
+            cell_total_value_usd = sheet.cell(row=i, column=9, value=item.total_value) # imprime el precio total
             
-            if tab_obj:
-                save_offer_product(tab_obj,project,product,measure,quantity,sale_price_usd,total_value,1)# guarda los datos generados en la base de datos
-
             style_cells([cell_model,
                          cell_description,
                          cell_und,
@@ -1417,7 +1670,7 @@ def print_offer(sheet,project):
                          cell_total_value_usd,
                          ],config_style_titles4)
             
-        len_item_two += len(dict.get('related_divices')) + 2       
+        len_item_two += len(dict.get('related_items')) + 2       
     
     
     subtotal_usd_inst = count_value_row(sheet,9,11+len_item,9 +  len_item_two)
@@ -1440,54 +1693,47 @@ def print_offer(sheet,project):
     
     sheet.merge_cells(f"C{11+len_item_two}:I{11+len_item_two}")
     
-    engi_pro = Product.objects.filter(code = "IP").first()
-    startup = Product.objects.filter(code="PO").first()
+    # engi_pro = Product.objects.filter(code = "IP").first()
+    # startup = Product.objects.filter(code="PO").first()
     
     print_column(sheet,titles,12+len_item_two,3,config_style_titles3)
-    engi_pro_startup = [engi_pro,startup]
+    
+    # engi_pro_startup = [engi_pro,startup]
     
     count = 0
 
-    subtotal_usd_offer = subtotal_usd_modules + subtotal_usd_inst
+    # # subtotal_usd_offer = subtotal_usd_modules + subtotal_usd_inst
 
-    engi_pro_price_usd = subtotal_usd_offer * 0.1
+    # # engi_pro_price_usd = subtotal_usd_offer * 0.1
     
-    startup_price_usd = subtotal_usd_offer * 0.15
+    # # startup_price_usd = subtotal_usd_offer * 0.15
     
-
     for i,item in enumerate(engi_pro_startup,start=13+len_item_two):
         count+=1
         cell_item = sheet.cell(row=i, column=3, value=count)
+
         style_cells([cell_item],config_style_titles3)
 
+        cell_model = sheet.cell(row=i, column=4, value=item.product.model)
 
-        
-        cell_model = sheet.cell(row=i, column=4, value=item.model)
-
-        product = Product.objects.filter(model=item.model).first()  
+        # product = Product.objects.filter(model=item.model).first()  
        
-
-        cell_description = sheet.cell(row=i, column=5, value=item.description)
+        cell_description = sheet.cell(row=i, column=5, value=item.product.description)
         
         cell_und = sheet.cell(row=i, column=6, value="UND")
+
+
+        cell_quantity = sheet.cell(row=i, column=7, value=item.quantity)
+        # if item.code == "IP":
+        #     sale_price_usd = round(engi_pro_price_usd,2)
+        # else:
+        #     sale_price_usd = round(startup_price_usd,2)
+
+        cell_price_usd = sheet.cell(row=i, column=8, value=item.unit_value)
         
-        quantity = 1
-
-        cell_quantity = sheet.cell(row=i, column=7, value=quantity)
-        if item.code == "IP":
-            sale_price_usd = round(engi_pro_price_usd,2)
-        else:
-            sale_price_usd = round(startup_price_usd,2)
-
-        cell_price_usd = sheet.cell(row=i, column=8, value=sale_price_usd)
-
-        total_value = sale_price_usd * quantity
-        
-        cell_total_value_usd = sheet.cell(row=i, column=9, value= total_value)
+        cell_total_value_usd = sheet.cell(row=i, column=9, value= item.total_value)
         
     
-        save_offer_product(None,project,product,measure,quantity,sale_price_usd,total_value,2)# guarda los datos generados en la base de datos
-
         style_cells([cell_model,
                         cell_description,
                         cell_und,
@@ -1509,90 +1755,96 @@ def print_offer(sheet,project):
         subtotal_usd_ipp],
         13 + len_item_two + count,3,config_style_titles3)
     
-    subtotal = subtotal_usd_modules+subtotal_usd_inst+subtotal_usd_ipp
+    # subtotal = subtotal_usd_modules+subtotal_usd_inst+subtotal_usd_ipp
 
-    discount = round(subtotal * 0,2)
-    subtotal_d = subtotal - discount 
-    admi = round(subtotal_d*0.07,2)
-    unexpected = round(subtotal_d*0.03,2)
-    utility = round(subtotal_d*0.08,2)
-    new_subtotal = subtotal_d + admi + unexpected + utility 
-    iva = (new_subtotal * 0.19)
-    total_value =  round(new_subtotal + iva,2)
+    # # discount = round(subtotal * 0,2)
+    # # subtotal_d = subtotal - discount 
+    # # admi = round(subtotal_d*0.07,2)
+    # # unexpected = round(subtotal_d*0.03,2)
+    # # utility = round(subtotal_d*0.08,2)
+    # # new_subtotal = subtotal_d + admi + unexpected + utility 
+    # # iva = (new_subtotal * 0.19)
+    # # total_value =  round(new_subtotal + iva,2)
+
+    subtotal = GeneratedOffer.objects.filter(measure__icontains="SUBTOTAL SUMINISTROS Y DESARROLLO ( USD )",project= project).first()
+    descuento = GeneratedOffer.objects.filter(measure__icontains="DESCUENTO",project= project).first()
+    subtotal_descuento = GeneratedOffer.objects.filter(measure__icontains="SUBTOTAL MENOS (-) DESCUENTO",project= project).first()
+    admin = GeneratedOffer.objects.filter(measure__icontains="ADMINISTRACIÓN",project = project).first()
+    imprevistos = GeneratedOffer.objects.filter(measure__icontains="IMPREVISTROS",project = project).first()
+    utilidades = GeneratedOffer.objects.filter(measure__icontains="UTILIDADES",project = project).first()
+    subtotal_directo_indirecto = GeneratedOffer.objects.filter(measure__icontains="SUBTOTAL COSTO DIRECTO + INDIRECTO",project = project).first()
+    iva_utilidad = GeneratedOffer.objects.filter(measure__icontains="IVA/UTILIDAD",project = project).first()
+    valor_total = GeneratedOffer.objects.filter(measure__icontains="VALOR TOTAL (USD) DÓLAR ESTADOUNIDENSE",project = project).first()
+
 
     subtotals = [{
         'title':"SUBTOTAL SUMINISTROS Y DESARROLLO ( USD )",
-        'value':subtotal,
+        'value':subtotal.total_value,
         'porcen':None
     },
     {
         'title':"DESCUENTO",
-        'value':discount,
-        'porcen':"0%"
+        'value':descuento.total_value,
+        'porcen':f"{descuento.porcent}%"
     },
     {
         'title':"SUBTOTAL MENOS (-) DESCUENTO",
-        'value':subtotal_d,
+        'value':subtotal_descuento.total_value,
         'porcen':None
     },
     {
         'title':"ADMINISTRACIÓN",
-        'value':admi,
-        'porcen':"7%"
+        'value':admin.total_value,
+        'porcen':f"{admin.porcent}%"
     },
 
      {
         'title':"IMPREVISTROS",
-        'value':unexpected,
-        'porcen':"3%"
+        'value':imprevistos.total_value,
+        'porcen':f"{imprevistos.porcent}%"
     },
 
      {
         'title':"UTILIDADES",
-        'value':utility,
-        'porcen':"8%"
+        'value':utilidades.total_value,
+        'porcen':f"{utilidades.porcent}%"
     },
      {
         'title':"SUBTOTAL COSTO DIRECTO + INDIRECTO",
-        'value':new_subtotal,
+        'value':subtotal_directo_indirecto.total_value,
         'porcen':None
     },
     {
         'title':"IVA/UTILIDAD",
-        'value':iva,
-        'porcen':"19%"
+        'value':iva_utilidad.total_value,
+        'porcen':f"{iva_utilidad.porcent}%"
     },
 
     {
         'title':"VALOR TOTAL (USD) DÓLAR ESTADOUNIDENSE",
-        'value':total_value,
+        'value':valor_total.total_value,
         'porcen':None
     },
 
     ]
 
-    def convert_to_integer(string):
-        total = ''
-        if string != None :
-            for s in string:
-                if s.isdigit():
-                    total += s
+    # # def convert_to_integer(string):
+    # #     total = ''
+    # #     if string != None :
+    # #         for s in string:
+    # #             if s.isdigit():
+    # #                 total += s
 
-            total = int(total)        
-        else:
-            total = 0 
+    # #         total = int(total)        
+    # #     else:
+    # #         total = 0 
             
-            
-        return total
+    # #     return total
 
-        
     
     def print_subtotals(sheet,array):
         for i,item in enumerate(array,start=15):
-
-            save_offer_product(None,project,None,item['title'],0,0,item['value'],3,convert_to_integer(item['porcen']))
-                          
-
+                  
             print_column(sheet,[None,
                                 None,
                                 item['title'],
@@ -1746,7 +1998,7 @@ def print_remission(sheet,remission):
         remission.company,
         remission.date.strftime("%d-%m-%Y"),
         remission.order_number,
-        remission.project.name,
+        remission.contruction_site,
         remission.responsible
     ]
 

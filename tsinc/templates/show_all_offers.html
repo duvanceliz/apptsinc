@@ -108,10 +108,10 @@
                   <li><a class="dropdown-item" href="{% url 'tabs' project.id %}" >Ver Tableros</a></li>
                   <li><a class="dropdown-item" href="/editproject/?id={{project.id}}" >Editar</a></li>
                   <li><a class="dropdown-item" href="{% url 'download_points' project.id %}" >Descargar puntos</a></li>
+                  <li><a class="dropdown-item" href="{% url 'generate_offer' project.id %}" >Generar oferta</a></li>
                   <li><a class="dropdown-item" href="{% url 'download_offer' project.id %}" >Descargar oferta</a></li>
                   <li><a class="dropdown-item" href="{% url 'edit_offer' project.id %}" >Editar oferta</a></li>
                   <li><a class="dropdown-item" href="{% url 'modify_points' project.id %}" >Editar Puntos</a></li>
-                  <li><a class="dropdown-item" href="" >Descargar</a></li>
                   <li><a class="dropdown-item" href="{% url 'delete_obj' project.id %}" onclick="return verificar()">Eliminar</a></li>
                 </ul>
               </div>
