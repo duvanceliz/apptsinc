@@ -358,6 +358,20 @@ class GeneratedOffer(models.Model):
     section = models.IntegerField(default=0)
 
 
+class task(models.Model):
+    name = models.CharField(max_length=250)
+    user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
+    start_date = models.DateField(default=datetime.date.today)
+    due_date = models.DateField(default=datetime.date.today)
+    estimated_time = models.TimeField(default=datetime.datetime.now().time())    
+    priority = models.CharField(max_length=250)
+    percent_completed = models.IntegerField(default=0)
+    project = models.ForeignKey(Project,on_delete=models.CASCADE)
+    description = models.TextField(validators=[MaxLengthValidator(5000)]) 
+
+    
+
+
 
     
 

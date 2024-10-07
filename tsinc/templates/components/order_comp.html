@@ -81,10 +81,10 @@
               <select class="form-select" aria-label="Default select example" name="project_id">
               
                 {% if order %}
-                <option selected value="{{project_from_offer.id}}">{{order.project.name}}</option>
+                <option selected value="{{order.project.id}}">{{order.project.name}}</option>
                 {% endif %}
                 {% for project in projects %}
-                 {% if not project.id == project_from_offer.id%}
+                 {% if not project.id == order.project.id %}
                 <option value="{{project.id}}" >{{project.name}}</option>
                 {% endif %}
                 {% endfor %}

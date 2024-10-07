@@ -119,7 +119,9 @@ urlpatterns = [
     path('create_invoice_from_offer/<int:project_id>', views.create_invoice_from_offer, name='create_invoice_from_offer'),
     path('show_all_purcharse_order_invoices/', views.show_all_purcharse_order_invoices, name='show_all_purcharse_order_invoices'),
     path('download_categories/', views.download_categories, name='download_categories'),
-    path('upload_categories/', views.upload_categories, name='upload_categories')
+    path('upload_categories/', views.upload_categories, name='upload_categories'),
+    path('create_task/', views.create_task, name='create_task')
+
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

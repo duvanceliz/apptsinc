@@ -2226,19 +2226,20 @@ def upload_order_file(request,id):
             folder_name = "order_files"
             if order_file:
                 
-                
-                upload_file(file,file_without_space,folder_name,f"{order.code}")
+                upload_file(file,file_without_space,order_file.path)
 
                 messages.info(request,f"El archivo {order_file.name} ya existe, ha sido reemplazado")
                 return redirect(f"/uploadorderfile/{order.id}")
             
             else:
+                
                 order_file = File.objects.create(name = file_without_space,
-                                                            order=order,
+                                                        path = f"{folder_name}/{order.code}",
+                                                        order=order,
                                                             usersession = request.user
                                                             )  
             
-            upload_file(file,file_without_space,folder_name,f"{order.code}")
+            upload_file(file,file_without_space,order_file.path)
 
             messages.success(request,f"El archivo {order_file.name} ha sido cargado correctamente")
 
@@ -3467,6 +3468,12 @@ def upload_categories(request):
         form = UploadFile()
     return render(request, 'upload_categories.html', {'form': form})
 
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def create_task(request):
+
+    return render(request,"create_task.html") 
 
 
 

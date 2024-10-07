@@ -35,6 +35,7 @@ models_ = [ Project,
             OrderInvoice,
             Folder,
             File,
-            GeneratedOffer          
+            GeneratedOffer,
+            task        
            ]
 admin.site.register(models_)
