@@ -77,6 +77,8 @@
   <div class="row">
 
     <div class="col-md-4">
+
+      
       <table class="table bg-light table-bordered">
       
         <tbody>
@@ -103,6 +105,7 @@
        
         </tbody>
       </table>
+    
     </div>
     <div class="col-md-2">
       
@@ -130,6 +133,7 @@
         <div class="card-header text-center fw-bold" style="background: #c6c6c6;" >
           {{tab.tab_name}}
         </div>
+        <div class="table-responsive-md">
         <table class="table bg-light table-bordered">
           
           <thead>
@@ -224,6 +228,7 @@
             
           </tbody>
           </table>
+        </div>
           {% endfor %}
 
        </div>
@@ -233,7 +238,7 @@
         {% for item in generated_offer %}
 
         {% if item.section == 10 %}
-
+        <div class="table-responsive-md">
         <table class="table table-bordered " style="background: #c6c6c6;" >
           <tbody>
             <tr>
@@ -250,6 +255,7 @@
             </tr>
           </tbody>
         </table>
+      </div>
 
         {% endif %}
 
@@ -269,6 +275,7 @@
         <div class="card-header text-center fw-bold " style="background: #c6c6c6;">
           {{tab.tab_name}}
         </div>
+        <div class="table-responsive-md">
         <table class="table bg-light table-bordered">
           
           <thead>
@@ -362,6 +369,7 @@
             
           </tbody>
           </table>
+        </div>
           {% endfor %}
 
        </div>
@@ -371,7 +379,7 @@
         {% for item in generated_offer %}
 
         {% if item.section == 20 %}
-
+        <div class="table-responsive-md">
         <table class="table table-bordered " style="background: #c6c6c6;">
           <tbody>
             <tr>
@@ -388,6 +396,7 @@
             </tr>
           </tbody>
         </table>
+      </div>
 
         {% endif %}
 
@@ -404,7 +413,7 @@
         <div class="card-header text-center text-white fw-bold" style="background: #50afea;">
           INGENIERÍA / PROGRAMACIÓN / PUESTA EN OPERACIÓN
         </div>
-        
+        <div class="table-responsive-md">
         <table class="table bg-light table-bordered">
           
           <thead>
@@ -497,6 +506,7 @@
             
           </tbody>
           </table>
+        </div>
       
 
        </div>
@@ -505,7 +515,7 @@
         {% for item in generated_offer %}
 
         {% if item.section == 30 %}
-
+        <div class="table-responsive-md">
         <table class="table table-bordered " style="background: #c6c6c6;">
           <tbody>
             <tr>
@@ -523,7 +533,7 @@
             </tr>
           </tbody>
         </table>
-
+      </div>
         {% endif %}
 
         {% endfor %}

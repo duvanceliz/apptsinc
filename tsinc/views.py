@@ -101,6 +101,8 @@ def create_project(request):
                                          asesor = request.POST['asesor'], 
                                          usersession=request.user )
         
+        messages.success(request,"El proyecto se ha creado correctamente")
+        
         def create_folders(offers_folder):
 
             company_folder = Folder.objects.filter(name__icontains = project.company_name, parent = offers_folder ).first() # traesr la carpeta company
@@ -962,7 +964,6 @@ def modify_points_file(request,id):
 def delete_controller(request, id):
     controller = Points.objects.filter(id=id).first()
     sheet = controller.sheet
-    print(sheet.project)
     controller.delete()
     return redirect(f"/modifypoints/{sheet.project.id}?sheet={sheet.id}")
 
@@ -3401,8 +3402,66 @@ def show_all_purcharse_order_invoices(request):
 
 
     
+@login_required
+def download_categories(request):
+    # Consulta todos los datos del modelo
+    queryset = Category.objects.all().values()
+    # Convierte el queryset a un DataFrame de pandas
+    df = pd.DataFrame(queryset)
+
+    # Crear una respuesta HTTP con el tipo de contenido de Excel
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=tabla_categorias.xlsx'
+
+    # Guardar el DataFrame en el archivo Excel
+    with pd.ExcelWriter(response, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Categorias')
+    return response
 
 
+@user_passes_test(staff_required,login_url='/accessdenied/')    
+@login_required   
+def upload_categories(request):
+    referer = request.META.get("HTTP_REFERER")
+    if request.method == 'POST':
+        form = UploadFile(request.POST, request.FILES)
+    
+        if form.is_valid():
+            excel_file = request.FILES['file']
+            
+            df = pd.read_excel(excel_file, engine='openpyxl')
+
+            for _,row in df.iterrows():
+                id = int(row['id'])
+                name = row['name']
+                tag = row['tag']
+                parent_id = row['parent_id'] if pd.notna(row['parent_id']) else None
+            
+
+                category = Category.objects.filter(id= id).first()
+                
+                
+                if category:
+                    category.name = name
+                    category.tag = tag
+                    category.parent_id = parent_id
+                    category.save()
+                else:
+                        Category.objects.create(
+                            name = name,
+                            tag = tag,
+                            parent_id = parent_id, 
+                        )
+
+
+            messages.success(request, 'Categorias cargadas correctamente.')
+            return redirect(referer)
+        else: 
+            messages.error(request, 'Las categorias no se cargaron correctamente.')    
+            return redirect(referer)
+    else:
+        form = UploadFile()
+    return render(request, 'upload_categories.html', {'form': form})
 
 
 

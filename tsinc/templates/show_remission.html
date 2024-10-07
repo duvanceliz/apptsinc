@@ -19,7 +19,7 @@
         <a href="{% url 'carpage' %}" class=" btn btn-primary btn-sm mb-2">Ver Carrito</a>
         <a href="{% url 'add_car_remission' remission.id %}" class=" btn btn-success btn-sm mb-2">Agregar del carrito</a>
       
-    
+         <div class="table-responsive-md">
         <table class="table table-hover table-light">
           <thead>
             
@@ -52,6 +52,7 @@
             {%endfor%}
           </tbody>
         </table>
+      </div>
     </div>
      
 

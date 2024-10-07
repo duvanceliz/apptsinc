@@ -117,5 +117,9 @@ urlpatterns = [
     path('add_car_to_invoice/<int:id>', views.add_car_to_invoice, name='add_car_to_invoice'),
     path('delete_product_in_invoice/<int:id>', views.delete_product_in_invoice, name='delete_product_in_invoice'),
     path('create_invoice_from_offer/<int:project_id>', views.create_invoice_from_offer, name='create_invoice_from_offer'),
-    path('show_all_purcharse_order_invoices/', views.show_all_purcharse_order_invoices, name='show_all_purcharse_order_invoices')
+    path('show_all_purcharse_order_invoices/', views.show_all_purcharse_order_invoices, name='show_all_purcharse_order_invoices'),
+    path('download_categories/', views.download_categories, name='download_categories'),
+    path('upload_categories/', views.upload_categories, name='upload_categories')
+
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
