@@ -306,27 +306,81 @@ def upload_products(request):
                 original = None
 
             df = pd.read_excel(excel_file, engine='openpyxl')
-
-            if not original:
-
-                for _,row in df.iterrows():
-                    if  pd.notna(row['Nombre del Producto / Servicio (obligatorio)']) and pd.notna( row['Referencia de Fábrica']) and pd.notna(row['Modelo'] ) and pd.notna(row['Marca'] ):
-                        product_name = row['Nombre del Producto / Servicio (obligatorio)'] 
-                        factory_ref = row['Referencia de Fábrica'] 
-                        model = row['Modelo'] 
-                        brand = row['Marca'] 
-                        location = row['UBICACIÓN'] if pd.notna(row['UBICACIÓN']) else 'NA'
-                        quantity = row['CANTIDAD'] if pd.notna(row['CANTIDAD']) else 0
-                        description = row['ORBSERVACION']
-                        sale_price = row['Precio de venta 12'] if pd.notna(row['Precio de venta 12']) else 0
-                        purcharse_price = row['Precio de venta 11'] if pd.notna(row['Precio de venta 11']) else 0
-                        
-                        product_exist = Product.objects.filter(model = model, brand = brand).exists()
-                         
-                        code,min_stock,point,descrip = verify_code_point_des(description)
+            try:
+                if not original:
+            
+                    for _,row in df.iterrows():
+                        if  pd.notna(row['Nombre del Producto / Servicio (obligatorio)']) and pd.notna( row['Referencia de Fábrica']) and pd.notna(row['Modelo'] ) and pd.notna(row['Marca'] ):
+                            product_name = row['Nombre del Producto / Servicio (obligatorio)'] 
+                            factory_ref = row['Referencia de Fábrica'] 
+                            model = row['Modelo'] 
+                            brand = row['Marca'] 
+                            location = row['UBICACIÓN'] if pd.notna(row['UBICACIÓN']) else 'NA'
+                            quantity = row['CANTIDAD'] if pd.notna(row['CANTIDAD']) else 0
+                            description = row['ORBSERVACION']
+                            sale_price = row['Precio de venta 12'] if pd.notna(row['Precio de venta 12']) else 0
+                            purcharse_price = row['Precio de venta 11'] if pd.notna(row['Precio de venta 11']) else 0
                             
+                            product_exist = Product.objects.filter(model = model, brand = brand).exists()
+                            
+                            code,min_stock,point,descrip = verify_code_point_des(description)
+                                
+                            if product_exist:
+                                product= Product.objects.filter(model=model, brand=brand).first()
+                                product.product_name = product_name
+                                product.factory_ref = factory_ref
+                                product.model = model
+                                product.brand = brand
+                                product.location = location
+                                product.quantity = quantity
+                                product.sale_price = sale_price
+                                product.purcharse_price = purcharse_price
+                                product.code = code
+                                product.point = point
+                                product.description = descrip
+                                product.min_stock = min_stock
+                                product.save()
+                            
+                            else:
+                                                            
+                                product = Product.objects.create(
+                                product_name=product_name,
+                                factory_ref=factory_ref,
+                                model=model,
+                                brand=brand,
+                                location=location,
+                                quantity= quantity,
+                                sale_price = sale_price,
+                                purcharse_price = purcharse_price,
+                                code = code,
+                                point = point,
+                                min_stock = min_stock,
+                                description=descrip,
+                                )
+                    messages.success(request, 'Productos subidos y creados exitosamente.')
+                else:
+
+                    for _,row in df.iterrows():
+                        code = row['code'] if pd.notna(row['code']) else 'NA'
+                        product_name = row['product_name']
+                        factory_ref = row['factory_ref']
+                        model = row['model']
+                        sale_price = row['sale_price']
+                        purcharse_price = row['purcharse_price']
+                        brand = row['brand']
+                        location = row['location'] if pd.notna(row['location']) else 'NA'
+                        quantity = row['quantity']
+                        min_stock = row['min_stock']
+                        point = row['point'] if pd.notna(row['point']) else 'NA'
+                        observation = row['observation'] if pd.notna(row['observation']) else 'NA'
+                        description = row['description'] if pd.notna(row['description']) else 'NA'
+                        iva = row['iva']
+
+                        product_exist = Product.objects.filter(model = model, brand = brand ).exists()
+
                         if product_exist:
-                            product= Product.objects.filter(model=model, brand=brand).first()
+                            product= Product.objects.get(model=model, brand=brand)
+                            product.code = code
                             product.product_name = product_name
                             product.factory_ref = factory_ref
                             product.model = model
@@ -335,84 +389,34 @@ def upload_products(request):
                             product.quantity = quantity
                             product.sale_price = sale_price
                             product.purcharse_price = purcharse_price
-                            product.code = code
                             product.point = point
-                            product.description = descrip
                             product.min_stock = min_stock
+                            product.observation = observation
+                            product.description = description
+                            product.iva = iva
                             product.save()
-                        
                         else:
-                                                        
                             product = Product.objects.create(
-                            product_name=product_name,
-                            factory_ref=factory_ref,
-                            model=model,
-                            brand=brand,
-                            location=location,
-                            quantity= quantity,
-                            sale_price = sale_price,
-                            purcharse_price = purcharse_price,
-                            code = code,
-                            point = point,
-                            min_stock = min_stock,
-                            description=descrip,
+                                    code = code,
+                                    product_name = product_name,
+                                    factory_ref = factory_ref,
+                                    model = model,
+                                    brand = brand,
+                                    location = location,
+                                    quantity = quantity,
+                                    sale_price = sale_price,
+                                    purcharse_price = purcharse_price,
+                                    min_stock = min_stock,
+                                    description = description,
+                                    point = point,
+                                    iva = iva,
                             )
-                messages.success(request, 'Productos subidos y creados exitosamente.')
-            else:
-                for _,row in df.iterrows():
-                    code = row['code'] if pd.notna(row['code']) else 'NA'
-                    product_name = row['product_name']
-                    factory_ref = row['factory_ref']
-                    model = row['model']
-                    sale_price = row['sale_price']
-                    purcharse_price = row['purcharse_price']
-                    brand = row['brand']
-                    location = row['location'] if pd.notna(row['location']) else 'NA'
-                    quantity = row['quantity']
-                    min_stock = row['min_stock']
-                    point = row['point'] if pd.notna(row['point']) else 'NA'
-                    observation = row['observation'] if pd.notna(row['observation']) else 'NA'
-                    description = row['description'] if pd.notna(row['description']) else 'NA'
-                    iva = row['iva']
-
-                    product_exist = Product.objects.filter(model = model, brand = brand ).exists()
-
-                    if product_exist:
-                        product= Product.objects.get(model=model, brand=brand)
-                        product.code = code
-                        product.product_name = product_name
-                        product.factory_ref = factory_ref
-                        product.model = model
-                        product.brand = brand
-                        product.location = location
-                        product.quantity = quantity
-                        product.sale_price = sale_price
-                        product.purcharse_price = purcharse_price
-                        product.point = point
-                        product.min_stock = min_stock
-                        product.observation = observation
-                        product.description = description
-                        product.iva = iva
-                        product.save()
-                    else:
-                         product = Product.objects.create(
-                                code = code,
-                                product_name = product_name,
-                                factory_ref = factory_ref,
-                                model = model,
-                                brand = brand,
-                                location = location,
-                                quantity = quantity,
-                                sale_price = sale_price,
-                                purcharse_price = purcharse_price,
-                                min_stock = min_stock,
-                                description = description,
-                                point = point,
-                                iva = iva,
-                         )
 
 
-                messages.success(request, 'Productos subidos y creados exitosamente.')
+                    messages.success(request, 'Productos subidos y creados exitosamente.')
+            except:
+                messages.error(request, 'Algo ha salido mal asegurese de que la tabla este contruida correctamente, no tenga parametro vacios, y marcar la casilla original si la tabla es la original de la base de datos.')
+
 
                 
             # messages.error(request, 'No se pudieron subir los productos a la base de datos, porfavor verifica que tu tabla tenga todos los parametros esten llenos')
