@@ -15,7 +15,7 @@
       </div>
     </div>
 {% else %}
-<form action="{% url 'create_remission' project_from_offer.id %}" method="post">
+<form action="{% url 'create_remission' %}" method="post">
     {% csrf_token %}
     <div class="row mb-3">
         <div class="col-md-4"></div>
@@ -42,7 +42,7 @@
   
                   <select class="form-select" aria-label="Default select example" name="project_id">
                     {% if remission %}
-                    <option selected value="{{project_from_offer.id}}">{{remission.project.name}}</option>
+                    <option selected value="{{remission.project.id}}">{{remission.project.name}}</option>
                     {% endif %}
                     {% for project in projects %}
                     {% if not project.id == remission.project.id %}

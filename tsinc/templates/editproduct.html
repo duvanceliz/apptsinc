@@ -11,31 +11,7 @@
                     EDITAR PRODUCTO
                 </div>
                 <div class="card-body">
-                    {% if messages %}
-          
-                        {% for message in messages %}
-
-                            {% if message.tags == 'success' %}
-                            <div class="alert alert-success" role="alert">
-                            {{ message }}
-                            </div>
-                            {% endif %}
-
-                            {% if message.tags == 'info' %}
-                            <div class="alert alert-warning" role="alert">
-                            {{ message }}
-                            </div>
-                            {% endif %}
-                            {% if message.tags == 'error' %}
-                            <div class="alert alert-danger" role="alert">
-                            {{ message }}
-                            </div>
-                            {% endif %}
-
-                        {% endfor %}
-                    
-                    
-                    {% endif %}
+                    {% include 'components/alert.html' %}
                      <form method="post">
                         {% csrf_token %}
 
@@ -101,6 +77,10 @@
                             <input type="text" class="form-control" id="exampleFormControlInput8" value="{{product.min_stock}}" name="min_stock">
                           </div>
                           <div class="col-md-6">
+                            <label for="exampleFormControlInput8" class="form-label">U. Medida</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput8" value="{{product.measure}}" name="measure">
+                          </div>
+                          <div class="col-md-12">
                             <label for="exampleFormControlInput8" class="form-label">OBSERVACIÓN</label>
                             <input type="text" class="form-control" id="exampleFormControlInput8" value="{{product.observation}}" name="observation">
                           </div>

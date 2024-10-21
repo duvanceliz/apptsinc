@@ -37,6 +37,7 @@ urlpatterns = [
     path('editproject/', views.edit_project, name='edit_project'),
     path('deleteproduct/<int:id>', views.delete_product, name='delete_product'),
     path('editproduct/<int:id>', views.edit_product, name='edit_product'),
+    path('createremission/', views.create_remission, name='create_remission'),
     path('createremission/<int:project_id>', views.create_remission, name='create_remission'),
     path('addproducttobox/<int:id>', views.add_product_to_box, name='add_product_to_box'),
     path('addproduc/<int:id>', views.add_product, name='add_product'),
@@ -109,8 +110,8 @@ urlpatterns = [
     path('save_offer_item/', views.save_offer_item, name='save_offer_item'),
     path('add_from_car_to_offer/<int:section>/<int:tab_id>/<int:project_id>', views.add_from_car_to_offer, name='add_from_car_to_offer'),
     path('generate_offer/<int:id>', views.generate_offer, name='generate_offer'),
-    path('add_from_car_to_offer/<int:section>', views.add_from_car_to_offer, name='add_from_car_to_offer'),
-    path('add_from_car_to_offer/<int:section>/<int:project_id>', views.add_from_car_to_offer, name='add_from_car_to_offer'),
+    # path('add_from_car_to_offer/<int:section>', views.add_from_car_to_offer, name='add_from_car_to_offer'),
+    path('add_from_car_to_offer/<int:project_id>/<int:parent_id>', views.add_from_car_to_offer, name='add_from_car_to_offer'),
     path('change_to_purcharse_order/', views.change_to_purcharse_order, name='change_to_purcharse_order'),
     path('create_order_from_offer/<int:project_id>', views.create_order_from_offer, name='create_order_from_offer'),
     path('create_remission_from_offer/<int:project_id>', views.create_remission_from_offer, name='create_remission_from_offer'),
@@ -120,7 +121,14 @@ urlpatterns = [
     path('show_all_purcharse_order_invoices/', views.show_all_purcharse_order_invoices, name='show_all_purcharse_order_invoices'),
     path('download_categories/', views.download_categories, name='download_categories'),
     path('upload_categories/', views.upload_categories, name='upload_categories'),
-    path('create_task/', views.create_task, name='create_task')
+    path('create_task/', views.create_task, name='create_task'),
+    path('custom_offer/', views.custom_offer, name='custom_offer'),
+    path('productos/', views.obtener_productos, name='obtener_productos'),
+    path('add_section/<int:project_id>', views.add_section, name='add_section'),
+    path('delete_offer_item/<int:id>', views.delete_offer_item, name='delete_offer_item'),
+    path('add_subtitle/<int:project_id>/<int:parent_id>', views.add_subtitle, name='add_subtitle'),
+
+
 
 
 

@@ -1,0 +1,172 @@
+{% for section in sections %}
+      <div class="card-header d-flex" style="background: #50afea;">
+       
+        <input type="text" value="{{section.title}}" data-id="{{section.id}}" class="form-control text-center fw-bold text-white" style="background: #50afea;"  name="title" id="sections">
+        
+        <div class="dropdown d-inline">
+          <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+            <i class="bi bi-gear"></i>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item"  href="{% url 'delete_offer_item' section.id %}">Eliminar</a></li>
+            <li><a class="dropdown-item"  href="{% url 'add_subtitle' project.id section.id %}">Agregar Subtitulo</a></li>
+          </ul>
+        </div>
+      </div> 
+        {% for tab in generated_tab %}
+           
+          {% if section == tab.parent %}
+           <div class="card-header d-flex" style="background: #c6c6c6;">
+            <input type="text" value="{{tab.title}}" data-id="{{tab.id}}" id="title_1" class="form-control text-center fw-bold" style="background: #c6c6c6;" name="title">
+
+            <a href="{% url 'add_from_car_to_offer' tab.project.id tab.id %}" class="btn btn-success btn-sm mb-2">
+              <i class="bi bi-cart-plus"></i>
+            </a>
+            <a class="btn btn-light btn-sm"  href="{% url 'delete_offer_item' tab.id %}"><i class="bi bi-trash"></i></a>
+
+          </div>
+          {% for item in generated_offer %}
+
+         
+      
+          {% if item.parent == tab %}
+
+          <div class="table-responsive-md">
+            <table class="table bg-light table-bordered table-sm">
+              
+              <thead>
+                <tr>
+                  <th>STOCK</th>
+                  <th>MODELO</th>
+                  <th>DESCRIPCIÓN</th>
+                  <th>UNIDAD</th>
+                  <th>CANT</th>
+                  <th>VALOR_UNIDAD</th>
+                  <th>VALOR_TOTAL</th>
+                  <th>Env</th>
+                  <th>Rest</th>
+                  <th></th>
+                 
+                </tr>
+              </thead>
+              
+              <tbody>
+
+                <tr>
+                  {% if  item.product.quantity >= item.quantity %}
+                  <td style="width: 10px;" class="text-center">{{ item.product.quantity }}<i class="bi bi-clipboard-check text-success"></i></td>
+                  {% else %}
+
+                  <td style="width: 10px;" class="text-center">{{ item.product.quantity }}<i class="bi bi-clipboard-x text-danger"></i></td>
+
+                  {% endif %}
+
+                  <td style="width: 200px;"> <a href="{% url 'product_info' item.product.id %}" >{{item.product.model}}</a>  </td>
+                  <td style="width: 300px;">
+                    <!-- <input type="text" value="{{item.description}}" class="form-control form-control-sm" data-id="{{item.id}}" name="description" style="height: 50px;" > -->
+                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" data-id="{{item.id}}" name="description">{{item.description}}</textarea>
+
+                  </td>
+                  <td style="width: 50px;">
+                    <input type="text" value="{{item.measure}}" class="form-control form-control-sm" data-id="{{item.id}}" name="measure" >
+       
+                  </td>
+                  <td style="width: 50px;">
+                    <input type="number" value="{{item.quantity}}" class="form-control form-control-sm" data-id="{{item.id}}" name="quantity" >
+       
+                  </td>
+                  <td style="width: 50px;">
+                    <input type="number" value="{{item.unit_value}}" class="form-control form-control-sm" data-id="{{item.id}}" name="unit_value">
+       
+                  </td>
+                  <td style="width: 50px;">
+                    <input type="number" value="{{item.total_value}}" class="form-control form-control-sm" data-id="{{item.id}}" data-parent="{{section.id}}" name="total_value" id="product">
+       
+                  </td>
+
+                    {% for  product_info in products_info %}
+                    {% if item.parent == product_info.parent %}
+                    {% if item.product == product_info.product %}
+
+                    <td style="width: 50px;">
+                        {{ product_info.delivered }}
+                    
+                    </td>
+
+                    {% if product_info.remaining == 0 %}
+                    <td style="width: 50px;" class="bg-success text-white text-center">
+                        
+                        {{ product_info.remaining }}
+                        
+                    </td>
+
+                    {% else %}
+
+                    <td style="width: 50px;" class="bg-secondary text-white text-center">
+                        
+                        {{ product_info.remaining }}
+                        
+                    </td>
+
+                    {% endif %}
+
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+
+                        <td style="width: 80px;">
+                            
+                            {% if not item.to_purcharse_order %}
+                            <button class="btn btn-success btn-sm" id="btn-add-to-order" data-id="{{item.id}}"><i class="bi bi-bag-plus"></i></button>
+                            {% else %}
+                            <button class="btn btn-danger btn-sm" id="btn-add-to-order" data-id="{{item.id}}"><i class="bi bi-bag-plus"></i></button>
+                            {% endif %}
+
+                            <a href="{% url 'delete_offer_item' item.id %}" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a>
+
+                        </td>
+                
+                </tr>
+
+              </tbody>
+            </table>
+         </div>
+
+         
+
+          {% endif %}
+                    
+
+          {% endfor %}
+
+          
+          {% endif %}
+
+
+        {% endfor %}
+
+      {% for subtotal in subtotals %}
+        {% if subtotal.parent == section %}
+        <div class="table-responsive-md">
+          <table class="table table-bordered " style="background: #c6c6c6;" >
+            <tbody>
+              <tr>
+                
+                <td style="width: 200px;" >{{subtotal.measure}}</td>
+                <td style="width: 300px;"></td>
+                <td style="width: 50px;"></td>
+                <td style="width: 50px;"></td>
+                <td style="width: 50px;"></td>
+                <td style="width: 100px;">
+                  <input type="number" value="{{subtotal.total_value|floatformat:2}}" class="form-control" data-id="{{subtotal.id}}" data-parent="{{section.id}}"  id="subtotals" name="total_value">
+                </td>
+                <td style="width: 80px;"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+      {% endfor %}
+       
+     
+     {% endfor %}

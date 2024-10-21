@@ -141,7 +141,7 @@
     const data = {
   labels: [
     'Total Facturado',
-    'Total Restante',
+    'Total Pendiente',
   ],
   datasets: [{
     label: 'Total Facturado vs Restante',
@@ -160,6 +160,33 @@ const config = {
   data: data,
 };
 new Chart(ctx, config);
+
+
+const ctx2 = document.getElementById('myChart2').getContext('2d');
+    const data2 = {
+  labels: [
+    'Total Facturado',
+    'Total Pendiente',
+  ],
+  datasets: [{
+    label: 'Total Facturado vs Restante',
+    data: [{{total_info_order.total_invoiced}}, {{total_info_order.total_remaining}}],
+    backgroundColor: [
+      '#2e9195',
+      '#e04c89',
+    ],
+    hoverOffset: 4
+  }]
+};
+
+
+const config2 = {
+  type: 'doughnut',
+  data: data2,
+};
+new Chart(ctx2, config2);
 </script>
+
+
 
 {% endblock %}

@@ -1041,14 +1041,36 @@ def generate_offer(request,id):
     project =Project.objects.get(id=id)
     tabs = Tabs.objects.filter(project = project).exists()
 
+    def verify_and_create(array):
+        for item in array:
+            i= GeneratedOffer.objects.filter(measure__icontains=item,project= project).first()
+            if not i:
+                GeneratedOffer.objects.create(measure=item,project=project)
+                
     if not tabs:
-        messages.error(request,"Debe generar primero tableros de control!")
+        messages.info(request,"La oferta no tiene tableros de control creados!")
+       
+        array = [
+            "SUBTOTAL SUMINISTROS Y DESARROLLO ( USD )",
+            "DESCUENTO",
+            "SUBTOTAL MENOS (-) DESCUENTO",
+            "ADMINISTRACIÓN",
+            "IMPREVISTROS",
+            "UTILIDADES",
+            "SUBTOTAL COSTO DIRECTO + INDIRECTO",
+            "IVA/UTILIDAD",
+            "VALOR TOTAL (USD) DÓLAR ESTADOUNIDENSE"
+        ]
+
+        verify_and_create(array)
+
+    
         return redirect(referer)
     try:
         generate_offer_(project)
         messages.success(request,"La oferta ha sido generada correctamente")
-    except:
-        messages.error(request,"Algo ha salido mal asegurese de haber generados los puntos de control")
+    except TypeError as e :
+        messages.error(request,f"Algo ha salido mal asegurese de haber generados los puntos de control, error:{e}")
     
     return redirect(referer)
 
@@ -1109,6 +1131,7 @@ def edit_product(request,id):
         point = request.POST.get('point')
         observation = request.POST.get('observation')
         description = request.POST.get('description')
+        measure = request.POST.get('measure')
         min_stock = request.POST.get('min_stock')
         product.code = code
         product.product_name = product_name
@@ -1123,6 +1146,7 @@ def edit_product(request,id):
         product.observation = observation
         product.description = description
         product.min_stock = min_stock
+        product.measure = measure
         product.save()
         messages.success(request,f"Cambios realizados correctamente")
         return redirect(f'/editproduct/{product.id}')
@@ -1189,7 +1213,7 @@ def increase_code():
 
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
-def create_remission(request,project_id): 
+def create_remission(request,project_id = None): 
    
     project = Project.objects.filter(id=project_id).first()
     projects = Project.objects.all()
@@ -1225,7 +1249,7 @@ def create_remission(request,project_id):
                                             supplier = request.POST['supplier'],
                                             responsible = request.POST['responsible'],
                                             observation = request.POST['observation'],
-                                            project = project,
+                                            project_id = request.POST.get('project_id'),
                                             usersession = request.user
                                             )
         products = []
@@ -1841,45 +1865,62 @@ def entry_info(request,id):
 
 
 
-@user_passes_test(superuser_required,login_url='/accessdenied/')
-@login_required
-def order_statictics(request): 
-    # data = {
-    #     'labels': ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
-    #     'values': [10, 20, 30, 40, 50]
-    # }
-    most_recent_entry = OrderEntry.objects.all().order_by("-date")[:5]
-    most_recent_order = PurcharseOrder.objects.all().order_by("-date")[:5]
-    purcharseorders = PurcharseOrder.objects.all()
-    entrys = OrderEntry.objects.all()
+def get_total_info_order(purcharseorders, entrys):
     currency = Trm.objects.filter(currency="usd").first()
+
+    total_invoiced_ = OrderInvoice.objects.filter(order__in = purcharseorders)
 
     total_price = 0
     total_delivered = 0
-
+    total_invoiced = 0
 
     for order in purcharseorders:
-        if order.progress != 100:
-            if order.currency:
-                if currency.value > 0:
-                    total_price += round(order.total_price / currency.value,2)
-            else:
-                total_price += order.total_price
+        if order.currency:
+            if currency.value > 0:
+                total_price += round(order.total_price / currency.value,2)
+        else:
+            total_price += order.total_price
 
-            for entry in entrys:
-                if order.id == entry.order.id:
-                    if order.currency:
-                        total_delivered += (entry.product.price/currency.value) * entry.quantity
-                    else:
-                        total_delivered += entry.product.price * entry.quantity
+        for entry in entrys:
+            if order.id == entry.order.id:
+                if order.currency:
+                    total_delivered += (entry.price/currency.value) * entry.quantity
+                else:
+                    total_delivered += entry.price * entry.quantity
+
+    for orderinvoice in total_invoiced_:
+        total_invoiced += orderinvoice.value_paid
+
     
-    total_delivered = round(total_delivered,2)
+        
+
+    total_info ={
+        'total_orders': round(total_price,2),
+        'total_delivered':round(total_delivered,2),
+        'total_remaining': round(total_price - total_delivered,2),
+        'total_invoiced': round(total_invoiced,2),
+        'total_remaining_invoiced': round(total_price - total_invoiced,2),
+
+    }
+
+    return total_info
+
+
+@user_passes_test(superuser_required,login_url='/accessdenied/')
+@login_required
+def order_statictics(request):
+
+  
+    most_recent_entry = OrderEntry.objects.all().order_by("-date")[:5]
+    most_recent_order = PurcharseOrder.objects.all().order_by("-date")[:5]
+    purcharseorders = PurcharseOrder.objects.exclude(progress=100)
+    entrys = OrderEntry.objects.filter(order__in = purcharseorders)
+  
     # difference = final_date - intial_date
     # delivery_time = difference.days
 
+    total_info = get_total_info_order(purcharseorders,entrys)
 
-
-    # pending_orders = [ order for order in purcharseorders if order.progress != 100]
 
     pending_orders = [{
         'order':order,
@@ -1889,12 +1930,7 @@ def order_statictics(request):
     ][:5]
 
    
-    total_info ={
-        'total_orders': round(total_price,2),
-        'total_delivered':round(total_delivered,2),
-        'total_remaining': round(total_price - total_delivered,2)
-
-    }
+    
     return render(request,"orderstatictics.html",{
                                                   'recent_entrys':most_recent_entry,
                                                   'recent_orders':most_recent_order,
@@ -2671,12 +2707,18 @@ def overview_folder(request,id):
         invoice_file = File.objects.filter(invoice__project = project)[:5]
         folder_file = File.objects.filter(folder__project = project)[:5]
         generated_offer = GeneratedOffer.objects.filter(project= project).exists()
+        pending_orders = PurcharseOrder.objects.filter(project  = project)
+        entrys = OrderEntry.objects.filter(order__in = pending_orders)
+
+        total_info_order = get_total_info_order(pending_orders,entrys)
+
         files = sorted_files(remission_files)
         files += sorted_files(invoice_file)
         files += sorted_files(folder_file)
         offer_info = calc_offer_info(project)
 
     else:
+        total_info_order = {}
         offer_info = {}
         project = None
         orders = None
@@ -2708,7 +2750,8 @@ def overview_folder(request,id):
         'children':children,
         'files':files,
         'offer_info':offer_info,
-        'generated_offer':generated_offer
+        'generated_offer':generated_offer,
+        'total_info_order':total_info_order
     }
     
     return render(request,'overview_folder.html',context)
@@ -2992,7 +3035,8 @@ def calc_offer_info(project):
 def edit_offer(request,id):
     project = Project.objects.filter(id=id).first()
     tabs = project.tabs.all()
-    generated_offer = GeneratedOffer.objects.filter(project= project)    
+    generated_tab = GeneratedOffer.objects.filter(product__isnull = True, is_title= True, parent__isnull = False, project = project)
+    generated_offer = GeneratedOffer.objects.filter(Q(project= project) and Q(product__isnull = False))
     subtotal = GeneratedOffer.objects.filter(measure__icontains="SUBTOTAL SUMINISTROS Y DESARROLLO ( USD )",project= project).first()
     descuento = GeneratedOffer.objects.filter(measure__icontains="DESCUENTO",project= project).first()
     subtotal_descuento = GeneratedOffer.objects.filter(measure__icontains="SUBTOTAL MENOS (-) DESCUENTO",project= project).first()
@@ -3004,14 +3048,15 @@ def edit_offer(request,id):
     valor_total = GeneratedOffer.objects.filter(measure__icontains="VALOR TOTAL (USD) DÓLAR ESTADOUNIDENSE",project = project).first()
     remissions = Remission.objects.filter(project = project).all()    
     products_shipped = ProductSent.objects.filter(remission__in = remissions)
-    generated_offer_ = GeneratedOffer.objects.filter(project= project, product__isnull = False) 
+    generated_offer_ = GeneratedOffer.objects.filter(project= project, product__isnull = False)
+    subtotals = GeneratedOffer.objects.filter(project = project, is_subtotal = True) 
     invoices = Invoice.objects.filter(project= project)
     folder = Folder.objects.filter(project = project).first()
     generated_offer__ = GeneratedOffer.objects.filter(project= project).exists()  
     if not generated_offer__:
         messages.info(request, "Asegurese de generar la oferta primero antes de editar!")
 
-
+    
     # offer_info = {
     #     'total_product':sum(item.quantity  for item in generated_offer),
     #     'total_delivered':sum(item.quantity for item in products_shipped),
@@ -3033,24 +3078,25 @@ def edit_offer(request,id):
     for item in generated_offer_:
         dict_p = {}
         dict_p['product'] = item.product
-        dict_p['section'] = item.section
-        dict_p['tab'] = item.tab
+        dict_p['parent'] = item.parent
         dict_p['delivered'] = 0
         dict_p['remaining'] = item.quantity 
         for product_sh in products_shipped:
             if item.section == product_sh.section:
                 if item.tab == product_sh.tab:
                     if item.product == product_sh.product:
-                        dict_p['product'] = item.product
-                        dict_p['section'] = item.section
-                        dict_p['tab'] = item.tab
+                        dict_p['product'] = item.product    
+                        dict_p['parent'] = item.parent
                         dict_p['delivered'] = product_sh.quantity
                         dict_p['remaining'] = item.quantity - product_sh.quantity
 
             
         products_info.append(dict_p)
  
+    sections = GeneratedOffer.objects.filter(product__isnull = True, is_title= True, parent__isnull = True, project = project)
+    
     # 'remaining': item.quantity - next((product_sh.quantity for product_sh in products_shipped if product_sh.product.id == item.product.id), 0)
+    
 
     return render(request,"edit_offer.html",{'project':project,
                                              'folder':folder,
@@ -3067,7 +3113,10 @@ def edit_offer(request,id):
                                              'valor_total':valor_total,
                                              'offer_info':offer_info,
                                              'products_shipped':products_shipped,
-                                             'products_info':products_info
+                                             'products_info':products_info,
+                                             'generated_tab':generated_tab,
+                                             'sections':sections,
+                                             'subtotals':subtotals
                                              })
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
@@ -3084,7 +3133,7 @@ def delete_offer_item(request,id):
 @login_required
 def save_offer_item(request):
     referer = request.META.get("HTTP_REFERER")
-    print(referer)
+   
     if request.method == "POST":
         raw_data = request.body
         # print(f"desde save_item: {raw_data}"  )
@@ -3095,64 +3144,58 @@ def save_offer_item(request):
         valor_descuento = 0
         subtotal_directo_indirecto_valor = 0
         subtotal_modules = 0
-        subtotal_inst = 0
-        subtotal_ipp = 0
-
-        
-
+    
+    
         for item in data['items']:
             offer_item = GeneratedOffer.objects.filter(id=item.get("id")).first()
+            
             project = offer_item.project
-            offer_item.quantity = int(item.get("quantity"))
-            offer_item.unit_value =  float(item.get("unit_value"))
-            offer_item.total_value = float(item.get("total_value"))
-            if offer_item.section == 0:
-                subtotal_modules += offer_item.total_value
-            elif offer_item.section == 1:
-                subtotal_inst += offer_item.total_value
-            elif offer_item.section == 2:
-                subtotal_ipp += offer_item.total_value
-            subtotal += offer_item.total_value
+            
+            
+            if item.get("title"):
+                offer_item.title= item.get("title")
+
+            if item.get("description"):
+                offer_item.description= item.get("description")
+
+            if item.get("measure"):
+                offer_item.measure= item.get("measure")
+
+            if item.get("quantity"):
+                offer_item.quantity= int(item.get("quantity"))
+
+            if item.get("unit_value"):
+                offer_item.unit_value=  float(item.get("unit_value"))
+
+            if item.get("total_value"):
+                offer_item.total_value= float(item.get("total_value"))
+
+            if offer_item.is_subtotal:
+                subtotal += offer_item.total_value
             offer_item.save()
         
         try:
-            subtotal_modules_q = GeneratedOffer.objects.filter(section = 10, project = project).first()
-            
-            if subtotal_modules_q:
-                subtotal_modules_q.total_value = subtotal_modules
-                subtotal_modules_q.save()
-
-            subtotal_inst_q = GeneratedOffer.objects.filter(section = 20, project = project).first()
-
-            if subtotal_modules_q:
-
-                subtotal_inst_q.total_value = subtotal_inst
-                subtotal_inst_q.save()
-
-            subtotal_ipp_q = GeneratedOffer.objects.filter(section = 30, project = project).first()
-
-            if subtotal_modules_q:
-                subtotal_ipp_q.total_value = subtotal_ipp
-                subtotal_ipp_q.save()
-
 
             subtotal_item = GeneratedOffer.objects.filter(measure__icontains="SUBTOTAL SUMINISTROS Y DESARROLLO ( USD )",project= project).first()
             if subtotal_item:
                 subtotal_item.total_value = subtotal
-                subtotal_item.save() 
-
+                subtotal_item.save()
+            
             descuento_item = GeneratedOffer.objects.filter(measure__icontains="DESCUENTO",project= project).first()
             if descuento_item:
                 descuento_item.porcent = data['descuento']
                 valor_descuento = subtotal * (float(data['descuento'])/100)
                 descuento_item.total_value = valor_descuento
                 descuento_item.save() 
+           
+
             subtotal_descuento = GeneratedOffer.objects.filter(measure__icontains="SUBTOTAL MENOS (-) DESCUENTO",project= project).first()
             
             if subtotal_descuento:
                 subtotal_desc = subtotal - valor_descuento
                 subtotal_descuento.total_value = subtotal_desc
                 subtotal_descuento.save()
+
             
             admin_descuento = GeneratedOffer.objects.filter(measure__icontains="ADMINISTRACIÓN",project = project).first()
             
@@ -3161,17 +3204,17 @@ def save_offer_item(request):
                 descuento_admin_valor = subtotal_desc * (float(data['descuento_admin'])/100)
                 admin_descuento.total_value = descuento_admin_valor
                 admin_descuento.save()
-
-
+            
+           
             imprevistos = GeneratedOffer.objects.filter(measure__icontains="IMPREVISTROS",project = project).first()
             
-
             if imprevistos:
                 imprevistos.porcent = data['descuento_imprevistos']
                 descuento_imprevistos_valor = subtotal_desc * (float(data['descuento_imprevistos'])/100)
                 imprevistos.total_value = descuento_imprevistos_valor
                 imprevistos.save()
 
+            
             utilidades = GeneratedOffer.objects.filter(measure__icontains="UTILIDADES",project = project).first()
 
             if utilidades:
@@ -3179,6 +3222,7 @@ def save_offer_item(request):
                 descuento_utilidades_valor = subtotal_desc * (float(data['descuento_utilidades'])/100)
                 utilidades.total_value = descuento_utilidades_valor
                 utilidades.save()
+            
 
             subtotal_directo_indirecto = GeneratedOffer.objects.filter(measure__icontains="SUBTOTAL COSTO DIRECTO + INDIRECTO",project = project).first()
 
@@ -3188,6 +3232,7 @@ def save_offer_item(request):
                 subtotal_directo_indirecto.total_value = subtotal_directo_indirecto_valor
                 subtotal_directo_indirecto.save()
 
+
             iva_utilidad = GeneratedOffer.objects.filter(measure__icontains="IVA/UTILIDAD",project = project).first()
             
             if iva_utilidad:
@@ -3195,6 +3240,7 @@ def save_offer_item(request):
                 iva_utilidad_valor = subtotal_directo_indirecto_valor * (float(data['iva_utilidad'])/100)
                 iva_utilidad.total_value = iva_utilidad_valor
                 iva_utilidad.save()
+            
 
             valor_total = GeneratedOffer.objects.filter(measure__icontains="VALOR TOTAL (USD) DÓLAR ESTADOUNIDENSE",project = project).first()
             
@@ -3202,6 +3248,9 @@ def save_offer_item(request):
                 valor_total_ = subtotal_directo_indirecto_valor + iva_utilidad_valor
                 valor_total.total_value = valor_total_
                 valor_total.save()
+
+            
+
             return JsonResponse({'subtotal': round(subtotal,2), 
                                 'valor_descuento': round(valor_descuento,2),
                                 'subtotal_desc':round(subtotal_desc,2),
@@ -3225,24 +3274,23 @@ def save_offer_item(request):
     
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
-def add_from_car_to_offer(request,section,tab_id=None,project_id=None):
+def add_from_car_to_offer(request,project_id,parent_id):
 
     referer = request.META.get("HTTP_REFERER")
     
-    products_in_car = ProductBox.objects.filter(usersession = request.user).all()
+    products_in_car = ProductBox.objects.filter(usersession = request.user).all() # productos en carrito
 
-    project = Project.objects.filter(id = project_id).first()
+    project = Project.objects.filter(id = project_id).first() #consulta el proyecto
 
-    offer_items = GeneratedOffer.objects.filter(project = project, product__isnull = False)
+    offer_items = GeneratedOffer.objects.filter(project = project, product__isnull = False) # consulta los items que son productos
     total_value_ = 0
-
-    
 
     for product_in_car in products_in_car: # recorre los elemetos del carrito
         total_value_ = product_in_car.quantity * product_in_car.price
         
-        product_in_offer = GeneratedOffer.objects.filter(project = project, product__id = product_in_car.product.id).first()
-        
+        product_in_offer = GeneratedOffer.objects.filter(project = project, product__id = product_in_car.product.id, parent_id = parent_id).first()
+
+        print(product_in_offer)
         if product_in_offer:
 
             product_in_offer.quantity += product_in_car.quantity
@@ -3251,12 +3299,13 @@ def add_from_car_to_offer(request,section,tab_id=None,project_id=None):
         else:    
             GeneratedOffer.objects.create(
                             product = product_in_car.product,
+                            measure = product_in_car.product.measure,
+                            description = product_in_car.product.description,
                             quantity = product_in_car.quantity,
                             unit_value = product_in_car.price,
-                            tab_id = tab_id,
                             total_value = total_value_,
                             project_id = project_id,
-                            section = section
+                            parent_id = parent_id
                             )
             
     messages.success(request,"El producto ha sido agregado correctamente")
@@ -3476,8 +3525,61 @@ def create_task(request):
     return render(request,"create_task.html") 
 
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def custom_offer(request):
+    products = list(Product.objects.values())  # Convertir queryset a lista de diccionarios
+
+    return render(request,"custom_offer.html",{'products':products}) 
 
 
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def save_offer_titles(request):
+    if request.method == "POST":
+        raw_data = request.body
+        body_unicode = raw_data.decode('utf-8')
+        data = json.loads(body_unicode)
+        print(data)
+        return JsonResponse({'status':'ok'})
+
+def obtener_productos(request):
+    productos = list(Product.objects.values())
+    return JsonResponse(productos, safe=False)
+
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def add_section(request,project_id):
+    referer = request.META.get("HTTP_REFERER")
+
+    item = GeneratedOffer.objects.filter(project_id=project_id).order_by('-section').first()
+
+
+    new_section = GeneratedOffer.objects.create(title=f"NUEVA SECTION",project_id = project_id, is_title = True)
+    GeneratedOffer.objects.create(title="NUEVO SUBTITULO", project_id = project_id, is_title = True, parent = new_section )
+
+    GeneratedOffer.objects.create(measure="SUBTOTAL", project_id = project_id, is_subtotal = True, parent = new_section )
+
+    return redirect(referer)
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def delete_offer_item(request,id):
+    referer = request.META.get("HTTP_REFERER")
     
+    item = GeneratedOffer.objects.filter(id=id).first()
+    item.delete()
+
+    return redirect(referer)
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def add_subtitle(request,project_id, parent_id):
+    referer = request.META.get("HTTP_REFERER")
+    
+    GeneratedOffer.objects.create(title="NUEVO SUBTITULO",project_id = project_id, parent_id = parent_id, is_title = True)
+
+    return redirect(referer)
 

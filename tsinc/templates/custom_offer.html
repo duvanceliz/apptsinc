@@ -1,0 +1,47 @@
+{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load static %}
+
+<div class="container">
+    <div class="row">
+       <div class="col-md-12">
+        <h1>Lista de Productos</h1>
+
+        <!-- Div para la tabla -->
+        <div id="myGrid" class="ag-theme-alpine" style="height: 400px; width: 100%;"></div>
+       </div>
+    </div>
+</div>
+
+<script>
+    // Función para cargar los productos desde Django
+    function obtenerProductos() {
+        fetch('/productos/')
+        .then(response => response.json())
+        .then(data => {
+            // Configuración de AG Grid
+            const gridOptions = {
+                columnDefs: [
+                    { headerName: "code", field: "code", editable: false },
+                    { headerName: "product_name", field: "product_name", editable: true },
+                    { headerName: "model", field: "model", editable: true },
+                    { headerName: "Precio", field: "sale_price", editable: true },
+                    { headerName: "Stock", field: "stock", editable: true },
+                ],
+                rowData: data,  // Datos obtenidos de Django
+                defaultColDef: {
+                    flex: 1,
+                    minWidth: 100,
+                    editable: true,
+                    resizable: true,
+                }
+            };
+
+            // Inicializar AG Grid
+            const eGridDiv = document.querySelector('#myGrid');
+            new agGrid.Grid(eGridDiv, gridOptions);
+        });
+    }
+
+    // Llamar a la función cuando se cargue la página
+    obtenerProductos();
+</script>
+{% endblock %}

@@ -1,0 +1,681 @@
+<div class="row">
+
+       
+
+    <div class="col-md-12">
+     {% include 'components/alert.html' %}
+     <div class="card-header text-center text-white fw-bold" style="background: #50afea;">
+       
+       <input type="text" value="{{title_1.title}}" data-id="title_1.id" id="title_1" class="form-control">
+      
+    </div>
+     {% for tab in tabs %}
+   
+     <div class="card-header text-center fw-bold" style="background: #c6c6c6;" >
+       <a href="{% url 'add_from_car_to_offer' 0 tab.id tab.project.id %}" class="btn btn-success btn-sm mb-2">
+         <i class="bi bi-cart-plus"></i> Agregar 
+       </a>
+       {{tab.tab_name}}
+     </div>
+     <div class="table-responsive-md">
+     <table class="table bg-light table-bordered">
+       
+       <thead>
+         <tr>
+           <th>STOCK</th>
+           <th>MODELO</th>
+           <th>DESCRIPCIÓN</th>
+           <th>UNIDAD</th>
+           <th>CANT</th>
+           <th>VALOR_UNIDAD</th>
+           <th>VALOR_TOTAL</th>
+           <th>Env</th>
+           <th>Rest</th>
+         </tr>
+       </thead>
+       
+       <tbody>
+         {% for item in generated_offer %}
+         {% if tab.id == item.tab.id %}
+         {% if item.section == 0 %}
+
+         <tr>
+
+           {% if  item.product.quantity >= item.quantity %}
+
+           <td style="width: 10px;" class="text-center">{{ item.product.quantity }}<i class="bi bi-clipboard-check text-success"></i></td>
+           {% else %}
+
+           <td style="width: 10px;" class="text-center">{{ item.product.quantity }}<i class="bi bi-clipboard-x text-danger"></i></td>
+
+           {% endif %}
+           
+           <td style="width: 200px;"> <a href="#" >{{item.product.model}}</a>  </td>
+           <td style="width: 300px;" >{{item.product.description}}</td>
+           <td style="width: 50px;" >{{item.measure}}</td>
+
+           <td  style="width: 50px;">
+             <input type="number" value="{{item.quantity}}" class="form-control form-control-sm" data-id="{{item.id}}" name="quantity">
+           </td>
+           <td style="width: 50px;">
+             <input type="number" value="{{item.unit_value}}" class="form-control form-control-sm" data-id="{{item.id}}" name="unit_value">
+           </td>
+           <td style="width: 50px;">
+             <input type="number" value="{{item.total_value}}" class="form-control form-control-sm" id="subtotal_s0" data-id="{{item.id}}" name="total_value">
+
+           </td>
+           {% for  product_info in products_info %}
+           {% if item.section == product_info.section %}
+           {% if item.tab == product_info.tab %}
+           {% if item.product == product_info.product %}
+         
+           <td style="width: 50px;" class="text-center">
+             {{ product_info.delivered}}
+           
+           </td>
+
+           {% if product_info.remaining == 0 %}
+           <td style="width: 50px;" class="bg-success text-white text-center">
+              
+             {{ product_info.remaining }}
+             
+           </td>
+
+           {% else %}
+
+           <td style="width: 50px;" class="bg-secondary text-white text-center">
+              
+             {{ product_info.remaining }}
+             
+           </td>
+
+           {% endif %}
+
+
+           {% endif %}
+           {% endif %}
+           {% endif %}
+           {% endfor %}
+             <td style="width: 80px;"> 
+             
+             {% if not item.to_purcharse_order %}
+             <button class="btn btn-success btn-sm" id="btn-add-to-order" data-id="{{item.id}}"><i class="bi bi-bag-plus"></i></button>
+             {% else %}
+             <button class="btn btn-danger btn-sm" id="btn-add-to-order" data-id="{{item.id}}"><i class="bi bi-bag-plus"></i></button>
+             {% endif %}
+             <a href="{% url 'delete_offer_item' item.id %}" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a>
+           </td>
+         </tr>
+         {% endif %}
+         {% endif %}
+         {% endfor %}
+         
+       </tbody>
+       </table>
+     </div>
+       {% endfor %}
+
+    </div>
+
+
+    <div class="col-md-12">
+     {% for item in generated_offer %}
+
+     {% if item.section == 10 %}
+    <div class="table-responsive-md">
+     <table class="table table-bordered " style="background: #c6c6c6;" >
+       <tbody>
+         <tr>
+           
+           <td style="width: 200px;" >{{item.measure}}</td>
+           <td style="width: 300px;"></td>
+           <td style="width: 50px;"></td>
+           <td style="width: 50px;"></td>
+           <td style="width: 50px;"></td>
+           <td style="width: 100px;">
+             <input type="number" value="{{item.total_value|floatformat:2}}" class="" data-id="{{item.id}}"  id="subtotal_modules" name="total_value">
+           </td>
+           <td style="width: 80px;"></td>
+         </tr>
+       </tbody>
+     </table>
+   </div>
+
+     {% endif %}
+
+     {% endfor %}
+
+    </div>
+
+    
+    <div class="col-md-12">
+     <div class="card-header text-center text-white fw-bold" style="background: #50afea;">
+       <input type="text" value="{{title_2.title}}" data-id="title_2.id" id="title_2" class="form-control">
+
+    </div>
+     
+     {% for tab in tabs %}
+     
+
+     
+     <div class="card-header text-center fw-bold " style="background: #c6c6c6;">
+       <a href="{% url 'add_from_car_to_offer' 1 tab.id tab.project.id %}" class="btn btn-success btn-sm mb-2">
+         <i class="bi bi-cart-plus"></i> Agregar
+       </a>
+       {{tab.tab_name}}
+     </div>
+     <div class="table-responsive-md">
+     <table class="table bg-light table-bordered">
+       
+       <thead>
+         <tr>
+           <th>STOCK</th>
+           <th>MODELO</th>
+           <th>DESCRIPCIÓN</th>
+           <th>UNIDAD</th>
+           <th>CANT</th>
+           <th>VALOR_UNIDAD</th>
+           <th>VALOR_TOTAL</th>
+           <th>Env</th>
+           <th>Rest</th>
+         </tr>
+       </thead>
+       
+       <tbody>
+         {% for item in generated_offer %}
+         {% if tab.id == item.tab.id %}
+         {% if item.section == 1 %}
+         <tr>
+           {% if  item.product.quantity >= item.quantity %}
+           <td style="width: 10px;" class="text-center">{{ item.product.quantity }}<i class="bi bi-clipboard-check text-success"></i></td>
+           {% else %}
+
+           <td style="width: 10px;" class="text-center">{{ item.product.quantity }}<i class="bi bi-clipboard-x text-danger"></i></td>
+
+           {% endif %}
+           <td style="width: 200px;"> <a href="{% url 'product_info' item.product.id %}" >{{item.product.model}}</a>  </td>
+
+           <td style="width: 300px;">{{item.product.description}}</td>
+           <td style="width: 50px;">{{item.measure}}</td>
+           <td style="width: 50px;">
+             <input type="number" value="{{item.quantity}}" class="form-control form-control-sm" data-id="{{item.id}}" name="quantity">
+
+           </td>
+           <td style="width: 50px;">
+             <input type="number" value="{{item.unit_value}}" class="form-control form-control-sm" data-id="{{item.id}}" name="unit_value">
+
+           </td>
+           <td style="width: 50px;">
+             <input type="number" value="{{item.total_value}}" class="form-control form-control-sm" data-id="{{item.id}}" name="total_value">
+
+           </td>
+           {% for  product_info in products_info %}
+           {% if item.section == product_info.section %}
+           {% if item.tab == product_info.tab %}
+           {% if item.product == product_info.product %}
+           <td style="width: 50px;">
+             {{ product_info.delivered }}
+           
+           </td>
+
+           {% if product_info.remaining == 0 %}
+           <td style="width: 50px;" class="bg-success text-white text-center">
+              
+             {{ product_info.remaining }}
+             
+           </td>
+
+           {% else %}
+
+           <td style="width: 50px;" class="bg-secondary text-white text-center">
+              
+             {{ product_info.remaining }}
+             
+           </td>
+
+           {% endif %}
+           
+
+           {% endif %}
+           {% endif %}
+           {% endif %}
+           {% endfor %}
+           <td style="width: 80px;">
+
+             {% if not item.to_purcharse_order %}
+             <button class="btn btn-success btn-sm" id="btn-add-to-order" data-id="{{item.id}}"><i class="bi bi-bag-plus"></i></button>
+             {% else %}
+             <button class="btn btn-danger btn-sm" id="btn-add-to-order" data-id="{{item.id}}"><i class="bi bi-bag-plus"></i></button>
+             {% endif %}
+
+             <a href="{% url 'delete_offer_item' item.id %}" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a>
+
+           </td>
+         </tr>
+         {% endif %}
+         {% endif %}
+         {% endfor %}
+         
+       </tbody>
+       </table>
+     </div>
+       {% endfor %}
+
+    </div>
+    
+
+    <div class="col-md-12">
+     {% for item in generated_offer %}
+
+     {% if item.section == 20 %}
+     <div class="table-responsive-md">
+     <table class="table table-bordered " style="background: #c6c6c6;">
+       <tbody>
+         <tr>
+           <td style="width: 200px;" >{{item.measure}}</td>
+           <td style="width: 300px;"></td>
+           <td style="width: 50px;"></td>
+           <td style="width: 50px;"></td>
+           <td style="width: 50px;"></td>
+           <td style="width: 100px;">
+             <input type="number" value="{{item.total_value|floatformat:2}}"  id="subtotal_inst" data-id="{{item.id}}" name="total_value">
+
+           </td>
+           <td style="width: 80px;"></td>
+         </tr>
+       </tbody>
+     </table>
+   </div>
+
+     {% endif %}
+
+     {% endfor %}
+
+    </div>
+     
+    <div class="col-md-12">
+
+     <a href="{% url 'add_from_car_to_offer' 2 project.id %}" class="btn btn-success btn-sm mb-2">
+       <i class="bi bi-cart-plus"></i> Agregar
+     </a>
+     
+     <div class="card-header text-center text-white fw-bold" style="background: #50afea;">
+       <input type="text" value="{{title_3.title}}" data-id="title_3.id" id="title_3" class="form-control">
+     </div>
+     <div class="table-responsive-md">
+     <table class="table bg-light table-bordered">
+       
+       <thead>
+         <tr>
+           <th>STOCK</th>
+           <th>MODELO</th>
+           <th>DESCRIPCIÓN</th>
+           <th>UNIDAD</th>
+           <th>CANT</th>
+           <th>VALOR_UNIDAD</th>
+           <th>VALOR_TOTAL</th>
+           <th>Env</th>
+           <th>Rest</th>
+         </tr>
+       </thead>
+       
+       <tbody>
+         {% for item in generated_offer %}
+         
+         {% if item.section == 2 %}
+         <tr>
+           {% if  item.product.quantity >= item.quantity %}
+           <td style="width: 10px;" class="text-center">{{ item.product.quantity }}<i class="bi bi-clipboard-check text-success"></i></td>
+           {% else %}
+
+           <td style="width: 10px;" class="text-center">{{ item.product.quantity }}<i class="bi bi-clipboard-x text-danger"></i></td>
+
+           {% endif %}
+           <td style="width: 200px;"> <a href="{% url 'product_info' item.product.id %}" >{{item.product.model}}</a>  </td>
+           <td style="width: 300px;">{{item.product.description}}</td>
+           <td style="width: 50px;">{{item.measure}}</td>
+           <td style="width: 50px;">
+             <input type="number" value="{{item.quantity}}" class="form-control form-control-sm" data-id="{{item.id}}" name="quantity" >
+
+           </td>
+           <td style="width: 50px;">
+             <input type="number" value="{{item.unit_value}}" class="form-control form-control-sm" data-id="{{item.id}}" name="unit_value">
+
+           </td>
+           <td style="width: 50px;">
+             <input type="number" value="{{item.total_value}}" class="form-control form-control-sm" data-id="{{item.id}}" name="total_value">
+
+           </td>
+           {% for  product_info in products_info %}
+           {% if item.section == product_info.section %}
+           {% if item.tab == product_info.tab %}
+           {% if item.product == product_info.product %}
+
+           <td style="width: 50px;">
+             {{ product_info.delivered }}
+           
+           </td>
+
+           {% if product_info.remaining == 0 %}
+           <td style="width: 50px;" class="bg-success text-white text-center">
+              
+             {{ product_info.remaining }}
+             
+           </td>
+
+           {% else %}
+
+           <td style="width: 50px;" class="bg-secondary text-white text-center">
+              
+             {{ product_info.remaining }}
+             
+           </td>
+
+           {% endif %}
+
+           {% endif %}
+           {% endif %}
+           {% endif %}
+           {% endfor %}
+           <td style="width: 80px;">
+             
+             {% if not item.to_purcharse_order %}
+             <button class="btn btn-success btn-sm" id="btn-add-to-order" data-id="{{item.id}}"><i class="bi bi-bag-plus"></i></button>
+             {% else %}
+             <button class="btn btn-danger btn-sm" id="btn-add-to-order" data-id="{{item.id}}"><i class="bi bi-bag-plus"></i></button>
+             {% endif %}
+
+             <a href="{% url 'delete_offer_item' item.id %}" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a>
+
+           </td>
+         </tr>
+         {% endif %}
+      
+         {% endfor %}
+         
+       </tbody>
+       </table>
+     </div>
+   
+
+    </div>
+
+    <div class="col-md-12">
+     {% for item in generated_offer %}
+
+     {% if item.section == 30 %}
+     <div class="table-responsive-md">
+     <table class="table table-bordered " style="background: #c6c6c6;">
+       <tbody>
+         <tr>
+           <td style="width: 300px;" >{{item.measure}}</td>
+           <td style="width: 200px;"></td>
+           <td style="width: 50px;"></td>
+           <td style="width: 50px;"></td>
+           <td style="width: 50px;"></td>
+           <td style="width: 100px;">
+             <input type="number" value="{{item.total_value|floatformat:2}}" id="subtotal_ipp" data-id="{{item.id}}" name="total_value">
+
+           </td>
+           <td style="width: 50px;"></td>
+         
+         </tr>
+       </tbody>
+     </table>
+   </div>
+     {% endif %}
+
+     {% endfor %}
+
+    </div>
+    <div class="col-md-12">
+     
+    
+     <div class="card-header text-center fw-bold" style="background: #c6c6c6;">
+       SUBTOTAL
+     </div>
+     
+     <table class="table bg-light table-bordered">
+       
+      
+       
+       <tbody>
+         
+         
+         <tr>
+           <td>
+
+             
+             SUBTOTAL SUMINISTROS Y DESARROLLO ( USD )     
+              
+           </td>
+           <td style="width: 80px;">
+             <input type="number" 
+             value="0" 
+             class="form-control form-control-sm"
+             disabled
+             >
+           </td>
+           <td >
+             
+             <input type="number" 
+             value="{{subtotal.total_value|floatformat:2}}" 
+             class="form-control form-control-sm"
+             id="subtotal"
+             >
+           
+           </td>
+         </tr>
+
+         
+         <tr>
+           <td>
+
+             
+             DESCUENTO   
+              
+           </td>
+           <td style="width: 80px;">
+             <input type="number" 
+             value="{{descuento.porcent}}" 
+             class="form-control form-control-sm"
+             id="descuento"
+             >
+            
+           </td>
+           <td >
+             
+             <input type="number" 
+             value="{{descuento.total_value|floatformat:2}}" 
+             class="form-control form-control-sm"
+             id="valor-descuento"
+             >
+           
+           </td>
+         </tr>
+         <tr>
+           <td>
+             SUBTOTAL MENOS (-) DESCUENTO  
+           </td>
+           <td style="width: 80px;">
+             <input type="number" 
+             value="0" 
+             class="form-control form-control-sm"
+             disabled
+             >
+            
+           </td>
+           <td >
+             
+             <input type="number" 
+             value="{{subtotal_descuento.total_value|floatformat:2}}" 
+             class="form-control form-control-sm"
+             id="subtotal-descuento"
+             >
+           
+           </td>
+         </tr>
+
+         <tr>
+           <td>
+
+             
+             ADMINISTRACIÓN 
+              
+           </td>
+           <td style="width: 80px;">
+             <input type="number" 
+             value="{{admin_descuento.porcent}}" 
+             class="form-control form-control-sm"
+              id="descuento-admin"
+             >
+            
+           </td>
+           <td >
+             
+             <input type="number" 
+             value="{{admin_descuento.total_value|floatformat:2}}" 
+             class="form-control form-control-sm"
+             id="descuento-admin-valor"
+             >
+           
+           </td>
+         </tr>
+
+
+         <tr>
+           <td>
+
+             
+             IMPREVISTOS
+              
+           </td>
+           <td style="width: 80px;">
+             <input type="number" 
+             value="{{imprevistos.porcent}}" 
+             class="form-control form-control-sm"
+              id="descuento-imprevistos"
+             >
+            
+           </td>
+           <td >
+             
+             <input type="number" 
+             value="{{imprevistos.total_value|floatformat:2}}" 
+             class="form-control form-control-sm"
+             id="descuento-imprevistos-valor"
+             >
+           
+           </td>
+         </tr>
+
+         <tr>
+           <td>
+             UTILIDADES
+              
+           </td>
+           <td style="width: 80px;">
+             <input type="number" 
+             value="{{utilidades.porcent}}" 
+             class="form-control form-control-sm"
+              id="descuento-utilidades"
+             >
+            
+           </td>
+           <td >
+             
+             <input type="number" 
+             value="{{utilidades.total_value|floatformat:2}}" 
+             class="form-control form-control-sm"
+             id="descuento-utilidades-valor"
+             >
+           
+           </td>
+         </tr>
+
+
+         <tr>
+           <td>
+             SUBTOTAL COSTO DIRECTO + INDIRECTO
+           </td>
+           <td style="width: 80px;">
+             <input type="number" 
+             value="0" 
+             class="form-control form-control-sm"
+              disabled
+             >
+            
+           </td>
+           <td >
+             
+             <input type="number" 
+             value="{{subtotal_directo_indirecto.total_value|floatformat:2}}" 
+             class="form-control form-control-sm"
+             id="subtotal_directo_indirecto"
+             >
+           
+           </td>
+         </tr>
+
+         <tr>
+           <td>
+             IVA/UTILIDAD
+           </td>
+           <td style="width: 80px;">
+             <input type="number" 
+             value="{{iva_utilidad.porcent}}" 
+             class="form-control form-control-sm"
+             id="iva_utilidad"
+             >
+           </td>
+           <td >
+             
+             <input type="number" 
+             value="{{iva_utilidad.total_value|floatformat:2}}" 
+             class="form-control form-control-sm"
+             id="iva_utilidad_valor"
+             >
+           
+           </td>
+         </tr>
+
+         <tr>
+           <td>
+             VALOR TOTAL (USD) DÓLAR ESTADOUNIDENSE
+           </td>
+           <td style="width: 80px;">
+             <input type="number" 
+             value="0" 
+             class="form-control form-control-sm"
+             disabled
+             >
+           </td>
+           <td >
+             
+             <input type="number" 
+             value="{{valor_total.total_value|floatformat:2}}" 
+             class="form-control form-control-sm"
+             id="valor_total"
+             >
+           
+           </td>
+         </tr>
+      
+       </tbody>
+       </table>
+       <div class="row">
+         <div class="col-md-12 text-end">
+           <a href="{% url 'download_offer' project.id %}" class="btn btn-success">Descargar</a>
+
+           <a href="{% url 'create_order_from_offer' project.id %}" class="btn btn-success" type="submit">Generar Orden</a>
+           
+           <a href="{% url 'create_remission_from_offer' project.id %}" class="btn btn-success" type="submit">Generar Remisión</a>
+           
+           <a href="{% url 'create_invoice_from_offer' project.id %}" class="btn btn-success" type="submit">Generar Factura</a>
+
+           <button class="btn btn-success" id="btn-offer-save" type="submit">Calcular y Guardar</button>
+   
+         </div>
+       </div>
+    </div>
+ </div>

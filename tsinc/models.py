@@ -44,6 +44,7 @@ class Product(models.Model):
     location = models.CharField(max_length=200, default=None)
     quantity = models.IntegerField()
     point = models.CharField(max_length=100,null=True,blank=True)
+    measure = models.CharField(max_length=250,null=True,blank=True)
     observation =models.CharField(max_length=250, null=True)
     description = models.TextField(validators=[MaxLengthValidator(500)], null=True)
     min_stock = models.IntegerField(default=0)
@@ -343,19 +344,26 @@ class File(models.Model):
     order_invoice = models.ForeignKey(OrderInvoice,on_delete=models.CASCADE, null=True, blank = True)
     date = models.DateTimeField(default=timezone.now)
     usersession = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
+   
 
 
 class GeneratedOffer(models.Model):
+    title = models.CharField(max_length=250,  null=True, blank=True)
     product = models.ForeignKey(Product,on_delete=models.CASCADE, null=True, blank = True)
     measure = models.CharField(max_length=200,  null=True, blank=True)
+    description = models.CharField(max_length=250,  null=True, blank=True)
     quantity = models.IntegerField(default=0, null=True, blank=True)
     unit_value = models.FloatField(default=0, null=True, blank=True)
     total_value = models.FloatField(default=0,  null=True, blank=True)
     porcent = models.FloatField(default=0,null=True, blank=True)
     to_purcharse_order = models.BooleanField(default=False)
+    is_title = models.BooleanField(default=False)
+    is_subtotal = models.BooleanField(default=False)
     tab = models.ForeignKey(Tabs,on_delete=models.CASCADE, null=True, blank = True)
     project = models.ForeignKey(Project,on_delete=models.CASCADE, null=True, blank = True)
     section = models.IntegerField(default=0)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+
 
 
 class task(models.Model):
