@@ -128,8 +128,7 @@ urlpatterns = [
     path('delete_offer_item/<int:id>', views.delete_offer_item, name='delete_offer_item'),
     path('add_subtitle/<int:project_id>/<int:parent_id>', views.add_subtitle, name='add_subtitle'),
 
+] 
 
-
-
-
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

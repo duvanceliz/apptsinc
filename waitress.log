@@ -1,0 +1,188 @@
+2024-10-21 16:42:16,281 INFO Serving on http://0.0.0.0:8000
+2024-10-21 16:46:25,598 INFO Serving on http://0.0.0.0:8000
+2024-10-21 16:46:53,229 ERROR Internal Server Error: /overview_folder/46
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 2757, in overview_folder
+    return render(request,'overview_folder.html',context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\templatetags\static.py", line 116, in render
+    url = self.url(context)
+          ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\templatetags\static.py", line 113, in url
+    return self.handle_simple(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\templatetags\static.py", line 129, in handle_simple
+    return staticfiles_storage.url(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\staticfiles\storage.py", line 203, in url
+    return self._url(self.stored_name, name, force)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\staticfiles\storage.py", line 182, in _url
+    hashed_name = hashed_name_func(*args)
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\staticfiles\storage.py", line 516, in stored_name
+    raise ValueError(
+ValueError: Missing staticfiles manifest entry for 'css_w/styles_workspace.css'
+2024-10-21 16:47:02,882 INFO Serving on http://0.0.0.0:8000
+2024-10-21 16:48:08,811 INFO Serving on http://0.0.0.0:8000
+2024-10-21 18:38:28,900 INFO Serving on http://0.0.0.0:8000
+2024-10-21 18:38:36,844 WARNING Not Found: /favicon.ico
+2024-10-21 18:39:05,738 WARNING Not Found: /media/order_files/OC-13/Captura_de_pantalla.png
+2024-10-21 18:39:13,619 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 18:39:20,118 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 18:40:46,858 WARNING Not Found: /media/order_files/OC-13/Captura_de_pantalla.png
+2024-10-21 18:41:18,044 WARNING Not Found: /media/order_files/OC-13/Captura_de_pantalla.png
+2024-10-21 18:41:51,469 WARNING Not Found: /media/order_files/OC-13/Captura_de_pantalla.png
+2024-10-21 18:42:03,357 WARNING Not Found: /media/order_files/OC-13/Captura_de_pantalla.png
+2024-10-21 18:43:04,152 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-21 18:44:07,431 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\apptsinc\settings.py changed, reloading.
+2024-10-21 18:44:50,791 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\apptsinc\settings.py changed, reloading.
+2024-10-21 18:45:08,946 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\apptsinc\settings.py changed, reloading.
+2024-10-21 18:45:37,429 INFO Serving on http://0.0.0.0:8000
+2024-10-21 18:45:48,072 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 18:55:31,697 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 18:55:35,278 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 18:55:43,959 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 18:58:35,873 INFO Serving on http://0.0.0.0:8000
+2024-10-21 18:58:47,687 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 19:02:57,236 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 19:03:03,898 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 19:37:49,230 INFO Serving on http://0.0.0.0:8000
+2024-10-21 19:41:45,895 WARNING Not Found: /favicon.ico
+2024-10-21 19:41:57,088 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 19:49:46,471 WARNING Not Found: /favicon.ico
+2024-10-21 19:50:53,187 WARNING Not Found: /media
+2024-10-21 19:51:37,331 WARNING Not Found: /media
+2024-10-21 19:52:07,868 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 19:52:11,740 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 19:52:26,187 WARNING Not Found: /media
+2024-10-21 19:56:01,943 INFO Serving on http://0.0.0.0:8000
+2024-10-21 19:56:11,633 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 19:56:15,450 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 19:56:28,323 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 19:57:09,544 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 19:57:47,942 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 19:59:36,987 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 20:00:21,331 INFO Serving on http://0.0.0.0:8000
+2024-10-21 20:01:27,972 INFO Serving on http://0.0.0.0:8000
+2024-10-21 20:02:24,595 WARNING Not Found: /favicon.ico
+2024-10-21 20:02:32,717 WARNING Task queue depth is 1
+2024-10-21 20:02:32,718 WARNING Task queue depth is 2
+2024-10-21 20:02:32,719 WARNING Task queue depth is 2
+2024-10-21 20:02:32,720 WARNING Task queue depth is 2
+2024-10-21 20:02:32,720 WARNING Task queue depth is 3
+2024-10-21 20:02:33,073 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 20:02:33,260 WARNING Not Found: /favicon.ico
+2024-10-21 20:02:38,434 WARNING Task queue depth is 1
+2024-10-21 20:02:38,435 WARNING Task queue depth is 2
+2024-10-21 20:02:38,438 WARNING Task queue depth is 2
+2024-10-21 20:02:38,441 WARNING Task queue depth is 1
+2024-10-21 20:02:38,813 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 20:02:39,018 WARNING Not Found: /favicon.ico
+2024-10-21 20:02:55,279 WARNING Not Found: /media/items/SENSORES/EHD110-800.svg
+2024-10-21 20:02:55,281 WARNING Not Found: /media/items/SENSORES/AQD-BBBE.svg
+2024-10-21 20:02:55,300 WARNING Not Found: /media/items/SENSORES/HT1D.svg
+2024-10-21 20:02:55,303 WARNING Not Found: /media/items/SENSORES/P74FA-1C.svg
+2024-10-21 20:02:55,306 WARNING Not Found: /media/items/DUCTOS/HORZ_DUCT.svg
+2024-10-21 20:02:55,617 WARNING Not Found: /media/items/DUCTOS/LEFT_INLET.svg
+2024-10-21 20:02:55,622 WARNING Not Found: /media/items/DUCTOS/RIGHT_OUTLET.svg
+2024-10-21 20:02:55,629 WARNING Task queue depth is 1
+2024-10-21 20:02:55,629 WARNING Task queue depth is 2
+2024-10-21 20:02:55,630 WARNING Not Found: /media/items/PUNTOS/AO.svg
+2024-10-21 20:02:55,632 WARNING Not Found: /media/items/PUNTOS/BI.svg
+2024-10-21 20:02:55,633 WARNING Not Found: /media/items/PUNTOS/AI.svg
+2024-10-21 20:02:55,634 WARNING Not Found: /media/items/DUCTOS/SUPPLY_FAN.svg
+2024-10-21 20:02:55,636 WARNING Not Found: /media/items/RELEVOS/CKIT-VMD1B-C24A.svg
+2024-10-21 20:02:55,636 WARNING Task queue depth is 2
+2024-10-21 20:02:55,638 WARNING Task queue depth is 2
+2024-10-21 20:02:55,639 WARNING Not Found: /media/items/PUNTOS/BO.svg
+2024-10-21 20:02:55,641 WARNING Not Found: /media/items/COILS/COOLING_COIL.svg
+2024-10-21 20:02:55,643 WARNING Not Found: /media/items/COILS/HEATING_COIL.svg
+2024-10-21 20:02:55,644 WARNING Not Found: /media/items/SENSORES/P74FA-1C.svg
+2024-10-21 20:02:55,645 WARNING Not Found: /media/items/DUCTOS/HORZ_DUCT.svg
+2024-10-21 20:02:55,646 WARNING Not Found: /media/items/SENSORES/HT1D.svg
+2024-10-21 20:02:55,647 WARNING Not Found: /media/items/SENSORES/AQD-BBBE.svg
+2024-10-21 20:02:55,839 WARNING Not Found: /favicon.ico
+2024-10-21 20:05:26,027 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 20:05:28,821 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 20:05:28,984 WARNING Not Found: /favicon.ico
+2024-10-21 20:05:51,811 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 20:06:29,781 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 20:08:37,325 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 20:08:46,889 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 20:09:14,638 WARNING Not Found: /favicon.ico
+2024-10-21 20:09:56,456 WARNING Not Found: /favicon.ico
+2024-10-21 20:10:13,293 WARNING Not Found: /favicon.ico
+2024-10-21 20:10:27,121 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 20:14:42,017 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 20:14:44,934 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 20:15:21,767 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 20:15:39,504 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 20:17:21,907 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 20:17:27,565 WARNING Not Found: /media/order_files/OC-13/Captura_de_pantalla.png
+2024-10-21 20:17:27,762 WARNING Not Found: /favicon.ico
+2024-10-21 20:17:30,987 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 20:17:46,509 WARNING Not Found: /favicon.ico
+2024-10-21 20:22:02,132 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 20:25:22,639 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 20:25:52,693 INFO Serving on http://0.0.0.0:8000
+2024-10-21 20:26:01,771 WARNING Not Found: /media/folder_files/CFP2-KSJLKD/DUVAN_CELIZ.pdf
+2024-10-21 20:26:37,986 WARNING Not Found: /media/order_files/OC-13/Captura_de_pantalla.png
+2024-10-21 20:29:09,886 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 20:31:10,818 WARNING Not Found: /media/product_files/512/evaluación_Dismeq.pdf
+2024-10-21 20:31:11,180 WARNING Not Found: /favicon.ico
+2024-10-21 20:32:40,005 WARNING Not Found: /favicon.ico
+2024-10-21 20:32:56,808 WARNING Not Found: /favicon.ico
+2024-10-21 20:52:29,648 WARNING Not Found: /favicon.ico
+2024-10-21 21:22:27,415 INFO Serving on http://0.0.0.0:8000
+2024-10-21 21:53:22,215 INFO Serving on http://0.0.0.0:8000
+2024-10-21 21:55:26,796 INFO Serving on http://0.0.0.0:8000
+2024-10-21 21:56:44,359 INFO Serving on http://0.0.0.0:8000
+2024-10-21 21:59:11,791 INFO Serving on http://0.0.0.0:8000
+2024-10-22 08:14:57,157 INFO Serving on http://0.0.0.0:8000
+2024-10-22 08:16:07,574 WARNING Not Found: /favicon.ico

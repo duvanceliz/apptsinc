@@ -20,6 +20,8 @@ import math
 from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField, F
 from django.views.decorators.http import require_POST
+from django.utils.encoding import iri_to_uri  # Para codificar caracteres especiales
+
 # Create your views here.
 
 
@@ -2228,7 +2230,10 @@ def upload_remission_file(request,id):
 def view_file(request,id):
     file = get_object_or_404(File,id=id)
         # Construir la URL del archivo
-    file_url = os.path.join(settings.MEDIA_URL, file.path, file.name)
+    file_url = f"{settings.MEDIA_URL}{file.path}/{file.name}"
+
+    # Codificar la URL para manejar caracteres especiales (como acentos)
+    file_url = iri_to_uri(file_url)
     
     return render(request, "view_file.html", {"file_url": file_url, 
                                                   "file_name": file.name,
