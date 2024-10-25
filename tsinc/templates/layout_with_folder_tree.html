@@ -14,7 +14,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script> -->
 
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -230,6 +230,29 @@
                     <i class="bi bi-cart4 d-block"></i>
                     Carrito
                   </a>
+                </li>
+
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle text-center text-dark" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                    <i class="bi bi-activity d-block"></i>
+                    Actividad
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'show_all_activity' %}">Actividad</a></li>
+            
+
+                  </ul>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle text-center text-dark" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                    <i class="bi bi-person-fill d-block"></i>
+                    Usuario
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'user_view' %}">Tareas</a></li>
+            
+
+                  </ul>
                 </li>
               </ul>
 

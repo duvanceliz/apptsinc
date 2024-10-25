@@ -1,0 +1,82 @@
+{% load humanize %}
+<div class="card">
+    <div class="card-header">
+        
+
+         <div class="row">
+            <div class="col-6"><h4>Tareas</h4></div>
+            <div class="col-6 text-end" >
+                <a href="{% url 'create_task' folder.project.id %}" class="btn btn-success btn-sm"><i class="bi bi-plus-circle-dotted"></i> Nueva</a>
+            </div>
+         </div>
+    </div>
+
+         <div class="table-responsive-md">
+    
+        <table class="table table-light table-sm">
+          <thead>
+            
+        
+            <tr>
+            <th scope="col">Nombre:</th>
+              <th scope="col">Fecha de inicio</th>
+              <th scope="col">Fecha final proyectada</th>
+              <th>asignado a:</th>
+              <th>Descripción</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          
+          </thead>
+          <tbody>
+            <tr>
+              {% for task in tasks %}
+              <td>{{task.name}}</td>
+              <td>{{task.start_date}}</td>
+              
+              <td>{{task.due_date}}</td>
+              
+              
+
+              <td>
+                {% for user in task.users.all %}
+
+                <span>{{user}},</span>
+                {% endfor %}
+            
+              </td>
+              <td> {{task.description}} </td>
+              <td>
+                {% if task.state == 'pendiente' %}
+  
+                  <span class="bg-danger p-1 text-white">{{task.state}}</span>      
+                {%elif task.state == 'en proceso' %}
+              
+    
+                <span class="bg-warning p-1 text-white">{{task.state}}</span>
+                {% else %}  
+                <span class="bg-success p-1 text-white">{{task.state}}</span> 
+                {% endif %}
+              </td>
+              <td>
+                 
+                <div class="dropdown d-inline">
+                  <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+                    <i class="bi bi-gear"></i>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item"  href="">Ver o Editar</a></li>
+                    <li><a class="dropdown-item" href="" onclick="return confirm_delete_task()">Eliminar</a></li>
+                  </ul>
+                </div>
+              
+              
+              </td>
+            </tr>
+    
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+      
+</div>

@@ -21,9 +21,13 @@ from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField, F
 from django.views.decorators.http import require_POST
 from django.utils.encoding import iri_to_uri  # Para codificar caracteres especiales
+from collections import Counter
 
 # Create your views here.
 
+def save_activity(item,action,project,usersession):
+    pass
+    
 
 def staff_required(user):
     return user.is_staff
@@ -1416,7 +1420,6 @@ def create_order(request, project_id = None):
     project = Project.objects.filter(id = project_id).first()
 
     projects = Project.objects.all()
-    
 
     if request.method == 'GET':
 
@@ -1462,6 +1465,7 @@ def create_order(request, project_id = None):
                                               usersession = request.user,
                                               project_id= project
                                              )
+        
         for product in productbox:
 
             OrderProduct.objects.create(
@@ -1826,12 +1830,17 @@ def create_order_entry(request,id):
                                                    'is_staff':is_staff
                                                    })
 
+
+    
+
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
-def delete_order(request,id):  
+def delete_order(request,id):
+    referer = request.META.get("HTTP_REFERER")
     order = PurcharseOrder.objects.filter(id = id).first()
     order.delete()
-    return redirect("/purcharseorder/")
+    # save_activity(f"ORDEN {order.code}","DELETE",order.project,request.user)
+    return redirect(referer)
 
 
 @login_required
@@ -2674,7 +2683,18 @@ def calc_offer_info_all_project(folders):
 
     return total_info_folder_customer
         
+def calculate_and_save_percentage_of_tasks(project):
 
+    tasks = Task.objects.filter(project = project).all()
+    tasks_completed = Task.objects.filter(project = project, state = 'finalizado').all()
+
+    if tasks:
+        percentage_und_task = 100/len(tasks)
+        porcentage_tasks = len(tasks_completed) * percentage_und_task
+
+
+        project.progress = porcentage_tasks
+        project.save()
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
@@ -2714,8 +2734,11 @@ def overview_folder(request,id):
         generated_offer = GeneratedOffer.objects.filter(project= project).exists()
         pending_orders = PurcharseOrder.objects.filter(project  = project)
         entrys = OrderEntry.objects.filter(order__in = pending_orders)
+        tasks = Task.objects.filter(project = project).all()
 
         total_info_order = get_total_info_order(pending_orders,entrys)
+
+        calculate_and_save_percentage_of_tasks(project)
 
         files = sorted_files(remission_files)
         files += sorted_files(invoice_file)
@@ -2730,6 +2753,7 @@ def overview_folder(request,id):
         remissions = None
         invoices = None
         generated_offer = None
+        tasks = None
         folder_file = File.objects.filter(folder = folder).all()
         files = sorted_files(folder_file)
 
@@ -2756,7 +2780,8 @@ def overview_folder(request,id):
         'files':files,
         'offer_info':offer_info,
         'generated_offer':generated_offer,
-        'total_info_order':total_info_order
+        'total_info_order':total_info_order,
+        'tasks':tasks
     }
     
     return render(request,'overview_folder.html',context)
@@ -3525,9 +3550,37 @@ def upload_categories(request):
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
-def create_task(request):
+def create_task(request, project_id):
 
-    return render(request,"create_task.html") 
+    referer = request.META.get("HTTP_REFERER")
+
+    project = Project.objects.filter(id= project_id).first()
+
+    if request.method == "GET":
+        return render(request,"create_task.html", {'form':CreateTask()}) 
+    else:
+        name = request.POST["name"]
+        start_date = request.POST["start_date"]
+        due_date = request.POST["due_date"]
+        description = request.POST["description"]
+        users = request.POST.getlist("users")
+
+        task = Task.objects.create(
+            name=name,
+            start_date=start_date,
+            due_date=due_date,
+            description=description,
+            project = project,
+            state = 'pendiente',
+            container = 'container1'
+        )
+        # Asignar los usuarios a la tarea
+        task.users.set(users)
+        task.save()
+        calculate_and_save_percentage_of_tasks(project)
+        
+
+        return redirect(referer)
 
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
@@ -3546,7 +3599,6 @@ def save_offer_titles(request):
         raw_data = request.body
         body_unicode = raw_data.decode('utf-8')
         data = json.loads(body_unicode)
-        print(data)
         return JsonResponse({'status':'ok'})
 
 def obtener_productos(request):
@@ -3587,4 +3639,81 @@ def add_subtitle(request,project_id, parent_id):
     GeneratedOffer.objects.create(title="NUEVO SUBTITULO",project_id = project_id, parent_id = parent_id, is_title = True)
 
     return redirect(referer)
+
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def show_all_activity(request):
+    
+    all_activiy = Activity.objects.filter().order_by('-date').all()
+    search = request.GET.get('search')
+    if search:
+        all_activiy = Activity.objects.filter(Q(model__icontains= search) | Q(usersession__username__icontains= search))
+    
+    all_activiy = paginator(request,all_activiy,10)
+
+    return render(request,"show_all_activity.html",{ 
+        'all_activity':all_activiy
+    })
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def user_view(request):
+
+    tasks = Task.objects.filter(users = request.user)
+    projects = set([ task.project for task in tasks ])
+    
+    tasks_per_project = [
+        {
+            'project':project,
+            'tasks': [task for task in tasks if project.id == task.project.id],
+            'total': sum(1 for task in tasks if project.id == task.project.id)
+        }
+
+    for project in projects
+
+    ]
+   
+    return render(request,"user_view.html", {'tasks_per_project':tasks_per_project})
+
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def tasks(request,project_id):
+
+    project = Project.objects.filter(id=project_id).first()
+
+    tasks = Task.objects.filter(project = project, users = request.user)
+   
+    return render(request,"tasks.html", {'tasks':tasks})
+
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def save_order_container_task(request):
+    if request.method == "POST":
+        raw_data = request.body
+        body_unicode = raw_data.decode('utf-8')
+        data = json.loads(body_unicode)
+
+        task = Task.objects.filter(id = data['task_id']).first()
+
+
+        task.container = data['container']
+
+        if task.container == "container1":
+            task.state = 'pendiente'
+        elif task.container == "container2":
+            task.state = 'en proceso'
+        elif task.container == "container3":
+            task.state = 'finalizado'
+
+        task.save()
+        calculate_and_save_percentage_of_tasks(task.project)
+
+        return JsonResponse({'status':'ok'})
+
+
+
+
 

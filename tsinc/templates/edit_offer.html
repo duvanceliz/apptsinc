@@ -95,6 +95,7 @@
   const valor_total = document.getElementById('valor_total')
   const subtotals = document.querySelectorAll("#subtotals")
   const sections = document.querySelectorAll("#sections")
+  // const csrfToken = null
 
 
   function post(url, data, csrfToken) {
@@ -265,13 +266,6 @@
         items.push(obj)
     }
 
-
-   
-
-    
-
-    
-
     data = {
       items:items,
       descuento:input_descuento.value,
@@ -280,6 +274,7 @@
       descuento_utilidades: descuento_utilidades.value,
       iva_utilidad:iva_utilidad.value
     }
+    
    
     post("/save_offer_item/",data,csrfToken)
   }
@@ -311,6 +306,7 @@
 
 
 const csrfToken_ = document.querySelector('[name=csrfmiddlewaretoken]').value;
+// const csrfToken_ = null
 const btn_add_to_order = document.querySelectorAll("#btn-add-to-order")
 
 function post2(url, data, csrfToken) {

@@ -186,3 +186,1718 @@ ValueError: Missing staticfiles manifest entry for 'css_w/styles_workspace.css'
 2024-10-21 21:59:11,791 INFO Serving on http://0.0.0.0:8000
 2024-10-22 08:14:57,157 INFO Serving on http://0.0.0.0:8000
 2024-10-22 08:16:07,574 WARNING Not Found: /favicon.ico
+2024-10-22 10:13:09,691 WARNING Not Found: /favicon.ico
+2024-10-22 10:45:21,479 INFO Serving on http://0.0.0.0:8000
+2024-10-22 10:45:30,227 WARNING Not Found: /favicon.ico
+2024-10-22 10:46:28,905 ERROR Internal Server Error: /generate_offer/37
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 1072, in generate_offer
+    generate_offer_(project)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\utils.py", line 1354, in generate_offer_
+    save_offer_product(None,project,product,measure,quantity,sale_price_usd,total_value,2,title_3)# guarda los datos generados en la base de datos
+                                            ^^^^^^^
+UnboundLocalError: cannot access local variable 'measure' where it is not associated with a value
+2024-10-22 11:22:53,402 WARNING Not Found: /media/items/SENSORES/AQD-BBBE.svg
+2024-10-22 11:22:53,408 WARNING Not Found: /media/items/SENSORES/EHD110-800.svg
+2024-10-22 11:22:53,435 WARNING Not Found: /media/items/SENSORES/HT1D.svg
+2024-10-22 11:22:53,436 WARNING Not Found: /media/items/SENSORES/P74FA-1C.svg
+2024-10-22 11:22:53,441 WARNING Not Found: /media/items/DUCTOS/HORZ_DUCT.svg
+2024-10-22 11:22:53,442 WARNING Not Found: /media/items/DUCTOS/LEFT_INLET.svg
+2024-10-22 11:22:53,447 WARNING Not Found: /media/items/DUCTOS/RIGHT_OUTLET.svg
+2024-10-22 11:22:53,448 WARNING Not Found: /media/items/DUCTOS/SUPPLY_FAN.svg
+2024-10-22 11:22:53,451 WARNING Not Found: /media/items/PUNTOS/AI.svg
+2024-10-22 11:22:53,452 WARNING Not Found: /media/items/PUNTOS/AO.svg
+2024-10-22 11:22:53,456 WARNING Not Found: /media/items/PUNTOS/BI.svg
+2024-10-22 11:22:53,457 WARNING Not Found: /media/items/PUNTOS/BO.svg
+2024-10-22 11:22:53,461 WARNING Not Found: /media/items/RELEVOS/CKIT-VMD1B-C24A.svg
+2024-10-22 11:22:53,462 WARNING Not Found: /media/items/COILS/COOLING_COIL.svg
+2024-10-22 11:22:53,466 WARNING Not Found: /media/items/COILS/HEATING_COIL.svg
+2024-10-22 11:22:53,524 WARNING Not Found: /media/items/DUCTOS/SUPPLY_FAN.svg
+2024-10-22 11:22:53,526 WARNING Not Found: /media/items/DUCTOS/HORZ_DUCT.svg
+2024-10-22 11:22:53,530 WARNING Not Found: /media/items/DUCTOS/RIGHT_OUTLET.svg
+2024-10-22 11:22:53,530 WARNING Not Found: /media/items/DUCTOS/LEFT_INLET.svg
+2024-10-22 11:22:53,536 WARNING Not Found: /media/items/SENSORES/P74FA-1C.svg
+2024-10-22 11:22:53,536 WARNING Not Found: /media/items/SENSORES/AQD-BBBE.svg
+2024-10-22 11:22:53,541 WARNING Not Found: /media/items/COILS/COOLING_COIL.svg
+2024-10-22 11:22:53,542 WARNING Not Found: /media/items/PUNTOS/BI.svg
+2024-10-22 11:22:53,548 WARNING Not Found: /media/items/SENSORES/HT1D.svg
+2024-10-22 11:22:53,548 WARNING Not Found: /media/items/RELEVOS/CKIT-VMD1B-C24A.svg
+2024-10-22 11:23:23,344 WARNING Not Found: /media/items/SENSORES/AQD-BBBE.svg
+2024-10-22 11:23:23,350 WARNING Not Found: /media/items/SENSORES/EHD110-800.svg
+2024-10-22 11:23:23,365 WARNING Not Found: /media/items/SENSORES/HT1D.svg
+2024-10-22 11:23:23,372 WARNING Not Found: /media/items/SENSORES/P74FA-1C.svg
+2024-10-22 11:23:23,374 WARNING Not Found: /media/items/DUCTOS/HORZ_DUCT.svg
+2024-10-22 11:23:23,375 WARNING Not Found: /media/items/DUCTOS/LEFT_INLET.svg
+2024-10-22 11:23:23,376 WARNING Not Found: /media/items/DUCTOS/RIGHT_OUTLET.svg
+2024-10-22 11:23:23,378 WARNING Not Found: /media/items/DUCTOS/SUPPLY_FAN.svg
+2024-10-22 11:23:23,384 WARNING Not Found: /media/items/PUNTOS/AI.svg
+2024-10-22 11:23:23,386 WARNING Not Found: /media/items/PUNTOS/BI.svg
+2024-10-22 11:23:23,388 WARNING Not Found: /media/items/RELEVOS/CKIT-VMD1B-C24A.svg
+2024-10-22 11:23:23,388 WARNING Not Found: /media/items/PUNTOS/AO.svg
+2024-10-22 11:23:23,389 WARNING Not Found: /media/items/PUNTOS/BO.svg
+2024-10-22 11:23:23,391 WARNING Not Found: /media/items/COILS/COOLING_COIL.svg
+2024-10-22 11:23:23,394 WARNING Not Found: /media/items/COILS/HEATING_COIL.svg
+2024-10-22 11:23:23,465 WARNING Not Found: /media/items/DUCTOS/SUPPLY_FAN.svg
+2024-10-22 11:23:23,466 WARNING Not Found: /media/items/DUCTOS/HORZ_DUCT.svg
+2024-10-22 11:23:23,466 WARNING Not Found: /media/items/DUCTOS/RIGHT_OUTLET.svg
+2024-10-22 11:23:23,466 WARNING Not Found: /media/items/DUCTOS/LEFT_INLET.svg
+2024-10-22 11:23:23,467 WARNING Not Found: /media/items/SENSORES/P74FA-1C.svg
+2024-10-22 11:23:23,467 WARNING Not Found: /media/items/SENSORES/AQD-BBBE.svg
+2024-10-22 11:23:23,471 WARNING Not Found: /media/items/COILS/COOLING_COIL.svg
+2024-10-22 11:23:23,472 WARNING Not Found: /media/items/PUNTOS/BI.svg
+2024-10-22 11:23:23,476 WARNING Not Found: /media/items/RELEVOS/CKIT-VMD1B-C24A.svg
+2024-10-22 11:23:23,476 WARNING Not Found: /media/items/SENSORES/HT1D.svg
+2024-10-22 11:23:57,284 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\apptsinc\settings.py changed, reloading.
+2024-10-22 11:24:03,930 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\apptsinc\settings.py changed, reloading.
+2024-10-22 14:31:14,899 WARNING Not Found: /deleteitem/
+2024-10-22 14:34:52,474 WARNING Not Found: /deleteitem/
+2024-10-22 14:50:30,995 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-22 14:50:36,748 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-22 14:50:49,234 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-22 14:54:31,433 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 14:54:39,350 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 14:57:09,471 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 14:57:32,551 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 14:58:05,555 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-22 14:58:30,921 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-22 15:00:53,489 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:01:01,337 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:01:28,639 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:02:00,240 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:02:31,153 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-22 15:02:50,913 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:03:47,180 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:09:10,480 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-22 15:09:25,144 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-22 15:15:56,847 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:16:09,133 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:16:26,873 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:16:39,018 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:16:51,184 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:17:00,220 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:17:40,442 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:19:00,516 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:20:07,382 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:23:24,868 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:23:44,920 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:30:25,068 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-22 15:34:40,001 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:34:43,954 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:35:22,551 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:35:58,118 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:36:59,637 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:37:14,247 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:37:18,074 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:38:08,743 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-22 15:41:41,015 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:43:17,758 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:44:49,626 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:45:06,214 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:46:33,314 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:47:09,615 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:47:34,952 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:47:39,738 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:47:43,592 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:52:31,608 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:53:37,064 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:53:52,725 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:54:48,900 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:55:00,133 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:56:16,622 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:57:12,356 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:58:35,840 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:58:41,507 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:58:44,977 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:59:02,628 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:59:11,505 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 15:59:47,505 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 16:00:00,651 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 16:00:04,344 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 16:00:15,421 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 16:01:16,850 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-22 16:01:24,659 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-22 16:01:34,662 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-22 16:01:40,499 WARNING Not Found: /create_task/
+2024-10-22 16:03:44,810 ERROR Internal Server Error: /create_task/50
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 329, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.IntegrityError: NOT NULL constraint failed: tsinc_task.project_id
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 3545, in create_task
+    task = Task.objects.create(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 679, in create
+    obj.save(force_insert=True, using=self.db)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\base.py", line 822, in save
+    self.save_base(
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\base.py", line 909, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\base.py", line 1071, in _save_table
+    results = self._do_insert(
+              ^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\base.py", line 1112, in _do_insert
+    return manager._insert(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1847, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1823, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 329, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.IntegrityError: NOT NULL constraint failed: tsinc_task.project_id
+2024-10-22 16:04:37,186 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 16:04:42,868 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 16:05:09,380 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 16:06:04,028 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 16:29:26,829 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 16:29:35,942 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 16:30:04,386 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 16:30:20,078 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-22 16:31:18,936 ERROR Internal Server Error: /overview_folder/50
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 2765, in overview_folder
+    return render(request,'overview_folder.html',context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\defaulttags.py", line 326, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader_tags.py", line 210, in render
+    return template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 173, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\defaulttags.py", line 479, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\urls\resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'create_task' with arguments '('',)' not found. 1 pattern(s) tried: ['create_task/(?P<project_id>[0-9]+)\\Z']
+2024-10-23 08:05:57,829 INFO Serving on http://0.0.0.0:8000
+2024-10-23 08:07:20,932 WARNING Not Found: /favicon.ico
+2024-10-23 08:42:43,161 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-23 08:49:40,297 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-23 09:45:58,701 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-23 09:46:02,359 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-23 09:46:13,592 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-23 09:46:26,077 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-23 09:46:35,436 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-23 09:46:47,613 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-23 09:46:57,494 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-23 09:47:20,923 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-23 09:47:24,483 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-23 09:47:51,952 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-23 09:47:59,879 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-23 09:48:14,386 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-23 09:48:19,339 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-23 09:48:34,141 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-23 09:48:37,616 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\forms.py changed, reloading.
+2024-10-23 09:58:37,946 ERROR Internal Server Error: /overview_folder/50
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 502, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'endif'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 2765, in overview_folder
+    return render(request,'overview_folder.html',context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\defaulttags.py", line 326, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader_tags.py", line 199, in render
+    template = context.template.engine.select_template(template_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\engine.py", line 208, in select_template
+    return self.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 504, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 565, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 77: 'endif'. Did you forget to register or load this tag?
+2024-10-23 10:12:06,731 ERROR Internal Server Error: /create_task/31
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\utils\datastructures.py", line 84, in __getitem__
+    list_ = super().__getitem__(key)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'priority'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 3543, in create_task
+    priority = request.POST["priority"]
+               ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\utils\datastructures.py", line 86, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'priority'
+2024-10-23 10:13:58,849 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:14:26,979 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:14:31,866 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:14:35,388 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:14:39,865 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:14:44,358 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:14:48,786 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:15:06,080 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:30:05,774 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:31:44,292 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:33:18,368 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:34:05,550 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:35:21,100 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:35:28,990 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:35:32,609 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:35:46,058 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:38:33,417 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:43:29,170 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:43:45,809 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:44:59,152 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:45:11,391 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:45:57,045 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:46:01,652 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:46:25,724 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:46:32,499 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:46:40,903 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:47:05,775 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:47:15,741 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:48:21,866 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:49:09,702 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:49:25,674 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:49:30,255 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:49:45,653 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:50:29,638 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 10:51:15,564 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-23 12:24:32,000 WARNING Not Found: /favicon.ico
+2024-10-23 12:34:53,481 WARNING Not Found: /favicon.ico
+2024-10-23 13:00:22,831 WARNING Not Found: /favicon.ico
+2024-10-23 13:09:10,008 WARNING Not Found: /favicon.ico
+2024-10-23 13:10:38,869 WARNING Forbidden (CSRF token missing.): /save_offer_item/
+2024-10-23 13:10:47,927 WARNING Forbidden (CSRF token missing.): /save_offer_item/
+2024-10-23 13:10:57,152 WARNING Forbidden (CSRF token missing.): /save_offer_item/
+2024-10-23 13:11:08,744 WARNING Forbidden (CSRF token missing.): /save_offer_item/
+2024-10-23 13:11:21,054 WARNING Forbidden (CSRF token missing.): /save_offer_item/
+2024-10-23 13:12:41,042 WARNING Forbidden (CSRF token missing.): /change_to_purcharse_order/
+2024-10-23 13:12:44,396 WARNING Forbidden (CSRF token missing.): /change_to_purcharse_order/
+2024-10-23 13:22:33,812 INFO Serving on http://0.0.0.0:8000
+2024-10-23 13:26:01,347 WARNING Not Found: /favicon.ico
+2024-10-23 13:26:14,365 WARNING Forbidden (Origin checking failed - http://localhost:8080 does not match any trusted origins.): /change_to_purcharse_order/
+2024-10-23 13:26:16,250 WARNING Forbidden (Origin checking failed - http://localhost:8080 does not match any trusted origins.): /change_to_purcharse_order/
+2024-10-23 13:26:19,485 WARNING Forbidden (Origin checking failed - http://localhost:8080 does not match any trusted origins.): /change_to_purcharse_order/
+2024-10-23 13:27:52,432 WARNING Forbidden (Origin checking failed - http://localhost:8080 does not match any trusted origins.): /change_to_purcharse_order/
+2024-10-23 13:27:56,058 WARNING Forbidden (Origin checking failed - http://localhost:8080 does not match any trusted origins.): /change_to_purcharse_order/
+2024-10-23 13:28:20,245 WARNING Forbidden (Origin checking failed - http://localhost:8080 does not match any trusted origins.): /change_to_purcharse_order/
+2024-10-23 13:28:54,335 WARNING Forbidden (Origin checking failed - http://localhost:8080 does not match any trusted origins.): /change_to_purcharse_order/
+2024-10-23 13:30:19,699 INFO Serving on http://0.0.0.0:8000
+2024-10-23 14:04:35,648 WARNING Not Found: /favicon.ico
+2024-10-23 14:17:13,606 WARNING Not Found: /favicon.ico
+2024-10-23 16:37:39,681 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:04:53,864 INFO Serving on http://0.0.0.0:8000
+2024-10-24 08:05:56,381 WARNING Not Found: /favicon.ico
+2024-10-24 08:12:51,997 ERROR Internal Server Error: /overview_folder/46
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 2732, in overview_folder
+    calculate_and_save_percentage_of_tasks(project)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 2682, in calculate_and_save_percentage_of_tasks
+    percentage_und_task = 100/len(tasks)
+                          ~~~^~~~~~~~~~~
+ZeroDivisionError: division by zero
+2024-10-24 08:12:58,776 ERROR Internal Server Error: /overview_folder/59
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 2732, in overview_folder
+    calculate_and_save_percentage_of_tasks(project)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 2682, in calculate_and_save_percentage_of_tasks
+    percentage_und_task = 100/len(tasks)
+                          ~~~^~~~~~~~~~~
+ZeroDivisionError: division by zero
+2024-10-24 08:13:03,698 ERROR Internal Server Error: /overview_folder/54
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 2732, in overview_folder
+    calculate_and_save_percentage_of_tasks(project)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 2682, in calculate_and_save_percentage_of_tasks
+    percentage_und_task = 100/len(tasks)
+                          ~~~^~~~~~~~~~~
+ZeroDivisionError: division by zero
+2024-10-24 08:13:08,668 ERROR Internal Server Error: /overview_folder/59
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 2732, in overview_folder
+    calculate_and_save_percentage_of_tasks(project)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 2682, in calculate_and_save_percentage_of_tasks
+    percentage_und_task = 100/len(tasks)
+                          ~~~^~~~~~~~~~~
+ZeroDivisionError: division by zero
+2024-10-24 08:14:14,484 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:14:42,120 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:22:26,660 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 08:25:09,234 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 08:25:12,858 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 08:26:02,002 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 08:26:08,666 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 08:26:17,567 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 08:26:26,416 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 08:26:34,085 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 08:26:37,431 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 08:26:44,308 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 08:27:42,500 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:27:59,923 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:28:03,434 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:28:11,183 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:28:15,726 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:29:03,971 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:29:13,009 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:29:50,247 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:30:06,768 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:30:56,830 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:31:37,337 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:31:41,962 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:36:21,075 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 08:42:40,857 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:42:55,327 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:43:01,983 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:45:44,376 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:47:48,670 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:47:58,661 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 08:48:59,350 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\admin.py changed, reloading.
+2024-10-24 08:52:10,161 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 08:52:24,741 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 09:00:38,760 ERROR Internal Server Error: /statictics/orders
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 1941, in order_statictics
+    return render(request,"orderstatictics.html",{
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\defaulttags.py", line 479, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\urls\resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'show_all_offer' not found. 'show_all_offer' is not a valid view function or pattern name.
+2024-10-24 09:00:53,609 ERROR Internal Server Error: /statictics/orders
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 1941, in order_statictics
+    return render(request,"orderstatictics.html",{
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\defaulttags.py", line 479, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\urls\resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'show_all_actvity' not found. 'show_all_actvity' is not a valid view function or pattern name.
+2024-10-24 09:02:06,184 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 09:02:10,849 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 09:04:44,276 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 09:05:00,871 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 09:05:57,911 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 09:06:09,082 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 09:06:12,595 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 09:07:02,794 ERROR Internal Server Error: /show_all_activity/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 3647, in show_all_activity
+    all_activiy = Invoice.objects.filter(Q(item__icontains= search) | Q(date__icontains= search) | Q(project__name__icontains= search))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1472, in build_filter
+    return self._add_q(
+           ^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1495, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1307, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1772, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'item' into field. Choices are: date, file, ica_retention, id, iva, number, productinvoice, project, project_id, source_retention, total_price, usersession, usersession_id
+2024-10-24 09:07:09,103 ERROR Internal Server Error: /show_all_activity/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 3647, in show_all_activity
+    all_activiy = Invoice.objects.filter(Q(item__icontains= search) | Q(date__icontains= search) | Q(project__name__icontains= search))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1472, in build_filter
+    return self._add_q(
+           ^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1495, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1307, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1772, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'item' into field. Choices are: date, file, ica_retention, id, iva, number, productinvoice, project, project_id, source_retention, total_price, usersession, usersession_id
+2024-10-24 09:08:12,490 ERROR Internal Server Error: /show_all_activity/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 3647, in show_all_activity
+    all_activiy = Invoice.objects.filter(Q(item__icontains= search) | Q(date__icontains= search) | Q(project__name__icontains= search))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1472, in build_filter
+    return self._add_q(
+           ^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1495, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1307, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1772, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'item' into field. Choices are: date, file, ica_retention, id, iva, number, productinvoice, project, project_id, source_retention, total_price, usersession, usersession_id
+2024-10-24 09:08:26,493 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 09:08:28,985 ERROR Internal Server Error: /show_all_activity/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 3647, in show_all_activity
+    all_activiy = Activity.objects.filter(Q(item__icontains= search) | Q(user__icontains= search) | Q(project__name__icontains= search))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1472, in build_filter
+    return self._add_q(
+           ^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1495, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1307, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1772, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'user' into field. Choices are: action, date, id, item, project, project_id, usersession, usersession_id
+2024-10-24 09:08:41,049 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 09:08:43,188 ERROR Internal Server Error: /show_all_activity/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 3647, in show_all_activity
+    all_activiy = Activity.objects.filter(Q(item__icontains= search) | Q(usersession__icontains= search) | Q(project__name__icontains= search))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1472, in build_filter
+    return self._add_q(
+           ^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1559, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1383, in build_lookup
+    lhs = self.try_transform(lhs, lookup_name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1427, in try_transform
+    raise FieldError(
+django.core.exceptions.FieldError: Unsupported lookup 'icontains' for ForeignKey or join on the field not permitted.
+2024-10-24 09:09:23,104 ERROR Internal Server Error: /show_all_activity/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 3647, in show_all_activity
+    all_activiy = Activity.objects.filter(Q(item__icontains= search) | Q(usersession__icontains= search) | Q(project__name__icontains= search))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1472, in build_filter
+    return self._add_q(
+           ^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1559, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1383, in build_lookup
+    lhs = self.try_transform(lhs, lookup_name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1427, in try_transform
+    raise FieldError(
+django.core.exceptions.FieldError: Unsupported lookup 'icontains' for ForeignKey or join on the field not permitted.
+2024-10-24 09:09:32,876 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 09:09:56,178 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 09:10:13,678 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 09:10:16,055 ERROR Internal Server Error: /show_all_activity/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 3647, in show_all_activity
+    all_activiy = Activity.objects.filter(Q(item__icontains= search) | Q(project__name__icontains= search) | Q(usersession__name__icontains= search) )
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1472, in build_filter
+    return self._add_q(
+           ^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1559, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1376, in build_lookup
+    lhs = self.try_transform(lhs, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1427, in try_transform
+    raise FieldError(
+django.core.exceptions.FieldError: Unsupported lookup 'name' for ForeignKey or join on the field not permitted.
+2024-10-24 09:10:45,759 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 09:11:12,290 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 09:53:50,384 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 09:53:55,163 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 09:54:13,684 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 10:09:49,766 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\apps.py changed, reloading.
+2024-10-24 10:10:32,995 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\apps.py changed, reloading.
+2024-10-24 10:11:25,719 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\admin.py changed, reloading.
+2024-10-24 10:27:31,797 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 10:30:16,257 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 10:34:34,143 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 10:35:18,188 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 10:43:29,862 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 10:46:19,346 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 10:48:26,588 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 10:48:30,113 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 10:51:12,736 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 10:51:40,704 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 10:59:08,239 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:00:30,996 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:00:38,827 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:00:45,504 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:01:19,003 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:03:34,700 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:04:14,583 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:08:12,855 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:08:20,657 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:12:49,274 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:14:15,498 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:14:28,993 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:15:05,415 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:18:27,447 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 11:19:37,379 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 11:22:22,808 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 11:22:32,031 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:22:42,990 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:22:48,728 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:24:45,398 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:25:08,735 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:25:12,204 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:26:21,368 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:28:22,549 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:28:56,545 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:30:15,764 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:31:24,666 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 11:31:43,607 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 11:31:47,166 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 11:31:50,606 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 11:34:05,624 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:34:09,072 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\signals.py changed, reloading.
+2024-10-24 11:36:00,203 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\apps.py changed, reloading.
+2024-10-24 11:37:55,501 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 11:38:05,337 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 11:38:26,173 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 11:46:06,101 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 11:46:12,972 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 11:46:16,405 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 11:47:42,264 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 11:57:56,548 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 11:59:08,634 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 12:02:09,139 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\apptsinc\settings.py changed, reloading.
+2024-10-24 12:03:11,648 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:03:30,589 ERROR Internal Server Error: /createorder/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\utils\deprecation.py", line 136, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py", line 20, in process_response
+    Activity.objects.create(
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 677, in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\base.py", line 567, in __init__
+    raise TypeError(
+TypeError: Activity() got unexpected keyword arguments: 'user'
+2024-10-24 12:03:42,824 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:04:43,819 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:10:50,256 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:11:48,280 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:15:04,712 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:16:02,408 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:16:51,044 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:17:38,182 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:18:49,439 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:19:46,495 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:20:31,795 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:20:45,049 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:22:09,673 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:22:21,903 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:22:30,745 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:22:45,000 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:23:17,532 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:23:33,334 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:24:50,684 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:25:52,331 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:26:00,152 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:28:11,745 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-24 12:31:04,076 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:31:14,077 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:31:24,085 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:32:19,370 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:32:49,468 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:33:18,486 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:41:38,484 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 12:42:18,966 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 12:45:18,817 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 12:56:12,834 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:56:23,922 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:56:53,804 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:58:51,911 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:59:10,599 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:59:31,469 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:59:46,850 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 12:59:57,865 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 13:00:13,219 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 13:00:22,153 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 13:00:58,930 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 13:01:38,430 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 13:02:05,977 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 13:02:59,931 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 13:03:07,786 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 13:03:12,359 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 13:03:53,545 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\middleware.py changed, reloading.
+2024-10-24 13:04:04,705 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 13:04:09,088 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 13:05:01,411 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 13:05:18,465 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 13:05:37,125 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 13:05:47,239 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 13:05:55,389 ERROR Internal Server Error: /show_all_activity/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 3649, in show_all_activity
+    all_activiy = Activity.objects.filter(Q(model__icontains= search) | Q(project__name__icontains= search))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1472, in build_filter
+    return self._add_q(
+           ^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1495, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1307, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1772, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'project' into field. Choices are: action, date, id, model, usersession, usersession_id
+2024-10-24 13:06:48,197 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 13:06:53,893 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 13:28:56,049 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 13:29:01,951 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:16:29,843 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:17:35,655 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:17:52,113 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:17:59,864 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:18:07,551 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:18:39,233 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:19:14,072 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:19:20,786 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:19:27,349 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:19:34,006 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:19:39,628 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:19:47,341 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:19:52,988 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:19:59,740 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:20:17,408 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:20:24,097 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:20:31,897 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:20:44,117 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:20:50,842 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:20:56,554 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:21:04,250 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:21:10,128 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:21:15,734 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:21:22,410 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:21:30,146 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:21:35,819 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:21:54,475 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:40:09,427 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 14:41:30,088 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 14:42:53,961 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 14:43:02,860 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 14:43:16,148 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 14:43:29,432 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 14:46:49,864 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:46:53,371 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:47:14,599 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:47:18,038 WARNING Not Found: /user_view/
+2024-10-24 14:47:30,516 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:47:34,961 WARNING Not Found: /user_view/
+2024-10-24 14:47:41,935 WARNING Not Found: /user_view/
+2024-10-24 14:47:46,349 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:47:48,396 WARNING Not Found: /user_view/
+2024-10-24 14:47:48,502 WARNING Not Found: /favicon.ico
+2024-10-24 14:47:56,361 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 14:48:29,598 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 14:48:37,539 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:11:18,863 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:14:04,192 WARNING Not Found: /create_task/31
+2024-10-24 15:14:42,709 WARNING Not Found: /createpage/29/
+2024-10-24 15:27:20,247 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:27:25,664 ERROR Internal Server Error: /user_view/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 3661, in user_view
+    print(tasks)
+          ^^^^
+NameError: name 'task' is not defined. Did you mean: 'Task'?
+2024-10-24 15:28:02,634 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:28:39,899 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:29:04,962 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:29:27,129 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:29:46,202 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:31:26,402 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:31:32,267 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:38:10,161 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:41:48,780 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:49:46,061 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:50:03,239 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:56:38,864 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:57:49,366 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:59:11,578 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 15:59:24,565 ERROR Internal Server Error: /user_view/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 3675, in user_view
+    print(Counter(tasks_per_project))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\AppData\Local\Programs\Python\Python312\Lib\collections\__init__.py", line 607, in __init__
+    self.update(iterable, **kwds)
+  File "C:\Users\Usuario\AppData\Local\Programs\Python\Python312\Lib\collections\__init__.py", line 699, in update
+    _count_elements(self, iterable)
+TypeError: unhashable type: 'dict'
+2024-10-24 15:59:35,235 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:00:00,813 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:00:44,435 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:02:14,450 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:02:34,208 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:02:38,770 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:02:43,780 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:07:10,093 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:07:13,918 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:07:18,615 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:11:10,152 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:11:14,095 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:11:17,530 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:19:23,856 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:19:29,474 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:19:48,271 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:20:40,689 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:21:29,489 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:21:42,272 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:21:47,021 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:21:50,933 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:21:55,666 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:22:00,631 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:22:38,196 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:23:17,490 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 16:23:30,962 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 16:23:51,841 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-24 16:24:05,159 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:24:23,630 WARNING Not Found: /tasks
+2024-10-24 16:25:51,180 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:25:55,034 ERROR Internal Server Error: /tasks/31
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 3685, in tasks
+    tasks = Task.objects.filter(project = project, usersession = request.user ).all()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1495, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1307, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1772, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'usersession' into field. Choices are: completed, description, due_date, id, name, project, project_id, start_date, users
+2024-10-24 16:26:18,033 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:26:20,722 ERROR Internal Server Error: /tasks/31
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 3685, in tasks
+    tasks = Task.objects.filter(project = project, usersession = request.user )
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1495, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1307, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\db\models\sql\query.py", line 1772, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'usersession' into field. Choices are: completed, description, due_date, id, name, project, project_id, start_date, users
+2024-10-24 16:26:40,405 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:26:54,039 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:27:16,440 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-24 16:55:11,156 WARNING Not Found: /createpage/29/
+2024-10-24 16:55:30,559 WARNING Not Found: /createpage/29/
+2024-10-24 16:56:35,829 WARNING Not Found: /project/tabs/29/page/create/29
+2024-10-24 16:56:40,503 WARNING Not Found: /project/tabs/29/page/create/29
+2024-10-24 16:56:48,451 WARNING Not Found: /project/tabs/29/page/create/29
+2024-10-24 16:56:49,964 WARNING Not Found: /project/tabs/29/page/create/29
+2024-10-24 16:56:50,048 WARNING Not Found: /favicon.ico
+2024-10-24 16:56:52,848 WARNING Not Found: /favicon.ico
+2024-10-24 16:56:59,736 WARNING Not Found: /deleteitem/
+2024-10-25 08:36:33,620 INFO Serving on http://0.0.0.0:8000
+2024-10-25 08:41:01,352 WARNING Not Found: /favicon.ico
+2024-10-25 08:57:04,798 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 08:57:45,101 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 08:57:48,572 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 08:57:55,276 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 09:14:12,305 WARNING Not Found: /favicon.ico
+2024-10-25 09:14:40,583 WARNING Not Found: /favicon.ico
+2024-10-25 09:15:19,551 WARNING Not Found: /favicon.ico
+2024-10-25 09:19:21,318 WARNING Not Found: /favicon.ico
+2024-10-25 09:19:59,708 WARNING Not Found: /favicon.ico
+2024-10-25 09:33:11,589 WARNING Not Found: /favicon.ico
+2024-10-25 09:35:24,653 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 09:36:15,538 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 09:38:31,228 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 09:38:34,710 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 09:39:15,588 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 09:40:44,069 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\admin.py changed, reloading.
+2024-10-25 09:41:32,452 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\admin.py changed, reloading.
+2024-10-25 09:42:59,788 WARNING Not Found: /favicon.ico
+2024-10-25 09:46:10,788 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 09:46:21,862 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 09:49:08,874 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 09:49:32,296 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 09:55:50,076 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 09:56:50,164 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 09:56:58,945 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 09:58:53,025 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 10:00:13,512 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 10:00:47,566 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 10:03:39,681 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\admin.py changed, reloading.
+2024-10-25 10:05:52,376 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 10:06:02,350 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 10:07:32,713 ERROR Internal Server Error: /tasks/31
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\smartif.py", line 180, in translate_token
+    op = OPERATORS[token]
+         ~~~~~~~~~^^^^^^^
+KeyError: '='
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py", line 3688, in tasks
+    return render(request,"tasks.html", {'tasks':tasks})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\backends\django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 510, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 510, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 510, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\defaulttags.py", line 861, in do_for
+    nodelist_loop = parser.parse(
+                    ^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 510, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\defaulttags.py", line 960, in do_if
+    condition = TemplateIfParser(parser, bits).parse()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\defaulttags.py", line 893, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\smartif.py", line 171, in __init__
+    mapped_tokens.append(self.translate_token(token))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\smartif.py", line 182, in translate_token
+    return self.create_var(token)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\defaulttags.py", line 896, in create_var
+    return TemplateLiteral(self.template_parser.compile_filter(value), value)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 597, in compile_filter
+    return FilterExpression(token, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Documents\duvan\py_proyect\app-django\venv\Lib\site-packages\django\template\base.py", line 698, in __init__
+    raise TemplateSyntaxError(
+django.template.exceptions.TemplateSyntaxError: Could not parse the remainder: '=' from '='
+2024-10-25 10:11:15,712 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 10:14:38,847 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 10:19:48,406 WARNING Not Found: /favicon.ico
+2024-10-25 10:31:50,191 WARNING Not Found: /favicon.ico
+2024-10-25 10:33:47,345 WARNING Not Found: /favicon.ico
+2024-10-25 10:34:34,683 WARNING Not Found: /favicon.ico
+2024-10-25 10:38:19,459 WARNING Not Found: /favicon.ico
+2024-10-25 10:39:01,902 WARNING Not Found: /favicon.ico
+2024-10-25 10:46:03,641 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 10:46:47,399 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 10:46:59,399 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 10:47:13,679 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 10:47:49,688 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\urls.py changed, reloading.
+2024-10-25 10:49:44,557 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 10:50:22,802 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 10:51:07,310 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 11:23:28,003 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:23:36,931 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:23:42,707 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:24:29,793 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:24:41,982 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:24:46,495 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:24:49,934 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:25:21,662 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:25:25,021 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:25:35,146 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:25:39,621 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:26:03,643 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:26:24,971 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:28:00,567 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:28:06,157 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:28:51,402 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:38:12,453 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:38:21,450 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:40:48,934 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 11:41:25,358 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:42:29,704 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 11:44:38,502 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 11:48:06,082 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 11:48:40,301 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\models.py changed, reloading.
+2024-10-25 11:49:54,093 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 11:50:43,445 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 11:51:22,555 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 11:51:59,524 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 11:52:24,961 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 11:52:32,160 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 11:52:43,261 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 11:55:14,726 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 11:55:18,365 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 11:56:29,365 WARNING Not Found: /favicon.ico
+2024-10-25 12:14:38,887 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 12:14:48,122 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 12:15:09,135 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.
+2024-10-25 12:17:05,885 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\tsinc\views.py changed, reloading.

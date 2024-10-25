@@ -1,0 +1,81 @@
+
+{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load humanize %} {% load static %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-4">
+      
+    </div>
+    <div class="col-md-4">
+      <form id="form-search">
+        <input id="input-search" type="text" name="search"/>
+        <button id="btn-search" class="btn btn-primary m-2" type="submit">
+          Buscar
+        </button>
+      </form>
+    </div>
+  </div>
+    <div class="row">
+   
+       <div class="col-md-12">
+        {% include 'components/alert.html' %}
+        
+        
+          <div class="table-responsive-md">
+
+          
+          <table class="table table-hover table-light">
+            <thead>
+              
+          
+              <tr>
+                <th scope="col">Log:</th>
+                <th scope="col">Action:</th>
+                <th scope="col">user</th>
+                <th scope="col">date</th>
+         
+              </tr>
+            
+            </thead>
+            <tbody>
+              <tr>
+                {% for activity in all_activity %}
+    
+                <td scope="row">{{activity.model}}</td>
+                <td>{{activity.action}}</td>
+                <td>{{activity.usersession}}</td>
+                <td>{{activity.date}}</td>
+              </tr>
+              
+              {%endfor%}
+            </tbody>
+          </table>
+    
+        </div>
+       </div>
+       <div class="pagination">
+        <span class="step-links">
+            {% if all_activity.has_previous %}
+                <a href="?page=1">&laquo; Primero</a>
+                <a href="?page={{ all_activity.previous_page_number }}">Anterior</a>
+            {% endif %}
+    
+            <span class="current">
+                Página {{ all_activity.number }} de {{ all_activity.paginator.num_pages }}.
+            </span>
+    
+            {% if all_activity.has_next %}
+                <a href="?page={{ all_activity.next_page_number }}">Siguiente</a>
+                <a href="?page={{ all_activity.paginator.num_pages }}">Último &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+      
+    </div>
+  </div>
+
+  <script src="{% static 'js/confirm.js' %}"></script>
+{% endblock %}

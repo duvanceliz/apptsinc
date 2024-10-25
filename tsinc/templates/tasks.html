@@ -1,0 +1,62 @@
+{% extends 'layout_with_folder_tree.html' %} {% block body %} {% load static %}
+
+<div class="container">
+    <div class="row">
+       <div class="col-md-4">
+        <div class="card">
+          <div class="card-header" >
+            <div class="display-6 text-center">
+              Por realizar
+            </div>
+          </div>
+          <div class="card-body" style="height: 40rem;" id="table-1" data-index="1">
+         
+              {% for task in tasks %}
+              {% if task.container == "container1" %}
+              {% include 'components/task_comp/accordion.html' %}
+              
+              {% endif %}
+              {% endfor %}
+          
+          </div>
+        </div>
+       </div>
+       <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <div class="display-6 text-center">
+              En proceso
+            </div>
+          </div>
+          <div class="card-body" style="height: 40rem;" id="table-2" data-index="2">
+            {% for task in tasks %}
+              {% if task.container == "container2" %}
+              {% include 'components/task_comp/accordion.html' %}
+              {% endif %}
+              {% endfor %}
+            
+          </div>
+        </div>
+       </div>
+       <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <div class="display-6 text-center">
+              Finalizada
+            </div>
+          </div>
+          <div class="card-body" style="height: 40rem;" id="table-3" data-index="3">
+            {% for task in tasks %}
+            {% if task.container == "container3" %}
+            {% include 'components/task_comp/accordion.html' %}
+            {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+       </div>
+    </div>
+</div>
+
+<script src="{% static 'js/tasks/main.js' %}"></script>
+{% endblock %}
+

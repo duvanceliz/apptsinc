@@ -30,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-g3=)z0wy@_28znm85%z=tss+c^+!42*wbo@6t$m&j3fq7n4^h@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -61,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    'tsinc.middleware.AuditLogMiddleware',
 ]
 
 ROOT_URLCONF = 'apptsinc.urls'
@@ -159,6 +160,12 @@ LOGIN_URL = '/login/'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # CSRF_TRUSTED_ORIGINS = ['http://*']
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8080',
+    'http://127.0.0.1:8080',
+    'http://201.244.121.90:84',
+]
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

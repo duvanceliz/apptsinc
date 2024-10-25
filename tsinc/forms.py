@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import formset_factory
-from .models import Brand, Location, Tabs, Product
+from .models import Brand, Location, Tabs, Product, User
 from django.db.models import Q
 
 
@@ -29,7 +29,21 @@ class CreateProject(forms.Form):
                                choices=OPCIONES_CHOICES,
                               widget=forms.Select(attrs={'class': 'form-select'})
                                )
-  
+    
+class CreateTask(forms.Form):
+    name = forms.CharField(label="Nombre de la tarea", 
+                           max_length=250,
+                           widget=forms.TextInput(attrs={'class': 'form-control'})
+                           
+                           )
+    start_date = forms.DateField(label='Fecha de inicio',widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}))
+    due_date = forms.DateField(label='Fecha proyectada de finalizacion',widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}))
+    description = forms.CharField(label="Descripción",max_length=500, widget=forms.Textarea(attrs={'class': 'form-control'}))
+    users = forms.ModelMultipleChoiceField(
+        queryset=User.objects.all(),
+        widget=forms.CheckboxSelectMultiple
+    )
+
 
 class CreateProduct(forms.Form):
     code = forms.CharField(label="Codigo del Producto", max_length=200, 

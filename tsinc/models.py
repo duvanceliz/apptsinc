@@ -4,6 +4,10 @@ from django.contrib.auth.models import User
 import os
 from django.core.validators import MaxLengthValidator
 from django.utils import timezone
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+
 
 class Project(models.Model):
     code = models.CharField(max_length=200, null=True)
@@ -366,18 +370,45 @@ class GeneratedOffer(models.Model):
 
 
 
-class task(models.Model):
+class Task(models.Model):
+    ACTION_CHOICES = [
+        ('container1', 'Container1'),
+        ('container2', 'Container2'),
+        ('container3', 'Container3'),
+    ]
+    ACTION_CHOICES2 = [
+        ('pendiente', 'Pendiente'),
+        ('en proceso', 'En proceso'),
+        ('finalizado', 'Finalizado'),
+    ]
     name = models.CharField(max_length=250)
-    user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
     start_date = models.DateField(default=datetime.date.today)
-    due_date = models.DateField(default=datetime.date.today)
-    estimated_time = models.TimeField(default=datetime.datetime.now().time())    
-    priority = models.CharField(max_length=250)
-    percent_completed = models.IntegerField(default=0)
-    project = models.ForeignKey(Project,on_delete=models.CASCADE)
+    due_date = models.DateField(default=datetime.date.today)  
+    completed = models.BooleanField(default=False)
+    state = models.CharField(max_length=10, choices=ACTION_CHOICES2,default='Pendiente',null=True)
     description = models.TextField(validators=[MaxLengthValidator(5000)]) 
+    project = models.ForeignKey(Project,on_delete=models.CASCADE)
+    users = models.ManyToManyField(User, related_name='tasks')
+    container = models.CharField(max_length=10, choices=ACTION_CHOICES,default='container1', null=True)
+    def __str__(self):
+        return self.name
 
     
+class Activity(models.Model):
+    ACTION_CHOICES = [
+        ('created', 'Created'),# visble Created
+        ('updated', 'Updated'),
+        ('deleted', 'Deleted'),
+    ]
+    model = models.CharField(max_length=250)
+    action = models.CharField(max_length=10, choices=ACTION_CHOICES, null=True)
+    date = models.DateTimeField(default=timezone.now)
+    usersession = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    def __str__(self):
+        return self.model
+    
+
+
 
 
 
