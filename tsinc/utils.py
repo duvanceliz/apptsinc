@@ -1381,7 +1381,7 @@ def generate_offer_(project):
     unexpected = round(subtotal_d*0.03,2)
     utility = round(subtotal_d*0.08,2)
     new_subtotal = subtotal_d + admi + unexpected + utility 
-    iva = (new_subtotal * 0.19)
+    iva = (utility * 0.19)
     total_value =  round(new_subtotal + iva,2)
 
     subtotals = [{

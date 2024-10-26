@@ -42,6 +42,12 @@ def paginator(request, obj, number):
     return page_obj
 
 
+def verify_and_create(array, project):
+        for item in array:
+            i= GeneratedOffer.objects.filter(measure__icontains=item,project= project).first()
+            if not i:
+                GeneratedOffer.objects.create(measure=item,project=project)
+
 @login_required
 def home(request):
 
@@ -89,7 +95,6 @@ def increase_offer_code():# incrementa el consecutivo de la oferta
 
         code.save()
 
-
     return code
 
 @login_required
@@ -100,14 +105,31 @@ def create_project(request):
     else:
 
         offer_code = increase_offer_code()
+
+        asesor = User.objects.filter(id = request.POST['asesor']).first()
+
         project = Project.objects.create(name = request.POST['name'], 
                                          code = offer_code.code,
                                          company_name = request.POST['company_name'],
                                          nit=request.POST['nit'], 
-                                         asesor = request.POST['asesor'], 
+                                         asesor = f"{asesor.first_name} {asesor.last_name}" , 
                                          usersession=request.user )
         
         messages.success(request,"El proyecto se ha creado correctamente")
+
+        array = [
+            "SUBTOTAL SUMINISTROS Y DESARROLLO ( USD )",
+            "DESCUENTO",
+            "SUBTOTAL MENOS (-) DESCUENTO",
+            "ADMINISTRACIÓN",
+            "IMPREVISTROS",
+            "UTILIDADES",
+            "SUBTOTAL COSTO DIRECTO + INDIRECTO",
+            "IVA/UTILIDAD",
+            "VALOR TOTAL (USD) DÓLAR ESTADOUNIDENSE"
+        ]
+
+        verify_and_create(array, project)
         
         def create_folders(offers_folder):
 
@@ -1047,11 +1069,7 @@ def generate_offer(request,id):
     project =Project.objects.get(id=id)
     tabs = Tabs.objects.filter(project = project).exists()
 
-    def verify_and_create(array):
-        for item in array:
-            i= GeneratedOffer.objects.filter(measure__icontains=item,project= project).first()
-            if not i:
-                GeneratedOffer.objects.create(measure=item,project=project)
+    
                 
     if not tabs:
         messages.info(request,"La oferta no tiene tableros de control creados!")
@@ -2696,6 +2714,20 @@ def calculate_and_save_percentage_of_tasks(project):
         project.progress = porcentage_tasks
         project.save()
 
+
+def count_comments(tasks, comments):
+
+    comments_per_task = [
+        {
+            'task':task,
+            'number_of_comments':sum(1 for comment in comments if task.id == comment.task.id )
+
+        }
+        for task in tasks
+    ]
+    return comments_per_task
+
+
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def overview_folder(request,id):
@@ -2735,15 +2767,20 @@ def overview_folder(request,id):
         pending_orders = PurcharseOrder.objects.filter(project  = project)
         entrys = OrderEntry.objects.filter(order__in = pending_orders)
         tasks = Task.objects.filter(project = project).all()
+        comments = Comment.objects.filter(task__in = tasks)
 
         total_info_order = get_total_info_order(pending_orders,entrys)
 
         calculate_and_save_percentage_of_tasks(project)
+        comments_per_task = count_comments(tasks, comments)
+
+        print(comments_per_task)
 
         files = sorted_files(remission_files)
         files += sorted_files(invoice_file)
         files += sorted_files(folder_file)
         offer_info = calc_offer_info(project)
+        
 
     else:
         total_info_order = {}
@@ -2754,6 +2791,8 @@ def overview_folder(request,id):
         invoices = None
         generated_offer = None
         tasks = None
+        comments = None
+        comments_per_task = None
         folder_file = File.objects.filter(folder = folder).all()
         files = sorted_files(folder_file)
 
@@ -2781,7 +2820,9 @@ def overview_folder(request,id):
         'offer_info':offer_info,
         'generated_offer':generated_offer,
         'total_info_order':total_info_order,
-        'tasks':tasks
+        'tasks':tasks,
+        'comments':comments,
+        'comments_per_task':comments_per_task
     }
     
     return render(request,'overview_folder.html',context)
@@ -3267,7 +3308,7 @@ def save_offer_item(request):
             
             if iva_utilidad:
                 iva_utilidad.porcent = data['iva_utilidad']
-                iva_utilidad_valor = subtotal_directo_indirecto_valor * (float(data['iva_utilidad'])/100)
+                iva_utilidad_valor = descuento_utilidades_valor * (float(data['iva_utilidad'])/100)
                 iva_utilidad.total_value = iva_utilidad_valor
                 iva_utilidad.save()
             
@@ -3578,10 +3619,38 @@ def create_task(request, project_id):
         task.users.set(users)
         task.save()
         calculate_and_save_percentage_of_tasks(project)
-        
-
+        messages.success(request,"La tarea ha sido creada correctamente")
+    
         return redirect(referer)
 
+
+def edit_task(request, id):
+    task = get_object_or_404(Task, id=id)
+    if request.method == 'POST':
+        referer = request.META.get("HTTP_REFERER")
+        form = CreateTask(request.POST)
+        if form.is_valid():
+            task.name = form.cleaned_data['name']
+            task.start_date = form.cleaned_data['start_date']
+            task.due_date = form.cleaned_data['due_date']
+            task.description = form.cleaned_data['description']
+            task.save()  # Guarda la instancia
+            # Actualiza la relación muchos a muchos
+            task.users.set(form.cleaned_data['users'])
+            messages.success(request,"La tarea ha sido actulizada correctamente")
+
+            return redirect(referer)
+              # Redirige a la lista de tareas o a donde desees
+    else:
+        initial_data = {
+            'name': task.name,
+            'start_date': task.start_date,
+            'due_date': task.due_date,
+            'description': task.description,
+            'users': task.users.all() 
+        }
+        form = CreateTask(initial=initial_data)
+    return render(request, 'create_task.html', {'form': form})
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
@@ -3684,6 +3753,8 @@ def tasks(request,project_id):
     project = Project.objects.filter(id=project_id).first()
 
     tasks = Task.objects.filter(project = project, users = request.user)
+
+    
    
     return render(request,"tasks.html", {'tasks':tasks})
 
@@ -3714,6 +3785,28 @@ def save_order_container_task(request):
         return JsonResponse({'status':'ok'})
 
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def save_comment(request):
+    if request.method == "POST":
+        raw_data = request.body
+        body_unicode = raw_data.decode('utf-8')
+        data = json.loads(body_unicode)
+        task = Task.objects.filter(id = data['task_id']).first()
+        if data['message']:
+            Comment.objects.create(message = data['message'], task = task, usersession = request.user )
+            return JsonResponse({'status':'ok'})
+        else:
+            return JsonResponse({'status':'error'})
+           
+            
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def delete_task(request,id):  
+    referer = request.META.get('HTTP_REFERER')
+    task = Task.objects.filter(id = id).first()
+    task.delete()
+    return redirect(referer)
 
 
 

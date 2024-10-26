@@ -10,14 +10,48 @@
             </div>
           </div>
           <div class="card-body" style="height: 40rem;" id="table-1" data-index="1">
-         
+            
+           
+              
               {% for task in tasks %}
               {% if task.container == "container1" %}
               {% include 'components/task_comp/accordion.html' %}
               
               {% endif %}
               {% endfor %}
-          
+
+          </div>
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <!-- Contenedor para la notificación -->
+                  
+                  <h5 class="modal-title" id="exampleModalLabel">Enviar un comentario</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                  <div class="alert alert-dismissible fade show " style="display: none;" role="alert" id="notificacion">
+                    <span id="mensajeNotificacion" class="text-white"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+
+                  
+      
+                  <div class="form-floating">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="comment" style="height: 100px" required ></textarea>
+                    <label for="comment">Escribe un comentario</label>
+                  </div>
+        
+        
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                  <button type="button" class="btn btn-primary" id="btn-comment-save" >Enviar</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
        </div>
@@ -58,5 +92,6 @@
 </div>
 
 <script src="{% static 'js/tasks/main.js' %}"></script>
+<script src="{% static 'js/tasks/save_comments.js' %}"></script>
 {% endblock %}
 

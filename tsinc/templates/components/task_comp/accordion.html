@@ -1,17 +1,32 @@
-<div class="accordion accordion-flush" id="accordionFlushExample" data-id="{{task.id}}">
+
+    
+    <div class="accordion accordion-flush" id="accordionFlushExample" data-id="{{task.id}}" >
     <div class="accordion-item">
       <h2 class="accordion-header" id="flush-heading{{task.id}}">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{task.id}}" aria-expanded="false" aria-controls="flush-collapse{{task.id}}">
           {{task.name}}
+          
         </button>
+       
       </h2>
       <div id="flush-collapse{{task.id}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{task.id}}" data-bs-parent="#accordionFlushExample">
         
         <div class="accordion-body">
+          <span class="fst-normal" style="font-size: 0.7rem;"><span class="fw-bold">Asignado por:</span> {{task.assigned_by}}</span>
+          <br>
+
           <span class="fst-normal" style="font-size: 0.7rem;"><span class="fw-bold">De:</span> {{task.start_date}} <span class="fw-bold">a:</span> {{task.due_date}}</span>
           <p class="text-lowercase">{{task.description}}</p>
+
+          <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal" data-task_id="{{task.id}}" id="btn-modal" ><i class="bi bi-chat-left-text"></i></button>
+
           
         </div>
       </div>
     </div>
   </div>
+  
+
+
+  
+

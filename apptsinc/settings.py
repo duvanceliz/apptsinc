@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'tsinc',
+    'user_sessions',
 ]
 
 MIDDLEWARE = [
@@ -177,4 +178,6 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 CORS_ALLOWED_ORIGINS = [
      "http://localhost:5173"
 ]
+
+SESSION_ENGINE = 'user_sessions.backends.db'
 

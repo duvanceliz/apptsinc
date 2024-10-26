@@ -11,72 +11,105 @@
          </div>
     </div>
 
-         <div class="table-responsive-md">
-    
-        <table class="table table-light table-sm">
-          <thead>
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+      {% for task in tasks %}
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-heading{{task.id}}">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{task.id}}" aria-expanded="false" aria-controls="flush-collapse{{task.id}}">
             
-        
-            <tr>
-            <th scope="col">Nombre:</th>
-              <th scope="col">Fecha de inicio</th>
-              <th scope="col">Fecha final proyectada</th>
-              <th>asignado a:</th>
-              <th>Descripción</th>
-              <th>Estado</th>
-              <th></th>
-            </tr>
-          
-          </thead>
-          <tbody>
-            <tr>
-              {% for task in tasks %}
-              <td>{{task.name}}</td>
-              <td>{{task.start_date}}</td>
               
-              <td>{{task.due_date}}</td>
-              
-              
-
-              <td>
-                {% for user in task.users.all %}
-
-                <span>{{user}},</span>
-                {% endfor %}
-            
-              </td>
-              <td> {{task.description}} </td>
-              <td>
-                {% if task.state == 'pendiente' %}
-  
-                  <span class="bg-danger p-1 text-white">{{task.state}}</span>      
-                {%elif task.state == 'en proceso' %}
-              
-    
-                <span class="bg-warning p-1 text-white">{{task.state}}</span>
-                {% else %}  
-                <span class="bg-success p-1 text-white">{{task.state}}</span> 
-                {% endif %}
-              </td>
-              <td>
-                 
-                <div class="dropdown d-inline">
-                  <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
-                    <i class="bi bi-gear"></i>
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item"  href="">Ver o Editar</a></li>
-                    <li><a class="dropdown-item" href="" onclick="return confirm_delete_task()">Eliminar</a></li>
-                  </ul>
+            <div class="container">
+               
+              <div class="row">
+                <div class="col-2">
+                  {{task.name}}
                 </div>
-              
-              
-              </td>
-            </tr>
-    
-            {%endfor%}
-          </tbody>
-        </table>
+                <div class="col-2">
+                  {{task.start_date}} - {{task.due_date}}
+                </div>
+                
+                <div class="col-2">
+                {% for user in task.users.all %}
+                {{user}},
+                {% endfor %}
+                </div>
+                <div class="col-3">
+                  
+                  {{task.description}},
+                  
+                  </div>
+                  <div class="col-1 text-center">
+
+                     {% for item in comments_per_task %}
+
+                     {% if item.task.id == task.id %}
+                     
+                    <span class="badge bg-primary rounded-pill">
+                      
+                      {{item.number_of_comments}}
+                      <i class="bi bi-chat-left-text"></i>
+                    </span>
+                    
+                      {% endif %}
+                    {% endfor %}
+                  
+                    
+                    
+                  </div>
+
+
+                <div class="col-2 text-center">
+                  {% if task.state == "pendiente" %}
+                  <span class="p-2 bg-danger text-white">{{task.state}}</span>
+                  {% elif task.state == "en proceso" %}
+                  <span class="p-2 bg-warning text-white">{{task.state}}</span>
+                  {% else %}
+
+                  <span class="p-2 bg-success text-white">{{task.state}}</span>
+
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </button>
+        </h2>
+        <div id="flush-collapse{{task.id}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{task.id}}" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">
+            <div class="container-flow mb-3">
+            <div class="row">
+              <div class="col-md-4">
+                <a href="{% url 'edit_task' task.id %}" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
+                <a href="{% url 'delete_task' task.id %}" class="btn btn-danger  btn-sm"><i class="bi bi-trash"></i></a>
+              </div>
+              <div class="col-md-4"></div>
+              <div class="col-md-4"></div>
+             </div>
+            </div>
+            {% for comment in comments %}
+
+            {% if comment.task.id == task.id %}
+            <div class="card mb-2 p-2">
+              <span class="fst-normal" style="font-size: 0.7rem;"><span class="fw-bold">comentario de:</span> {{comment.usersession}}</span>
+     
+            <span class="fst-normal" style="font-size: 0.7rem;"><span class="fw-bold">Fecha:</span> {{comment.date}}</span>
+         
+            <span class="fst-normal">{{comment.message}}</span>
+            </div>
+            
+
+            {% endif %}
+
+
+            {% endfor %}
+          
+          </div>
+        </div>
       </div>
+
+      {% endfor %}
+
+      
+      
+    </div>
       
 </div>

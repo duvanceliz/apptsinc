@@ -37,6 +37,7 @@ models_ = [ Project,
             File,
             GeneratedOffer,
             Task,
-            Activity, 
+            Activity,
+            Comment
            ]
 admin.site.register(models_)

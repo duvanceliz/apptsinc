@@ -4,19 +4,23 @@
     <div class="row">
        <div class="col-md-12">
            <ul class="list-group">
+
             {% for item in tasks_per_project %}
             <li class="list-group-item d-flex justify-content-between align-items-start">
               <div class="ms-2 me-auto">
                 <div class="fw-bold"><a href="{% url 'tasks' item.project.id %}">{{item.project}}</a></div>
-                {% for task in item.tasks %}
 
-                {{task.name}},
-                {% endfor %}
               </div>
-              <span class="badge bg-primary rounded-pill">{{item.total}}</span>
+              <span class="badge bg-primary rounded-pill">{{item.total}}
+                <i class="bi bi-list-task"></i>
+              </span>
             </li>
             {% endfor %}
+            
         </ul>
+        {% if not tasks_per_project %}
+            <h6 class="display-6">No tienes tareas por realizar</h6>
+            {%endif%}
 
        </div>
     </div>

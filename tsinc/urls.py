@@ -131,6 +131,12 @@ urlpatterns = [
     path('user_view/', views.user_view, name='user_view'),
     path('tasks/<int:project_id>', views.tasks, name='tasks'),
     path('save_order_container_task/', views.save_order_container_task, name='save_order_container_task'),
+    path('comment/save/', views.save_comment, name='save_comment'),
+    path('task/dalete/<int:id>', views.delete_task, name='delete_task'),
+    path('task/edit/<int:id>', views.edit_task, name='edit_task'),
+
+
+
 
 
 

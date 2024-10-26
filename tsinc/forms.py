@@ -4,6 +4,8 @@ from .models import Brand, Location, Tabs, Product, User
 from django.db.models import Q
 
 
+
+
 class CreateProject(forms.Form):
     name = forms.CharField(label="Nombre del proyecto", 
                            max_length=200,
@@ -20,15 +22,20 @@ class CreateProject(forms.Form):
                           )
     delivery_date = forms.DateField(label='Fecha de entrega',widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}))
     closing_date = forms.DateField(label='Fecha de cierre',widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}))
-    OPCIONES_CHOICES = [
-        ('Roberto Bravo', 'Roberto Bravo'),
-        ('Edwin Serrano', 'Edwin Serrano'),
-        ('Angela Ramirez', 'Angela Ramirez'),
-    ]
-    asesor = forms.ChoiceField(label="Asesor",
-                               choices=OPCIONES_CHOICES,
-                              widget=forms.Select(attrs={'class': 'form-select'})
-                               )
+    # OPCIONES_CHOICES = [
+    #     ('Roberto Bravo', 'Roberto Bravo'),
+    #     ('Edwin Serrano', 'Edwin Serrano'),
+    #     ('Angela Ramirez', 'Angela Ramirez'),
+    # ]
+    # asesor = forms.ChoiceField(label="Asesor",
+    #                            choices=OPCIONES_CHOICES,
+    #                           widget=forms.Select(attrs={'class': 'form-select'})
+    #                            )
+    asesor = forms.ChoiceField(
+        label="Asesor",
+        choices=[(user.id, f"{user.first_name} {user.last_name}") for user in User.objects.all() if user.first_name and user.last_name ],
+        widget=forms.Select(attrs={'class': 'form-select'}),
+    )
     
 class CreateTask(forms.Form):
     name = forms.CharField(label="Nombre de la tarea", 
