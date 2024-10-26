@@ -30,9 +30,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-g3=)z0wy@_28znm85%z=tss+c^+!42*wbo@6t$m&j3fq7n4^h@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['201.244.121.90','localhost']
 
 # Application definition
 
@@ -105,7 +105,7 @@ DATABASES = {
 #    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
      'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'backup_20241026_114236.sqlite3',
     }
 }
 
@@ -175,9 +175,9 @@ MEDIA_URL = '/media/'
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # cors authorizations
-CORS_ALLOWED_ORIGINS = [
-     "http://localhost:5173"
-]
+# CORS_ALLOWED_ORIGINS = [
+#      "http://localhost:5173"
+# ]
 
 SESSION_ENGINE = 'user_sessions.backends.db'
 
