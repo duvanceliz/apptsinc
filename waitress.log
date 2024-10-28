@@ -3522,3 +3522,6 @@ django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000
 2024-10-26 12:43:24,187 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\apptsinc\settings.py changed, reloading.
 2024-10-26 12:43:39,404 INFO C:\Users\Usuario\Documents\duvan\py_proyect\app-django\apptsinc\settings.py changed, reloading.
 2024-10-26 12:45:16,055 INFO Serving on http://0.0.0.0:8000
+2024-10-26 15:25:30,509 INFO Serving on http://0.0.0.0:8000
+2024-10-28 07:40:49,281 INFO Serving on http://0.0.0.0:8000
+2024-10-28 07:45:59,130 WARNING Not Found: /favicon.ico
