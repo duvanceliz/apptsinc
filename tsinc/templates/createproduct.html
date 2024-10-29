@@ -18,9 +18,13 @@
             {% endfor %}
                 </div>
             {% endif %}
-            <form action="" method="POST">
+            <form action="" method="POST" class="">
                 {% csrf_token %}
-                {{form.as_p}}
+
+                <div class="row row-cols-2">
+                  {{form.as_p}}
+                </div>
+                
             
                 <button class="btn btn-primary" style="width: 100%;">Guardar</button>
             

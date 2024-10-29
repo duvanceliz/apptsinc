@@ -11,7 +11,8 @@ from datetime import date
 from openpyxl.drawing.image import Image
 import os
 from django.conf import settings
-
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 
@@ -2193,10 +2194,17 @@ def print_order(sheet,order):
 
 
 
-    
+def send_notification(tarea, usuario_email, ):
+    subject = 'Tarea Asignada'
+    message = f'El usuario --{tarea.assigned_by}-- te ha asignado la tarea con nombre "{tarea.name}", y descripción "{tarea.description}". porfavor validar en la plataforma'
+    from_email = settings.EMAIL_HOST_USER
+    recipient_list = [usuario_email]
 
-
-
+    try:
+        send_mail(subject, message, from_email, recipient_list)
+    except Exception as e:
+        # Manejo de errores
+        print(f'Error al enviar correo: {e}')
 
 
 

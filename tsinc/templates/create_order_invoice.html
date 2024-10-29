@@ -140,7 +140,7 @@
                                 
                                 <td id="table-columns">{{invoice.usersession}}</td>
                                 <td id="table-columns">{{invoice.order.code}}</td>
-                                <td id="table-columns">{{invoice.value_paid|intcomma|floatformat:1}}</td>
+                                <td id="table-columns">{{invoice.value_paid|floatformat:2|intcomma}}</td>
                                 <td id="table-columns">{{invoice.iva|intcomma}}</td>
                                 <td id="table-columns">{{invoice.source_retention|intcomma}}</td>
                                 <td id="table-columns">{{invoice.ica_retention|intcomma}}</td>

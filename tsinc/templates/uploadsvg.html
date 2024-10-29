@@ -61,10 +61,17 @@
       <div class="card-body"> 
         <form method="post" enctype="multipart/form-data" class="d-flex flex-column p-4">
           {% csrf_token %}
-          <label for="folder_name">Nombre de la carpeta:</label>
-          <input class="form-control" type="text" id="folder_name" name="folder_name" placeholder="Por ejemplo: ductos">
-          <label for="tag">Etiqueta</label>
-          <input class="form-control" type="text" id="tag" name="tag" >
+          <!-- <input class="form-control" type="text" id="folder_name" name="folder_name" placeholder="Por ejemplo: ductos"> -->
+          <!-- <label for="tag">Etiqueta</label>
+          <input class="form-control" type="text" id="tag" name="tag" > -->
+          
+          <label for="folder_name">Elige la categoria:</label>
+          <select class="form-select" aria-label="Default select example" name="category">
+            {% for category in categories %}
+            <option value="{{category.id}}">{{category.name}}</option>
+            {% endfor %}
+           
+          </select>
           <br><br>
           <input class="form-control" type="file" name="files" multiple>
           <br><br>

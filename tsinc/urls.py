@@ -3,12 +3,13 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 urlpatterns = [
     path('', views.home, name='home' ),
     path('project/create', views.create_project, name='create_project'),
     path('product/create', views.create_product, name='create_product'),
     path('project/delete/<int:id>/', views.delete_project, name='delete_obj'),
-    path('product/', views.product, name='product' ),
+    path('show_inventory/', views.show_inventory, name='product' ),
     path('dashboard/<int:id>/', views.dashboard, name='dashboard' ),
     path('uploadproducts/', views.upload_products, name='uploadproducts' ),
     path('project/tabs/<int:id>/', views.tabs, name='tabs'),
@@ -144,3 +145,7 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+
+

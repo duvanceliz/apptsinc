@@ -16,7 +16,7 @@
       <div class="accordion-body">
         
       {% for item in panelitems %}
-      {% if  subcategory.tag == item.tag %}
+      {% if  subcategory == item.category %}
       <img id="item" pk="{{item.id}}" src="/media/{{item.img}}" alt="items" style="width: {{item.width}}px;"  description="{{item.product.description}}" draggable="true" >
       {% endif %}
       {% endfor %}

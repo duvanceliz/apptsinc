@@ -22,12 +22,16 @@ from django.db.models import Case, When, Value, IntegerField, F
 from django.views.decorators.http import require_POST
 from django.utils.encoding import iri_to_uri  # Para codificar caracteres especiales
 from collections import Counter
+from django.contrib.auth.decorators import permission_required
+from .utils import send_notification
 
 # Create your views here.
 
 def save_activity(item,action,project,usersession):
     pass
-    
+
+
+
 
 def staff_required(user):
     return user.is_staff
@@ -67,6 +71,7 @@ def home(request):
                        
     return render(request, 'home.html',{'page_obj': page_obj, 'username':user.username, 'session_key':session_key, 'tabs':tabs, 'pages':pages})
 
+@permission_required('tsinc.delete_project', login_url='/accessdenied/')
 @login_required
 def delete_project(request, id):
     referer = request.META.get('HTTP_REFERER')
@@ -97,6 +102,8 @@ def increase_offer_code():# incrementa el consecutivo de la oferta
 
     return code
 
+
+@permission_required('tsinc.add_project', login_url='/accessdenied/')
 @login_required
 def create_project(request):
     referer = request.META.get('HTTP_REFERER')
@@ -106,13 +113,13 @@ def create_project(request):
 
         offer_code = increase_offer_code()
 
-        asesor = User.objects.filter(id = request.POST['asesor']).first()
+        # asesor = User.objects.filter(id = request.POST['asesor']).first()
 
         project = Project.objects.create(name = request.POST['name'], 
                                          code = offer_code.code,
                                          company_name = request.POST['company_name'],
                                          nit=request.POST['nit'], 
-                                         asesor = f"{asesor.first_name} {asesor.last_name}" , 
+                                         asesor = request.POST['asesor'], 
                                          usersession=request.user )
         
         messages.success(request,"El proyecto se ha creado correctamente")
@@ -206,10 +213,10 @@ def save_stat_prod(products):
 
    
 
-
+@permission_required('tsinc.view_product', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
-def product(request):
+def show_inventory(request):
 
     search = request.GET.get('search')
     currency = Trm.objects.filter(currency = "usd").first()
@@ -656,6 +663,7 @@ def save_items(request):
     
 @login_required
 def create_page(request,id):
+    referer = request.META.get("HTTP_REFERER")
     if request.method == 'GET':
         tab = get_object_or_404(Tabs,id=id)
         pages_tab = tab.dashboards.all()
@@ -667,14 +675,15 @@ def create_page(request,id):
     else:
         tab = Tabs.objects.get(id=id)
         Dasboard.objects.create(name = request.POST['name'], tab=tab)
-        return redirect(f'/createpage/{id}/')
+        return redirect(referer)
 
 @login_required
 def delete_page(request, id):
+    referer = request.META.get("HTTP_REFERER")
     object = get_object_or_404(Dasboard, id=id)
     tab = object.tab
     object.delete()
-    return redirect(f'/createpage/{tab.id}/')
+    return redirect(referer)
 @login_required
 def delete_item(request):
     if request.method == 'POST':
@@ -750,15 +759,17 @@ def handle_uploaded_file(file, path):
         for chunk in file.chunks():
             destination.write(chunk)
 
-
+@permission_required('tsinc.add_panelitems', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def upload_svg(request):
 
     if request.method == 'POST' and request.FILES.getlist('files'):#verifica si el metodo es post y si exiten archivos
-        folder_name = request.POST.get('folder_name') #nombre de la carpeta
-        tag = request.POST.get('tag') #etiqueta 
+        # tag = request.POST.get('tag') #etiqueta 
+        category_id = request.POST.get('category') #etiqueta 
         files = request.FILES.getlist('files') #archivos
+        category = Category.objects.filter(id=category_id).first()
+        folder_name = category.name
 
         def validation_panelitem(file):#valida que exita el item de panel
             panelitem_exists = PanelItems.objects.filter(name=file.name).exists()
@@ -794,12 +805,12 @@ def upload_svg(request):
                 if product:
                     panelitem = PanelItems(name=file.name,  
                                         img=f'items/{folder_name}/{file.name}', 
-                                        tag=tag, product=product, folder= folder)
+                                        category_id=category_id, product=product, folder= folder)
                     panelitem.save()
                 else:
                     panelitem = PanelItems(name=file.name,  
                                         img=f'items/{folder_name}/{file.name}', 
-                                        tag=tag,folder= folder)
+                                        category_id=category_id,folder= folder)
                     panelitem.save()
                     
                 return panelitem
@@ -841,8 +852,11 @@ def upload_svg(request):
         return redirect('/uploadsvg')
 
     folders = Folders.objects.all()
-    return render(request, 'uploadsvg.html', {'folders':folders})
+    categories = Category.objects.filter( parent__isnull = False )
+    return render(request, 'uploadsvg.html', {'folders':folders,'categories':categories})
 
+
+@permission_required('tsinc.view_folders', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def files_folders(request):
@@ -855,6 +869,7 @@ def files_folders(request):
         'panelitems': panelitems
     } )
 
+@permission_required('tsinc.delete_panelitem', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def delete_file_item(request, id):
@@ -877,6 +892,8 @@ def delete_file_item(request, id):
 
     return redirect('/filesfolders')
 
+
+@permission_required('tsinc.delete_folders', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def delete_folder_item(request, id):
@@ -1112,6 +1129,7 @@ def edit_page(request):
     
     return render(request,'editpage.html',{'page':page})
 
+@permission_required('tsinc.change_project', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def edit_project(request):
@@ -1182,6 +1200,7 @@ def edit_product(request,id):
 
 @login_required
 def add_product_to_box(request,id): 
+    referer = request.META.get("HTTP_REFERER")
     product = Product.objects.filter(id=id).first()
     user = request.user
     if ProductBox.objects.filter(product = product, usersession = request.user).exists():
@@ -1192,7 +1211,9 @@ def add_product_to_box(request,id):
     else:
         ProductBox.objects.create(product = product, quantity = 1, price =product.sale_price, usersession = user) 
         messages.success(request,f"El producto {product.model} ha sido agregado al carrito.")
-    return redirect('/product/')
+    return redirect(referer)
+
+
 
 @login_required
 def add_product(request,id):
@@ -1235,6 +1256,7 @@ def increase_code():
 
     return remission_code
 
+@permission_required('tsinc.add_remission', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def create_remission(request,project_id = None): 
@@ -1305,6 +1327,7 @@ def clean_productbox(request):
     productbox.delete()
     return redirect(referer)
 
+@permission_required('tsinc.view_remission', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def remissions(request):  
@@ -1327,7 +1350,7 @@ def remissions(request):
     return render(request,'remissions.html',{'remissions':remissions, 
                                              'remission_files_info':remission_files_info
                                              })
-
+@permission_required('tsinc.delete_remission', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def delete_remission(request,id):  
@@ -1341,7 +1364,7 @@ def delete_remission(request,id):
     remission.delete()
     return redirect(referer)
 
-
+@permission_required('tsinc.view_remission', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def show_remission(request,id):  
@@ -1429,7 +1452,7 @@ def increase_code_order():
     code.save()
 
     return code
-
+@permission_required('tsinc.add_purcharseorder', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def create_order(request, project_id = None):
@@ -1513,6 +1536,8 @@ def save_car(request):
             productbox.save()
         return JsonResponse({'mensaje': 'Datos guardados con éxito!'})
 
+
+@permission_required('tsinc.view_purcharseorder', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/')
 @login_required
 def purcharse_order(request):  
@@ -1580,6 +1605,7 @@ def calc_info_order_product(orderproducts,orderentry):
         info_per_product.append(p)
     return info_per_product
 
+@permission_required('tsinc.view_purcharseorder', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/')   
 @login_required
 def order_product_info(request,id):  
@@ -1710,7 +1736,7 @@ def download_order(request,id):
         messages.error(request,f"¡Ha ocurrido un error al momento de generar el archivo!.{e}")
         return redirect('/purcharseorder/')
 
-
+@permission_required('tsinc.change_remission', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def edit_remission(request,id):
@@ -1744,6 +1770,7 @@ def edit_remission(request,id):
     
     return render(request,'edit_remission.html',{'remission':remission, 'products':products})
 
+@permission_required('tsinc.change_purcharseorder', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/')     
 @login_required
 def edit_order(request,id):
@@ -1850,7 +1877,7 @@ def create_order_entry(request,id):
 
 
     
-
+@permission_required('tsinc.delete_purcharseorder', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def delete_order(request,id):
@@ -1901,7 +1928,8 @@ def get_total_info_order(purcharseorders, entrys):
 
     total_price = 0
     total_delivered = 0
-    total_invoiced = 0
+    total_invoiced_usd = 0
+    total_invoiced_cop = 0
 
     for order in purcharseorders:
         if order.currency:
@@ -1918,17 +1946,19 @@ def get_total_info_order(purcharseorders, entrys):
                     total_delivered += entry.price * entry.quantity
 
     for orderinvoice in total_invoiced_:
-        total_invoiced += orderinvoice.value_paid
+        if orderinvoice.order.currency:
+            total_invoiced_usd += orderinvoice.value_paid/currency.value
+        else:
+            total_invoiced_usd += orderinvoice.value_paid
 
-    
         
 
     total_info ={
         'total_orders': round(total_price,2),
         'total_delivered':round(total_delivered,2),
         'total_remaining': round(total_price - total_delivered,2),
-        'total_invoiced': round(total_invoiced,2),
-        'total_remaining_invoiced': round(total_price - total_invoiced,2),
+        'total_invoiced': round(total_invoiced_usd,2),
+        'total_remaining_invoiced': round(total_price - total_invoiced_usd,2),
 
     }
 
@@ -2251,7 +2281,7 @@ def upload_remission_file(request,id):
     
     return render(request,"uploadremissionfile.html",{'form':UploadFile, 'remission':remission})
 
-
+@permission_required('tsinc.view_file', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def view_file(request,id):
@@ -2266,7 +2296,7 @@ def view_file(request,id):
                                                   "file_name": file.name,
                                                   })
     
-
+@permission_required('tsinc.view_delete', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def delete_file(request,id):
@@ -2465,6 +2495,7 @@ def create_invoice(request,id):
                                                   'productbox':productbox
                                                   })
 
+@permission_required('tsinc.view_invoice', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def invoices(request):
@@ -2506,10 +2537,11 @@ def calc_total_invoice(invoices, order):
     return total_invoice     
         
     
-
+@permission_required('tsinc.add_orderinvoice', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def create_order_invoice(request,id):
+    referer = request.META.get("HTTP_REFERER")
     order = get_object_or_404(PurcharseOrder,id=id)
     invoices = OrderInvoice.objects.filter(order = order).all()
 
@@ -2533,11 +2565,11 @@ def create_order_invoice(request,id):
                 usersession = request.user
             )
         
-            return redirect(f"/createorderinvoice/{order.id}")
+            return redirect(referer)
         
         else:
             messages.error(request,f"El valor ingresado: {value_paid} es mayor del valor total de la orden: {order.total_price} o del valor restante {total_invoice['total_leftover']}")
-            return redirect(f"/createorderinvoice/{order.id}")
+            return redirect(referer)
       
     return render(request,"create_order_invoice.html",{
         'order':order,
@@ -2546,18 +2578,21 @@ def create_order_invoice(request,id):
         'order_invoice_files':order_invoice_files
     })
 
+
+@permission_required('tsinc.delete_orderinvoice', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def delete_order_invoice(request,id):
+    referer = request.META.get("HTTP_REFERER")
     orderinvoice = get_object_or_404(OrderInvoice,id=id)
     orderinvoice.delete()
-    return redirect(f"/createorderinvoice/{orderinvoice.order.id}")
+    return redirect(referer)
 
+
+@permission_required('tsinc.view_project', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def show_all_offers(request,approved):
-
-    
 
     if not approved:
         offers = Project.objects.filter(approved = False).all()
@@ -2727,8 +2762,7 @@ def count_comments(tasks, comments):
     ]
     return comments_per_task
 
-
-@user_passes_test(staff_required,login_url='/accessdenied/') 
+@permission_required('tsinc.view_folder', login_url='/accessdenied/')
 @login_required
 def overview_folder(request,id):
     folder = Folder.objects.filter(id = id).first()
@@ -2769,12 +2803,10 @@ def overview_folder(request,id):
         tasks = Task.objects.filter(project = project).all()
         comments = Comment.objects.filter(task__in = tasks)
 
-        total_info_order = get_total_info_order(pending_orders,entrys)
+        total_info_order = get_total_info_order(pending_orders,entrys) # calcular informacion resumen de ofertas y resumen de ordenes
 
         calculate_and_save_percentage_of_tasks(project)
         comments_per_task = count_comments(tasks, comments)
-
-        print(comments_per_task)
 
         files = sorted_files(remission_files)
         files += sorted_files(invoice_file)
@@ -2858,6 +2890,7 @@ def update_tree_order(request):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
+@permission_required('tsinc.delete_folder', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/')   
 @login_required
 def delete_folder(request,id):
@@ -2866,6 +2899,7 @@ def delete_folder(request,id):
     folder.delete()
     return redirect(referer)
 
+@permission_required('tsinc.add_folder', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def new_folder(request):
@@ -2875,7 +2909,7 @@ def new_folder(request):
         Folder.objects.create(name = name, color ="#ffffff" ,usersession = request.user , order = 0)
     return redirect(referer)
 
-
+@permission_required('tsinc.change_folder', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def update_folder(request,id):
@@ -2896,7 +2930,7 @@ def update_folder(request,id):
         
     return redirect(referer)
 
-
+@permission_required('tsinc.view_invoice', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def show_invoice(request, id):
@@ -3055,7 +3089,7 @@ def upload_order_invoice_file(request,id):
     return render(request,"upload_order_invoice_file.html",{'form':UploadFile,  
                                                       'order_invoice':order_invoice})
 
-
+@permission_required('tsinc.view_file', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def docs(request):
@@ -3361,7 +3395,6 @@ def add_from_car_to_offer(request,project_id,parent_id):
         
         product_in_offer = GeneratedOffer.objects.filter(project = project, product__id = product_in_car.product.id, parent_id = parent_id).first()
 
-        print(product_in_offer)
         if product_in_offer:
 
             product_in_offer.quantity += product_in_car.quantity
@@ -3517,6 +3550,7 @@ def create_invoice_from_offer(request, project_id):
     return redirect(f"/createinvoice/{project_id}")
 
 
+@permission_required('tsinc.view_orderinvoice', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def show_all_purcharse_order_invoices(request):
@@ -3613,11 +3647,24 @@ def create_task(request, project_id):
             description=description,
             project = project,
             state = 'pendiente',
-            container = 'container1'
+            container = 'container1',
+            assigned_by = request.user
+
         )
         # Asignar los usuarios a la tarea
         task.users.set(users)
         task.save()
+        
+        for user in users:
+            # send_notification(task,user.email)
+            user_ = User.objects.filter(id = user).first()
+            if (user_.email):
+                send_notification(task,user_.email)
+                messages.success(request,f"Se ha enviado una notificacion al emaíl del usuario {user_}")
+            else:
+                messages.info(request,f"El usuario {user_} no tiene un correo asignado, porfavor verificar en el panel de adminitrador")
+
+        
         calculate_and_save_percentage_of_tasks(project)
         messages.success(request,"La tarea ha sido creada correctamente")
     
@@ -3710,7 +3757,7 @@ def add_subtitle(request,project_id, parent_id):
     return redirect(referer)
 
 
-@user_passes_test(staff_required,login_url='/accessdenied/') 
+@user_passes_test(superuser_required,login_url='/accessdenied/')
 @login_required
 def show_all_activity(request):
     

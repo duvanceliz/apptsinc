@@ -5,7 +5,15 @@
       {% include 'components/alert.html'%}
 
      <div class="row">
-      <h4 class="display-6">REMISIÓN: {{remission.number}}, PROYECTO: <a href="{% url 'overview_folder' folder.id %}">{{remission.project}}</a></h4>
+      <h4 class="display-6">REMISIÓN: {{remission.number}}, PROYECTO: 
+        {% if folder.id %}
+        <a href="{% url 'overview_folder' folder.id %}">{{remission.project}}</a>
+        {% else %}
+        <a href="">{{remission.project}}</a>
+
+        {% endif %}
+      
+      </h4>
      </div>
 
      {% include 'components/remission_comp.html' with from=from_show_remission %}

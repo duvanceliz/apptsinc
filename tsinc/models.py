@@ -22,6 +22,7 @@ class Project(models.Model):
     closing_date = models.DateField(default=datetime.date.today)
     date = models.DateField(default=datetime.date.today)
     usersession = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+   
     def __str__(self):
         return self.name
     
@@ -80,15 +81,25 @@ class Folders(models.Model):
     def __str__(self):
         return self.name
 
+
+
+class Category(models.Model):
+    name= models.CharField(max_length=100, default=None)
+    tag = models.CharField(max_length=100, null=True, blank=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    def __str__(self):
+        return self.name
+    
 class PanelItems(models.Model):
     name = models.CharField(max_length=100, null=True)
     img = models.CharField(max_length=100, default=None)
     tag = models.CharField(max_length=100,null=True)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, related_name='items', null=True, blank=True)
     folder = models.ForeignKey(Folders, on_delete=models.CASCADE, related_name='panelitems', null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return self.img
-
+    
 class Items(models.Model):
     tag = models.CharField(max_length=200, null=True) 
     id_code = models.CharField(max_length=50, default=None)
@@ -117,12 +128,8 @@ class Labels(models.Model):
         return self.id_code
 
 
-class Category(models.Model):
-    name= models.CharField(max_length=100, default=None)
-    tag = models.CharField(max_length=100, null=True, blank=True)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-    def __str__(self):
-        return self.name
+
+
 
 
 class Sheet(models.Model):
