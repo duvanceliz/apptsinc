@@ -183,9 +183,9 @@ SESSION_ENGINE = 'user_sessions.backends.db'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'shared16.arvixe.com'
+EMAIL_HOST = '#'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'administrator@tsinc.com.co'
-EMAIL_HOST_PASSWORD = 'Raspberry@81234'
+EMAIL_HOST_PASSWORD = '#'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
