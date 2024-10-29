@@ -22,20 +22,21 @@ class CreateProject(forms.Form):
                           )
     delivery_date = forms.DateField(label='Fecha de entrega',widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}))
     closing_date = forms.DateField(label='Fecha de cierre',widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}))
-    # OPCIONES_CHOICES = [
-    #     ('Roberto Bravo', 'Roberto Bravo'),
-    #     ('Edwin Serrano', 'Edwin Serrano'),
-    #     ('Angela Ramirez', 'Angela Ramirez'),
-    # ]
-    # asesor = forms.ChoiceField(label="Asesor",
-    #                            choices=OPCIONES_CHOICES,
-    #                           widget=forms.Select(attrs={'class': 'form-select'})
-    #                            )
-    asesor = forms.ChoiceField(
-        label="Asesor",
-        choices=[(user.id, f"{user.first_name} {user.last_name}") for user in User.objects.all() if user.first_name and user.last_name ],
-        widget=forms.Select(attrs={'class': 'form-select'}),
-    )
+    OPCIONES_CHOICES = [
+        ('Roberto Bravo', 'Roberto Bravo'),
+        ('Erwin Serrano', 'Erwin Serrano'),
+        ('Angela Ramirez', 'Angela Ramirez'),
+
+    ]
+    asesor = forms.ChoiceField(label="Asesor",
+                               choices=OPCIONES_CHOICES,
+                              widget=forms.Select(attrs={'class': 'form-select'})
+                               )
+    # asesor = forms.ChoiceField(
+    #     label="Asesor",
+    #     choices=[(user.id, f"{user.username} {user.last_name}") for user in User.objects.all() if user.is_staff ],
+    #     widget=forms.Select(attrs={'class': 'form-select'}),
+    # )
     
 class CreateTask(forms.Form):
     name = forms.CharField(label="Nombre de la tarea", 
@@ -47,8 +48,9 @@ class CreateTask(forms.Form):
     due_date = forms.DateField(label='Fecha proyectada de finalizacion',widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}))
     description = forms.CharField(label="Descripción",max_length=500, widget=forms.Textarea(attrs={'class': 'form-control'}))
     users = forms.ModelMultipleChoiceField(
-        queryset=User.objects.all(),
-        widget=forms.CheckboxSelectMultiple
+        queryset=User.objects.filter(is_staff=True),
+        widget=forms.SelectMultiple(attrs={'class': 'form-select'})
+        
     )
 
 
