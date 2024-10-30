@@ -1,6 +1,11 @@
 from django.contrib import admin
 from .models import *
 # Register your models here.
+from .forms import PanelItemsForm
+
+@admin.register(PanelItems)
+class PanelItemsAdmin(admin.ModelAdmin):
+    form = PanelItemsForm
 
 models_ = [ Project,
             Brand,
@@ -8,7 +13,7 @@ models_ = [ Project,
             Product,
             Tabs,
             Dasboard,
-            PanelItems,
+
             Items,
             Labels,
             Category,

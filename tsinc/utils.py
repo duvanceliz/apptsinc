@@ -193,9 +193,9 @@ def calc_controllers(item_points, type_controller):
         total_points = clean_points(total_points)
         reduce_points = functools.reduce(lambda x,y:x+y,total_points)
         if reduce_points <= prom:
-            filtered_expansions = [expansion for expansion in expansions if expansion['total_points'] <= prom]
+            filtered_expansions = [expansion for expansion in expansions if expansion['total_points'] <= prom and expansion['total_points']>0]
         elif reduce_points > prom:
-            filtered_expansions = [expansion for expansion in expansions if expansion['total_points'] > prom]
+            filtered_expansions = [expansion for expansion in expansions if expansion['total_points'] > prom ]
         return filtered_expansions
         
     
@@ -207,8 +207,7 @@ def calc_controllers(item_points, type_controller):
             stop +=1
             filtered_expansions = filter_expansions(new_points, expansions)
             new_points = iterator_function(total_points,filtered_expansions)
-            if stop > 10:
-                print(new_points)
+            if stop > 20:
                 break
                 
      
@@ -297,9 +296,14 @@ def calc_controllers(item_points, type_controller):
         if len(controllers_js) > 0 and len(expansions_js) > 0:
 
             point_quantity = functools.reduce(lambda x,y: x+y,item_points)
-        
+
             if point_quantity > 0 and point_quantity < 18:
-                controller = [controller for controller in controllers_js if controller['model']=="F4-CGM04060" or controller['model']=="M4-CGM04060"][0]  
+
+                modelos_deseados = {"F4-CGM04060-0", "M4-CGM04060-0"}
+                
+                # Filtra los controladores utilizando una comprensión de lista
+                controller = next((controller for controller in controllers_js if controller['model'] in modelos_deseados), None)
+
                 new_controller_point = closest_match(controller['points'],item_points)
                 
                 #print(f'puntos controlador:{new_controller_point}')
@@ -310,7 +314,12 @@ def calc_controllers(item_points, type_controller):
                     # new_points = subtract_points(item_points, new_controller_point)
                     add_expansion_js(item_points,expansions_js)
             else:
-                controller = [controller for controller in controllers_js if controller['model']=="F4-CGM09090" or controller['model']=="M4-CGM04060"][0]  
+
+                modelos_deseados = {"F4-CGM09090-0", "M4-CGM09090-0"}
+                
+                # Filtra los controladores utilizando una comprensión de lista
+                controller = next((controller for controller in controllers_js if controller['model'] in modelos_deseados), None)
+                
                 new_controller_point = closest_match(controller['points'],item_points)
                 
                 # print(f'puntos controlador:{new_controller_point}')
@@ -822,8 +831,9 @@ def calc_trafo(sheet, row, column, divices,tab,project, points = 0):
     tr = Divice.objects.filter(model=trf,tab=tab,project=project).all()
     tr.delete()
     tr_prod = Product.objects.filter(model = trf).first()
-    for i in range(1,quantity+1):
-        Divice.objects.create(model=tr_prod.model, brand = tr_prod.brand, tab = tab, project = project)
+    if tr_prod:
+        for i in range(1,quantity+1):
+            Divice.objects.create(model=tr_prod.model, brand = tr_prod.brand, tab = tab, project = project)
     
     
     sheet.column_dimensions['G'].width = 32
@@ -2197,11 +2207,20 @@ def print_order(sheet,order):
 def send_notification(tarea, usuario_email, ):
     subject = 'Tarea Asignada'
     message = f'El usuario --{tarea.assigned_by}-- te ha asignado la tarea con nombre "{tarea.name}", y descripción "{tarea.description}". porfavor validar en la plataforma'
+    html_message = f"""
+            <h2>¡Nueva Tarea Asignada!</h2>
+            <p>El usuario: <strong>"{tarea.assigned_by}"</strong> 
+            te ha asignado la tarea: <strong>"{tarea.description}"</strong> 
+            del proyecto:<strong>"{tarea.project.name}"</strong> 
+            porfavor ingresa al siguiente enlace:
+            <a href="http://201.244.121.90:84/user_view/">Ver tarea</a> para validar.
+            </p>
+        """
     from_email = settings.EMAIL_HOST_USER
     recipient_list = [usuario_email]
 
     try:
-        send_mail(subject, message, from_email, recipient_list)
+        send_mail(subject, message, from_email, recipient_list, html_message=html_message)
     except Exception as e:
         # Manejo de errores
         print(f'Error al enviar correo: {e}')

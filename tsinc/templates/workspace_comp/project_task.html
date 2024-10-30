@@ -33,12 +33,12 @@
                 {{user}},
                 {% endfor %}
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                   
                   {{task.description}},
                   
                   </div>
-                  <div class="col-1 text-center">
+                  <div class="col-2 text-center">
 
                      {% for item in comments_per_task %}
 
@@ -48,6 +48,12 @@
                       
                       {{item.number_of_comments}}
                       <i class="bi bi-chat-left-text"></i>
+                    </span>
+
+                    <span class="badge bg-primary rounded-pill">
+                      
+                      {{item.number_of_files}}
+                      <i class="bi bi-file-earmark-text"></i>
                     </span>
                     
                       {% endif %}
@@ -89,17 +95,35 @@
 
             {% if comment.task.id == task.id %}
             <div class="card mb-2 p-2">
-              <span class="fst-normal" style="font-size: 0.7rem;"><span class="fw-bold">comentario de:</span> {{comment.usersession}}</span>
+              <span class="fst-normal" style="font-size: 0.7rem;"><span class="fw-bold">comentario de:</span> {{comment.usersession}} <a href="{% url 'delete_comment' comment.id %}" class="btn btn-light btn-sm" ><i class="bi bi-trash"></i></a>
+            </span>
      
             <span class="fst-normal" style="font-size: 0.7rem;"><span class="fw-bold">Fecha:</span> {{comment.date}}</span>
          
             <span class="fst-normal">{{comment.message}}</span>
+
             </div>
             
 
             {% endif %}
 
 
+            {% endfor %}
+
+            {% for file in task_files %}
+
+            {% if file.task.id == task.id %}
+
+            <div class="card mb-2 p-2">
+              <span class="fst-normal" style="font-size: 0.7rem;">El usuario: <span class="fw-bold">{{file.usersession}}</span>  subio el archivo: <span class="fw-bold"><a href="{% url 'view_file' file.id %}">{{file.name}}</a></span> <a href="{% url 'delete_file' file.id %}" class="btn btn-light btn-sm" ><i class="bi bi-trash"></i></a> </span>
+              <span class="fst-normal" style="font-size: 0.7rem;"><span class="fw-bold">Fecha:</span> {{file.date}}</span>
+              
+
+            </div>
+
+
+            {% endif %}
+                 
             {% endfor %}
           
           </div>

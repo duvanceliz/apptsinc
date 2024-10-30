@@ -2,10 +2,11 @@ from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
-
+from .views import ProductAutocomplete
 
 urlpatterns = [
     path('', views.home, name='home' ),
+    path('product-autocomplete/', ProductAutocomplete.as_view(), name='product-autocomplete'),
     path('project/create', views.create_project, name='create_project'),
     path('product/create', views.create_product, name='create_product'),
     path('project/delete/<int:id>/', views.delete_project, name='delete_obj'),
@@ -35,7 +36,7 @@ urlpatterns = [
     path('license/delete/<int:id>', views.delete_license, name='delete_license'),
     path('downloadoffer/<int:id>', views.download_offer, name='download_offer'),
     path('editpage/', views.edit_page, name='edit_page'),
-    path('editproject/', views.edit_project, name='edit_project'),
+    path('editproject/<int:id>', views.edit_project, name='edit_project'),
     path('product/delete/<int:id>', views.delete_product, name='delete_product'),
     path('editproduct/<int:id>', views.edit_product, name='edit_product'),
     path('remission/create', views.create_remission, name='create_remission'),
@@ -135,10 +136,10 @@ urlpatterns = [
     path('comment/save/', views.save_comment, name='save_comment'),
     path('task/dalete/<int:id>', views.delete_task, name='delete_task'),
     path('task/edit/<int:id>', views.edit_task, name='edit_task'),
-
-
-
-
+    path('upload_task_file/', views.upload_task_file, name='upload_task_file'),
+    path('comment/dalete/<int:id>', views.delete_comment, name='delete_comment'),
+    path('task/archive/<int:id>/<int:opt>', views.archive_task, name='archive_task'),
+    path('archived_task_project/', views.archived_task_project, name='archived_task_project'),
 
 
 ] 

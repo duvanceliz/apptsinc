@@ -22,7 +22,7 @@ class Project(models.Model):
     closing_date = models.DateField(default=datetime.date.today)
     date = models.DateField(default=datetime.date.today)
     usersession = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-   
+    archive_tasks = models.BooleanField(default=False)
     def __str__(self):
         return self.name
     
@@ -291,6 +291,8 @@ class ProductFile(models.Model):
 
 
 
+
+
 class Invoice(models.Model):
     number = models.CharField(max_length=100)
     total_price = models.FloatField(default=0)
@@ -343,18 +345,6 @@ class Folder(models.Model):
         ordering = ['order']
 
 
-class File(models.Model):
-    name = models.CharField(max_length=200)
-    path = models.CharField(max_length=200, null=True)
-    project = models.ForeignKey(Project,on_delete=models.CASCADE, null=True, blank = True)
-    product = models.ForeignKey(Product,on_delete=models.CASCADE, null=True, blank = True)
-    remission = models.ForeignKey(Remission,on_delete=models.CASCADE, null=True, blank = True)
-    order = models.ForeignKey(PurcharseOrder,on_delete=models.CASCADE, null=True, blank = True)
-    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, null=True, blank = True)
-    folder = models.ForeignKey(Folder,on_delete=models.CASCADE, null=True, blank = True)
-    order_invoice = models.ForeignKey(OrderInvoice,on_delete=models.CASCADE, null=True, blank = True)
-    date = models.DateTimeField(default=timezone.now)
-    usersession = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
    
 
 
@@ -401,6 +391,19 @@ class Task(models.Model):
     def __str__(self):
         return self.name
 
+class File(models.Model):
+    name = models.CharField(max_length=200)
+    path = models.CharField(max_length=200, null=True)
+    project = models.ForeignKey(Project,on_delete=models.CASCADE, null=True, blank = True)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE, null=True, blank = True)
+    remission = models.ForeignKey(Remission,on_delete=models.CASCADE, null=True, blank = True)
+    order = models.ForeignKey(PurcharseOrder,on_delete=models.CASCADE, null=True, blank = True)
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, null=True, blank = True)
+    folder = models.ForeignKey(Folder,on_delete=models.CASCADE, null=True, blank = True)
+    order_invoice = models.ForeignKey(OrderInvoice,on_delete=models.CASCADE, null=True, blank = True)
+    task = models.ForeignKey(Task,on_delete=models.CASCADE, null=True, blank = True)
+    date = models.DateTimeField(default=timezone.now)
+    usersession = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
     
 class Activity(models.Model):
     ACTION_CHOICES = [
@@ -420,6 +423,7 @@ class Comment(models.Model):
     date = models.DateTimeField(default=timezone.now)
     usersession = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='comments')
+
 
 
 

@@ -1,9 +1,9 @@
 from django import forms
 from django.forms import formset_factory
-from .models import Brand, Location, Tabs, Product, User
+from .models import Brand, Location, Tabs, Product, User, PanelItems
 from django.db.models import Q
-
-
+import datetime
+from dal import autocomplete
 
 
 class CreateProject(forms.Form):
@@ -20,12 +20,19 @@ class CreateProject(forms.Form):
                           max_length=200,
                           widget=forms.TextInput(attrs={'class': 'form-control'})
                           )
-    delivery_date = forms.DateField(label='Fecha de entrega',widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}))
-    closing_date = forms.DateField(label='Fecha de cierre',widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}))
+    delivery_date = forms.DateField(label='Fecha de entrega',
+                                    widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}),
+                                    initial=datetime.date.today
+                                    )
+    closing_date = forms.DateField(label='Fecha de cierre',
+                                   widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}),
+                                   initial=datetime.date.today
+                                   )
     OPCIONES_CHOICES = [
         ('Roberto Bravo', 'Roberto Bravo'),
         ('Erwin Serrano', 'Erwin Serrano'),
         ('Angela Ramirez', 'Angela Ramirez'),
+        ('Cataina Pinilla', 'Cataina Pinilla'),
 
     ]
     asesor = forms.ChoiceField(label="Asesor",
@@ -44,9 +51,21 @@ class CreateTask(forms.Form):
                            widget=forms.TextInput(attrs={'class': 'form-control'})
                            
                            )
-    start_date = forms.DateField(label='Fecha de inicio',widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}))
-    due_date = forms.DateField(label='Fecha proyectada de finalizacion',widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}))
+    start_date = forms.DateField(label='Fecha de inicio',
+                                 widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}),
+                                 initial=datetime.date.today
+                                 )
+    due_date = forms.DateField(label='Fecha proyectada de finalizacion',
+                               widget=forms.DateInput(attrs={'type': 'date','class':'form-control'}),
+                               initial=datetime.date.today
+
+                               )
     description = forms.CharField(label="Descripción",max_length=500, widget=forms.Textarea(attrs={'class': 'form-control'}))
+    send_email = forms.BooleanField(
+        label="Enviar notificación al correo", 
+        required=False, 
+        initial=False
+    )
     users = forms.ModelMultipleChoiceField(
         queryset=User.objects.filter(is_staff=True),
         widget=forms.SelectMultiple(attrs={'class': 'form-select'})
@@ -266,8 +285,13 @@ class CreateInvoice(forms.Form):
                                     )
  
 
-    
-
+class PanelItemsForm(forms.ModelForm):
+    class Meta:
+        model = PanelItems
+        fields = '__all__'
+        widgets = {
+            'product': autocomplete.ModelSelect2(url='product-autocomplete')
+        }
 
 
 

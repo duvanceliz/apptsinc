@@ -107,12 +107,12 @@
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <li><a class="dropdown-item" href="{% url 'tabs' project.id %}" >Ver Tableros</a></li>
-                    <li><a class="dropdown-item" href="/editproject/?id={{project.id}}" >Editar</a></li>
+                    <li><a class="dropdown-item" href="{% url 'edit_project' project.id %}" >Editar Proyecto</a></li>
                     <li><a class="dropdown-item" href="{% url 'download_points' project.id %}" >Descargar puntos</a></li>
+                    <li><a class="dropdown-item" href="{% url 'modify_points' project.id %}" >Ver o Editar Puntos</a></li>
                     <li><a class="dropdown-item" href="{% url 'generate_offer' project.id %}" >Generar oferta</a></li>
                     <li><a class="dropdown-item" href="{% url 'download_offer' project.id %}" >Descargar oferta</a></li>
-                    <li><a class="dropdown-item" href="{% url 'edit_offer' project.id %}" >Editar oferta</a></li>
-                    <li><a class="dropdown-item" href="{% url 'modify_points' project.id %}" >Editar Puntos</a></li>
+                    <li><a class="dropdown-item" href="{% url 'edit_offer' project.id %}" >Ver o Editar oferta</a></li>
                     <li><a class="dropdown-item" href="{% url 'delete_obj' project.id %}" onclick="return verificar()">Eliminar</a></li>
                   </ul>
                 </div>

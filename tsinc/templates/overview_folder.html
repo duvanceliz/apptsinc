@@ -2,7 +2,7 @@
 
 <div class="container">
    
-
+  {% include 'components/alert.html' %}
         <div class="row mb-4">
             <div class="col-md-8">
                 <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>';">
@@ -28,19 +28,46 @@
             {% include 'workspace_comp/form_update_folder.html' with  folder=folder project=folder.project %}
 
            </div>
-           <div class="col-md-6 text-end">
+           <div class="col-md-6 d-flex flex-row gap-2 justify-content-end">
 
 
             {% if folder.project %}
-            <a href="{% url 'tabs' folder.project.id %}" class="btn btn-primary btn-sm">Ver Tableros</a>
-           
-            <a href="{% url 'generate_offer' folder.project.id %}" class="btn btn-primary btn-sm">Generar oferta</a>
+            <div class="dropdown">
+              <button class="btn btn-light dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+                Proyecto <i class="bi bi-gear"></i>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="{% url 'tabs' folder.project.id %}" >Ver Tableros</a></li>
+                <li><a class="dropdown-item" href="{% url 'edit_project' folder.project.id %}" >Editar Proyecto</a></li>
+                <li><a class="dropdown-item" href="{% url 'upload_folder_file' folder.id %}" >Cargar archivo</a></li>
+                <li><a class="dropdown-item" href="{% url 'delete_obj' folder.project.id %}" onclick="return verificar()">Eliminar</a></li>
+              </ul>
+            </div>
 
-         
-            <a href="{% url 'edit_offer' folder.project.id %}" class="btn btn-primary btn-sm">Ver oferta</a>
+            <div class="dropdown">
+              <button class="btn btn-light dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+                Puntos <i class="bi bi-gear"></i>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+                <li><a class="dropdown-item" href="{% url 'modify_points' folder.project.id %}" >Ver o Editar Puntos</a></li>
+                <li><a class="dropdown-item" href="{% url 'download_points' folder.project.id %}" >Descargar puntos</a></li>
+
+              </ul>
+            </div>
+
+            <div class="dropdown">
+              <button class="btn btn-light dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+                Oferta <i class="bi bi-gear"></i>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="{% url 'edit_offer' folder.project.id %}" >Ver o Editar oferta</a></li>
+                <li><a class="dropdown-item" href="{% url 'generate_offer' folder.project.id %}" >Generar oferta</a></li>
+                <li><a class="dropdown-item" href="{% url 'download_offer' folder.project.id %}" >Descargar oferta</a></li>
+              </ul>
+            </div>
             {% endif %}
 
-            <a href="{% url 'upload_folder_file' folder.id %}" class="btn btn-success btn-sm">Cargar archivo</a>
           
            </div>
 

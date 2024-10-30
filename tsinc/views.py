@@ -24,6 +24,7 @@ from django.utils.encoding import iri_to_uri  # Para codificar caracteres especi
 from collections import Counter
 from django.contrib.auth.decorators import permission_required
 from .utils import send_notification
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
@@ -157,7 +158,7 @@ def create_project(request):
             offers_folder = Folder.objects.create(name="OFERTAS") # crea la carpeta "ofertas"
             create_folders(offers_folder) # crea las carpetas correpondiente
 
-        return redirect(referer)
+        return redirect("/")
 
 def replace_cero(value):
     if value == 0:
@@ -492,6 +493,8 @@ def tabs(request, id):
                                            'project':project
                                            })
     else:
+
+        referer = request.META.get("HTTP_REFERER")
         
         project = Project.objects.get(id=id)
         chest_type = True
@@ -501,6 +504,7 @@ def tabs(request, id):
         tab_name = request.POST['tab_name']
 
         tab = Tabs.objects.filter(tab_name = tab_name, project = project).first()
+
         
         if tab:  
             messages.error(request,f"El tablero con el nombre de {tab.tab_name} ya existe, elige otro nombre")
@@ -510,8 +514,8 @@ def tabs(request, id):
                                   chest_type = chest_type, 
                                   controller= request.POST['controller'], 
                                   project= project)
-        
-        return redirect(f"/project/tabs/{id}/")
+    
+        return redirect(referer)
 
 @login_required
 def delete_tab(request, id):
@@ -527,7 +531,7 @@ def download_points(request,id):
     pages = Dasboard.objects.filter(tab__in=tabs).select_related('tab')
     items = Items.objects.filter(dashboard__in=pages).select_related('dashboard') 
     labels = Labels.objects.filter(dashboard__in=pages).select_related('dashboard')  
-
+    referer = request.META.get("HTTP_REFERER")
     
     parent_labels = [ label for label in labels if label.relationship != 'None'] 
         
@@ -538,6 +542,12 @@ def download_points(request,id):
         }
         for label in parent_labels
         ]
+    
+
+    if not data:
+        messages.error(request,f"¡Ha ocurrido un error al momento de generar el archivo!, asegurese de haber creado equipos en la dashboard")
+        return redirect(referer)
+    
     
     # print(pd.DataFrame(data))
     
@@ -566,8 +576,6 @@ def download_points(request,id):
     
         c_quantity = 0
 
-   
-
         for i in range(0,len(tabs)):
             if tabs[i].chest_type:
                 c_quantity += 1
@@ -594,8 +602,8 @@ def download_points(request,id):
         workbook.save(response)
         return response
     except TypeError as e:
-        messages.error(request,f"¡Ha ocurrido un error al momento de generar el archivo! {e}, asegurese de haber creado tableros, paginas y equipos en la dashboard. si el problema persiste contacte a la empresa.")
-        return redirect('/')
+        messages.error(request,f"¡Ha ocurrido un error al momento de generar el archivo! {e}")
+        return redirect(referer)
     
 
     
@@ -938,6 +946,8 @@ def edit_tab(request):
 
 @login_required
 def modify_points_file(request,id):
+
+    referer = request.META.get("HTTP_REFERER")
     try:
         if request.method == "GET":
             project = Project.objects.get(id=id)
@@ -1004,10 +1014,10 @@ def modify_points_file(request,id):
                 license = Product.objects.filter(id=request.POST["license"]).first()
                 License.objects.create(name=license.model,description=license.description, sheet=sheet)
 
-            return redirect(f"/modifypoints/{id}?sheet={sheet.id}")
+            return redirect(referer)
     except:
-        messages.error(request,"¡Ha ocurrido un error para generar la información!, asegurese de haber descargado el archivo de puntos previamente. si el problema persiste contacte a la empresa.")
-        return redirect('/')
+        messages.error(request,"¡Ha ocurrido un error para generar la información!, asegurese de haber descargado el archivo de puntos previamente.")
+        return redirect(referer)
 
 
 def delete_controller(request, id):
@@ -1132,8 +1142,7 @@ def edit_page(request):
 @permission_required('tsinc.change_project', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
-def edit_project(request):
-    id = int(request.GET.get('id'))
+def edit_project(request, id):
     project = get_object_or_404(Project,id=id)
     if request.method == 'POST':
         project_name = request.POST.get('project_name')
@@ -2750,12 +2759,13 @@ def calculate_and_save_percentage_of_tasks(project):
         project.save()
 
 
-def count_comments(tasks, comments):
+def count_comments(tasks, comments, files):
 
     comments_per_task = [
         {
             'task':task,
-            'number_of_comments':sum(1 for comment in comments if task.id == comment.task.id )
+            'number_of_comments':sum(1 for comment in comments if task.id == comment.task.id ),
+            'number_of_files':sum(1 for file in files if task.id == file.task.id )
 
         }
         for task in tasks
@@ -2802,11 +2812,13 @@ def overview_folder(request,id):
         entrys = OrderEntry.objects.filter(order__in = pending_orders)
         tasks = Task.objects.filter(project = project).all()
         comments = Comment.objects.filter(task__in = tasks)
+        task_files = File.objects.filter(task__in = tasks)
+    
 
         total_info_order = get_total_info_order(pending_orders,entrys) # calcular informacion resumen de ofertas y resumen de ordenes
 
         calculate_and_save_percentage_of_tasks(project)
-        comments_per_task = count_comments(tasks, comments)
+        comments_per_task = count_comments(tasks, comments, task_files)
 
         files = sorted_files(remission_files)
         files += sorted_files(invoice_file)
@@ -2824,6 +2836,7 @@ def overview_folder(request,id):
         generated_offer = None
         tasks = None
         comments = None
+        task_files = None
         comments_per_task = None
         folder_file = File.objects.filter(folder = folder).all()
         files = sorted_files(folder_file)
@@ -2854,7 +2867,8 @@ def overview_folder(request,id):
         'total_info_order':total_info_order,
         'tasks':tasks,
         'comments':comments,
-        'comments_per_task':comments_per_task
+        'comments_per_task':comments_per_task,
+        'task_files':task_files
     }
     
     return render(request,'overview_folder.html',context)
@@ -3630,16 +3644,17 @@ def create_task(request, project_id):
     referer = request.META.get("HTTP_REFERER")
 
     project = Project.objects.filter(id= project_id).first()
+    folder = Folder.objects.filter(project = project).first()
 
     if request.method == "GET":
-        return render(request,"create_task.html", {'form':CreateTask()}) 
+        return render(request,"create_task.html", {'form':CreateTask(), 'folder':folder}) 
     else:
         name = request.POST["name"]
         start_date = request.POST["start_date"]
         due_date = request.POST["due_date"]
         description = request.POST["description"]
         users = request.POST.getlist("users")
-
+       
         task = Task.objects.create(
             name=name,
             start_date=start_date,
@@ -3658,11 +3673,12 @@ def create_task(request, project_id):
         for user in users:
             # send_notification(task,user.email)
             user_ = User.objects.filter(id = user).first()
-            if (user_.email):
-                send_notification(task,user_.email)
-                messages.success(request,f"Se ha enviado una notificacion al emaíl del usuario {user_}")
-            else:
-                messages.info(request,f"El usuario {user_} no tiene un correo asignado, porfavor verificar en el panel de adminitrador")
+            if request.POST.getlist("send_email"):
+                if (user_.email):
+                    send_notification(task,user_.email)
+                    messages.success(request,f"Se ha enviado una notificacion al emaíl del usuario {user_}")
+                else:
+                    messages.info(request,f"El usuario {user_} no tiene un correo asignado, porfavor verificar en el panel de adminitrador")
 
         
         calculate_and_save_percentage_of_tasks(project)
@@ -3778,6 +3794,8 @@ def user_view(request):
 
     tasks = Task.objects.filter(users = request.user)
     projects = set([ task.project for task in tasks ])
+
+    all_archived = False
     
     tasks_per_project = [
         {
@@ -3789,8 +3807,13 @@ def user_view(request):
     for project in projects
 
     ]
-   
-    return render(request,"user_view.html", {'tasks_per_project':tasks_per_project})
+
+
+    all_archived = all([True if project.archive_tasks else False for project in projects ])
+
+    
+    
+    return render(request,"user_view.html", {'tasks_per_project':tasks_per_project, 'all_archived':all_archived})
 
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
@@ -3801,9 +3824,42 @@ def tasks(request,project_id):
 
     tasks = Task.objects.filter(project = project, users = request.user)
 
-    
-   
     return render(request,"tasks.html", {'tasks':tasks})
+
+
+
+def upload_task_file(request):
+    if request.method == 'POST':
+        # file = request.FILES['file']
+    
+        if 'file' in request.FILES:
+            file = request.FILES['file']
+            task_id = request.POST.get('task_id')
+
+            file_without_space = file.name.replace(" ", "_")
+            
+            task_file = File.objects.filter(name=file_without_space,task_id = task_id).first()
+
+            task = Task.objects.filter(id = task_id).first()
+
+            folder_name = "task_files"
+
+            if task_file:
+
+                upload_file(file,file_without_space,task_file.path)
+
+            else:
+                task_file = File.objects.create(name = file_without_space,
+                                                            path=f"{folder_name}/{task.id}",
+                                                            task_id=task.id,
+                                                            usersession = request.user
+                                                            )  
+            
+            upload_file(file,file_without_space,task_file.path)
+
+        return JsonResponse({'message': 'File uploaded successfully'})
+    
+    return JsonResponse({'error': 'No file uploaded'}, status=400)
 
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
@@ -3856,4 +3912,63 @@ def delete_task(request,id):
     return redirect(referer)
 
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def delete_comment(request,id):  
+    referer = request.META.get('HTTP_REFERER')
+    comment = Comment.objects.filter(id = id).first()
+    comment.delete()
+    return redirect(referer)
 
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def archive_task(request,id,opt):  
+    referer = request.META.get('HTTP_REFERER')
+    if opt == 0:
+        project = Project.objects.filter(id = id).first()
+        project.archive_tasks = True
+        project.save()
+
+    elif opt == 1:
+        project = Project.objects.filter(id = id).first()
+        project.archive_tasks = False
+        project.save()
+
+    return redirect(referer)
+
+
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def archived_task_project(request):
+
+    tasks = Task.objects.filter(users = request.user)
+    projects = set([ task.project for task in tasks ])
+    
+    tasks_per_project = [
+        {
+            'project':project,
+            'tasks': [task for task in tasks if project.id == task.project.id],
+            'total': sum(1 for task in tasks if project.id == task.project.id)
+        }
+
+    for project in projects
+
+    ]
+
+    all_archived = any([True if project.archive_tasks else False for project in projects ])
+
+    return render(request,"archived_task_project.html", {'tasks_per_project':tasks_per_project, 'all_archived':all_archived})
+
+
+class ProductAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Product.objects.none()  # Evita mostrar resultados si el usuario no está autenticado.
+
+        qs = Product.objects.all()
+
+        if self.q:
+            qs = qs.filter(model__icontains=self.q)  # Filtra productos por el nombre (o el campo que prefieras).
+
+        return qs

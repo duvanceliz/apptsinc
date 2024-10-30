@@ -30,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-g3=)z0wy@_28znm85%z=tss+c^+!42*wbo@6t$m&j3fq7n4^h@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['201.244.121.90','localhost']
 
@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'api',
     'tsinc',
     'user_sessions',
+    'dal',
+    'dal_select2',
 ]
 
 MIDDLEWARE = [
@@ -105,7 +107,7 @@ DATABASES = {
 #    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
      'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'backup_20241026_114236.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -187,5 +189,5 @@ EMAIL_HOST = 'shared16.arvixe.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'administrator@tsinc.com.co'
-EMAIL_HOST_PASSWORD = 'Raspberry@81234'
+EMAIL_HOST_PASSWORD = '##'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

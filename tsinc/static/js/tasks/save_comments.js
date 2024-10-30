@@ -40,12 +40,16 @@ function post(url, data, csrfToken) {
           // document.getElementById('mensaje').innerText = 'Error: ' + error.response.data.mensaje;
           
             // Mostrar mensaje de error si hay un fallo en la solicitud
-            const notificacion = document.getElementById("notificacion");
+            if(error){
+              const notificacion = document.getElementById("notificacion");
             const mensajeNotificacion = document.getElementById("mensajeNotificacion");
             mensajeNotificacion.textContent = 'Ocurrió un error al enviar el formulario.';
             notificacion.style.backgroundColor = '#dc3545'; // Rojo
             mostrarNotificacion();
             console.error("Error:", error);
+
+            }
+            
         });
     }
 
@@ -82,10 +86,6 @@ function mostrarNotificacion() {
   setTimeout(() => {
       notificacion.style.display = 'none'; // Ocultar después de 3 segundos
   }, 3000);
-}
-
-function cerrarNotificacion() {
-  document.getElementById("notificacion").style.display = 'none'; // Cerrar manualmente
 }
 
 
