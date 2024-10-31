@@ -25,6 +25,7 @@ from collections import Counter
 from django.contrib.auth.decorators import permission_required
 from .utils import send_notification
 from django.views.decorators.csrf import csrf_exempt
+from .utils import ProductNotFoundError
 
 # Create your views here.
 
@@ -115,7 +116,12 @@ def create_project(request):
         offer_code = increase_offer_code()
 
         # asesor = User.objects.filter(id = request.POST['asesor']).first()
+        project = Project.objects.filter(name = request.POST['name']).first()
 
+        if project:
+            messages.error(request,"¡El ya existe un proyecto con el mismo nombre, prueba con otro!")
+            return redirect(referer)
+        
         project = Project.objects.create(name = request.POST['name'], 
                                          code = offer_code.code,
                                          company_name = request.POST['company_name'],
@@ -286,10 +292,10 @@ def product_search(request):
 @user_passes_test(staff_required,login_url='/accessdenied/')   
 @login_required
 def create_product(request):
+    referer = request.META.get('HTTP_REFERER')
     if request.method == 'GET':
        return render(request, 'createproduct.html',{'form': CreateProduct()})
     else:
-        print(request.POST)
         if request.POST['iva'] == 'on':
             iva = True
         else:
@@ -309,7 +315,7 @@ def create_product(request):
                                          observation= request.POST['observation'],
                                          description= request.POST['description'],
                                          iva=iva)
-        return redirect('/product')
+        return redirect(referer)
 
 
 def verify_code_point_des(description):
@@ -603,6 +609,9 @@ def download_points(request,id):
         return response
     except TypeError as e:
         messages.error(request,f"¡Ha ocurrido un error al momento de generar el archivo! {e}")
+        return redirect(referer)
+    except ProductNotFoundError as e:
+        messages.error(request,f"{e}")
         return redirect(referer)
     
 
@@ -1160,9 +1169,10 @@ def edit_project(request, id):
 
 @login_required
 def delete_product(request, id):
+    referer = request.META.get('HTTP_REFERER')
     product = Product.objects.filter(id=id).first()
     product.delete()
-    return redirect(f"/product/")
+    return redirect(referer)
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
@@ -2911,7 +2921,7 @@ def delete_folder(request,id):
     referer = request.META.get('HTTP_REFERER')
     folder = Folder.objects.filter(id = id).first()
     folder.delete()
-    return redirect(referer)
+    return redirect("/")
 
 @permission_required('tsinc.add_folder', login_url='/accessdenied/')
 @user_passes_test(staff_required,login_url='/accessdenied/') 
@@ -2932,12 +2942,12 @@ def update_folder(request,id):
         name = request.POST.get("name")
         project_id = request.POST.get("project_id")
         color = request.POST.get("color")
+        currency = request.POST.get("currency")
         folder = Folder.objects.filter(id = id).first()     
         if not project_id == "none":
             folder.project_id = project_id
         else:
             folder.project = None
-             
         folder.name = name
         folder.color = color
         folder.save()   
@@ -3127,7 +3137,8 @@ def calc_offer_info(project):
     products_shipped = ProductSent.objects.filter(remission__in = remissions)
     invoices = Invoice.objects.filter(project= project)
     valor_total = GeneratedOffer.objects.filter(measure__icontains="VALOR TOTAL (USD) DÓLAR ESTADOUNIDENSE",project = project).first()
-
+    total_invoiced_usd = 0
+    
 
     offer_info = {
         'total_product':sum(item.quantity  for item in generated_offer),
@@ -3136,7 +3147,14 @@ def calc_offer_info(project):
     }
 
 
+    # for invoice in invoices:
+    #     if orderinvoice.order.currency:
+    #         total_invoiced_usd += orderinvoice.value_paid/currency.value
+    #     else:
+    #         total_invoiced_usd += orderinvoice.value_paid
+
     offer_info['total_remaining'] = offer_info['total_product'] - offer_info['total_delivered']
+
 
     if valor_total:
         offer_info['total_offer'] = valor_total.total_value
@@ -3450,6 +3468,7 @@ def change_to_purcharse_order(request):
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def create_order_from_offer(request, project_id): 
+    referer = request.META.get("HTTP_REFERER")
     project = Project.objects.filter(id = project_id).first()
     items_offer = GeneratedOffer.objects.filter(project = project, to_purcharse_order = True)
     
@@ -3466,13 +3485,15 @@ def create_order_from_offer(request, project_id):
                                       price=price, 
                                       usersession = usersession)
             
-    return redirect(f"/createorder/{project_id}")
+    return redirect(f"/order/create/{project_id}")
 
 
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
-def create_remission_from_offer(request, project_id): 
+def create_remission_from_offer(request, project_id):
+
+
 
     project = Project.objects.filter(id = project_id).first()
     items_offer = GeneratedOffer.objects.filter(project = project, to_purcharse_order = True)
@@ -3493,7 +3514,7 @@ def create_remission_from_offer(request, project_id):
                                       section = item.section, 
                                       usersession = usersession)
             
-    return redirect(f"/createremission/{project_id}")
+    return redirect(f"/remission/create/{project_id}")
 
 
 
@@ -3561,7 +3582,7 @@ def create_invoice_from_offer(request, project_id):
                                       price=price, 
                                       usersession = usersession)
             
-    return redirect(f"/createinvoice/{project_id}")
+    return redirect(f"/invoice/create/{project_id}")
 
 
 @permission_required('tsinc.view_orderinvoice', login_url='/accessdenied/')
@@ -3570,6 +3591,14 @@ def create_invoice_from_offer(request, project_id):
 def show_all_purcharse_order_invoices(request):
 
     order_invoices = OrderInvoice.objects.all()
+
+    order_invoices = OrderInvoice.objects.filter().order_by('-date').all()
+    search = request.GET.get('search')
+    if search:
+        order_invoices = OrderInvoice.objects.filter(Q(order__code__icontains= search) | Q(usersession__username__icontains= search) | Q(order__project__name__icontains= search))
+    
+    
+    order_invoices = paginator(request,order_invoices,10)
 
     return render(request,"purcharse_order_invoices.html",{'order_invoices':order_invoices}) 
 
@@ -3689,6 +3718,8 @@ def create_task(request, project_id):
 
 def edit_task(request, id):
     task = get_object_or_404(Task, id=id)
+    project = Project.objects.filter(id= task.project.id).first()
+    folder = Folder.objects.filter(project = project).first()
     if request.method == 'POST':
         referer = request.META.get("HTTP_REFERER")
         form = CreateTask(request.POST)
@@ -3713,7 +3744,7 @@ def edit_task(request, id):
             'users': task.users.all() 
         }
         form = CreateTask(initial=initial_data)
-    return render(request, 'create_task.html', {'form': form})
+    return render(request, 'create_task.html', {'form': form, 'folder':folder})
 
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required

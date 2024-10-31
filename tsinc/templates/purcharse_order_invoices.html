@@ -51,7 +51,12 @@
                 <td>{{invoice.usersession}}</td>
                 <td>{{invoice.order.project}}</td>
                 <td>{{invoice.order}}</td>
-                <td>{{invoice.value_paid}}</td>
+                {% if invoice.order.currency %}
+                <td>{{invoice.value_paid|intcomma}} <span style="font-size: 0.6rem;" class="fw-bold">COP</span> </td>
+                {% else %}
+                <td>{{invoice.value_paid|intcomma}} <span style="font-size: 0.6rem;" class="fw-bold">USD</span></td>
+
+                {% endif %}
                 <td>{{invoice.iva|intcomma}}</th>
                 <td>{{invoice.source_retention|intcomma}}</td>
                 <td>{{invoice.ica_retention|intcomma}}</td>
@@ -81,18 +86,18 @@
        </div>
        <div class="pagination">
         <span class="step-links">
-            {% if invoices.has_previous %}
+            {% if order_invoices.has_previous %}
                 <a href="?page=1">&laquo; Primero</a>
-                <a href="?page={{ invoices.previous_page_number }}">Anterior</a>
+                <a href="?page={{ order_invoices.previous_page_number }}">Anterior</a>
             {% endif %}
     
             <span class="current">
-                Página {{ invoices.number }} de {{ invoices.paginator.num_pages }}.
+                Página {{ order_invoices.number }} de {{ order_invoices.paginator.num_pages }}.
             </span>
     
-            {% if invoices.has_next %}
-                <a href="?page={{ invoices.next_page_number }}">Siguiente</a>
-                <a href="?page={{ invoices.paginator.num_pages }}">Último &raquo;</a>
+            {% if order_invoices.has_next %}
+                <a href="?page={{ order_invoices.next_page_number }}">Siguiente</a>
+                <a href="?page={{ order_invoices.paginator.num_pages }}">Último &raquo;</a>
             {% endif %}
         </span>
     </div>

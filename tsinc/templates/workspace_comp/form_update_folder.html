@@ -1,7 +1,7 @@
 <form action="{% url 'update_folder' folder.id %}" class="" method="post">
     {% csrf_token %}
      <div class="row">
-        <div class="col-4">
+        <div class="col-3">
            
               
             <div class="form-floating">
@@ -28,15 +28,24 @@
                 <label for="floatingInputValue2">Proyecto relacionado</label>
              </div>
         </div>
+        <div class="col-2">
+
+
+           <select class="form-select h-100" aria-label="Default select example" name="currency">
+            <option selected value="0">USD</option>
+            <option value="1">COP</option>
+            </select>
+
+        </div>
         <div class="col-1">
-            <div class="d-inline">
+            <div class="d-inline align-item-center">
 
                 <input type="color" id="folder-color" name="color" value="{{folder.color}}"  />
           
             </div>
 
         </div>
-        <div class="col-2">
+        <div class="col-1">
            
             <button class="btn btn-success btn-sm"><i class="bi bi-floppy"></i></button>
             

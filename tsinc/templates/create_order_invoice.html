@@ -30,8 +30,8 @@
                                   </tr>
                                   <tr>
                                     
-                                    <td>{{order.code}}</td>
-                                    <td>{{order.total_price|floatformat:1}}</td>
+                                    <td><a href="{% url 'order_product_info' order.id %}">{{order.code}}</a></td>
+                                    <td>{{order.total_price|floatformat:1|intcomma}}</td>
                                     
                                   </tr>
                                   <tr class="bg-light">
@@ -42,8 +42,8 @@
                                   </tr>
                                   <tr>
                                     
-                                    <td>{{total_invoice.total_value|floatformat:1}}</td>
-                                    <td>{{total_invoice.total_leftover|floatformat:1}}</td>
+                                    <td>{{total_invoice.total_value|floatformat:1|intcomma}}</td>
+                                    <td>{{total_invoice.total_leftover|floatformat:1|intcomma}}</td>
                                     
                                   </tr>
                                  
