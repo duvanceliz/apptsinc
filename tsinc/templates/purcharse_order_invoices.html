@@ -52,9 +52,9 @@
                 <td>{{invoice.order.project}}</td>
                 <td>{{invoice.order}}</td>
                 {% if invoice.order.currency %}
-                <td>{{invoice.value_paid|intcomma}} <span style="font-size: 0.6rem;" class="fw-bold">COP</span> </td>
+                <td>{{invoice.value_paid|intcomma}} <span style="font-size: 0.6rem;" class="fw-bold bg-success text-white">COP</span> </td>
                 {% else %}
-                <td>{{invoice.value_paid|intcomma}} <span style="font-size: 0.6rem;" class="fw-bold">USD</span></td>
+                <td>{{invoice.value_paid|intcomma}} <span style="font-size: 0.6rem;" class="fw-bold bg-success text-white">USD</span></td>
 
                 {% endif %}
                 <td>{{invoice.iva|intcomma}}</th>

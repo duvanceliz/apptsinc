@@ -243,10 +243,12 @@ ul ul {
   margin-right: 5px;
 }
 
-.workspace-nav{
-  height: 800px;
-  overflow-y: scroll; 
+.workspace-nav {
+  height: 1700px; /* Ocupa el 100% de la altura de la pantalla */
+  overflow-y: scroll; /* Habilita el desplazamiento vertical si es necesario */
 }
+
+
 
 .workspace-nav{
   width: 100%; /* Establece el ancho máximo del contenedor */
@@ -316,6 +318,38 @@ ul ul {
 
 
 }
+
+#folder-card{
+  height: 300px;
+  overflow-y: scroll; 
+}
+
+
+#orders-card{
+  height: 250px;
+  overflow-y: scroll; 
+}
+
+#remissions-card{
+  height: 250px;
+  overflow-y: scroll; 
+}
+
+#invoices-card{
+  height: 250px;
+  overflow-y: scroll; 
+}
+
+#files-card{
+  height: 250px;
+  overflow-y: scroll; 
+}
+
+#tasks-card{
+  height: 300px;
+  overflow-y: scroll; 
+}
+
 
 
 

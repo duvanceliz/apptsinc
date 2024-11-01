@@ -64,7 +64,7 @@ class CreateTask(forms.Form):
     send_email = forms.BooleanField(
         label="Enviar notificación al correo", 
         required=False, 
-        initial=False
+        initial=True
     )
     users = forms.ModelMultipleChoiceField(
         queryset=User.objects.filter(is_staff=True),

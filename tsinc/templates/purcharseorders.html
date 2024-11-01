@@ -59,9 +59,9 @@
                 <td id="table-columns">{{order.tracking}}</td>
                 <td id="table-columns">{{order.supplier}}</td>
                 {% if  not order.currency %}
-                <td id="table-columns">{{order.total_price|floatformat:2|intcomma}} <span style="font-size: 0.6rem;" class="fw-bold"> USD</span></td>
+                <td id="table-columns">{{order.total_price|floatformat:2|intcomma}} <span style="font-size: 0.6rem;" class="fw-bold bg-success text-white"> USD</span></td>
                 {% else %}
-                <td id="table-columns">{{order.total_price|floatformat:2|intcomma}} <span style="font-size: 0.6rem;" class="fw-bold"> COP</span></td>
+                <td id="table-columns">{{order.total_price|floatformat:2|intcomma}} <span style="font-size: 0.6rem;" class="fw-bold bg-success text-white"> COP</span></td>
                 {% endif %}
                  {% for file in order_files_info  %}
                  {% if file.order_id == order.id  %}

@@ -23,6 +23,7 @@ class Project(models.Model):
     date = models.DateField(default=datetime.date.today)
     usersession = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     archive_tasks = models.BooleanField(default=False)
+    currency = models.BooleanField(default=False)
     def __str__(self):
         return self.name
     

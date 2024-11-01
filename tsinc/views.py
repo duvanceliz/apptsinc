@@ -491,12 +491,14 @@ def download_products(request):
 def tabs(request, id):
     if request.method == 'GET':
         project = Project.objects.get(id=id)
+        folder  = Folder.objects.filter(project = project).first()
         tabs = project.tabs.all()
         
         # tabs = offer.tabs.all()
         return render(request,'tabs.html',{'tabs': tabs, 
                                            'form': CreateTab(), 
-                                           'project':project
+                                           'project':project,
+                                           'folder':folder
                                            })
     else:
 
@@ -932,8 +934,7 @@ def delete_folder_item(request, id):
         
     return redirect('/filesfolders')
 @login_required
-def edit_tab(request):
-    id = int(request.GET.get('id'))
+def edit_tab(request,id):
     tab = get_object_or_404(Tabs,id=id)
     if request.method == 'POST':
         tab_name = request.POST.get('tab')
@@ -2477,10 +2478,10 @@ def delete_product_file(request,id):
 @user_passes_test(staff_required,login_url='/accessdenied/') 
 @login_required
 def create_invoice(request,id):
-
+    referer = request.META.get("HTTP_REFERER")
     project = Project.objects.filter(id=id).first()
     productbox = ProductBox.objects.filter(usersession = request.user).all()
-
+    
 
     if request.method == "POST":
         number = request.POST.get('number')
@@ -2507,7 +2508,7 @@ def create_invoice(request,id):
             )
 
         messages.success(request,"La factura ha sido creado correctamente")
-        return redirect(f"/createinvoice/{project.id}")
+        return redirect(referer)
     
     return render(request,"create_invoice.html",{
                                                   'project':project,
@@ -2719,36 +2720,67 @@ def overview(request):
 
     return render(request,"workspace.html",context)
 
+def get_all_projects(folder):
+    projects = set()  # Usamos un set para evitar duplicados si algún proyecto aparece en varios folders
+    if folder.project:  # Si el folder tiene un proyecto asignado, lo agregamos
+        projects.add(folder.project)
+    
+    # Recorremos los hijos del folder y llamamos a la función recursivamente
+    for child in folder.children.all():
+        projects.update(get_all_projects(child))  # Agrega los proyectos de los hijos recursivamente
+    
+    return projects  # Retorna todos los proyectos encontrados
 
 def calc_offer_info_all_project(folders):
 
-    
     folders_children = []
-    for folder in folders:
-        if folder.children:
-            for folder_  in  folder.children.all():
+    for folder in folders: # recorro los folders 
+        if folder.children: # si el folder tiene folder hijos 
+            for folder_  in  folder.children.all(): # recorro los los folder hijos y los agrega al lista
                 folders_children.append(folder_)     
+    
         
     
     if folders_children:
         projects = [ folder.project  for folder in folders_children if folder.project]
     else:
         projects = [ folder.project  for folder in folders if folder.project]
-
-    
+  
     total_offer = 0
     total_invoiced = 0
     total_info_folder_customer = {}
 
+    total_in_orders = 0
+
     for project in projects:
+        currency = Trm.objects.filter(currency = "usd" ).first()
+        
 
         total_offer_ = GeneratedOffer.objects.filter(measure__icontains="VALOR TOTAL (USD) DÓLAR ESTADOUNIDENSE",project = project).first()
         total_invoices_ = Invoice.objects.filter(project = project)
-        if total_offer_:
-            total_offer += total_offer_.total_value
-        if total_invoices_:
-            total_invoiced += sum(total_invoice.total_price for total_invoice in total_invoices_) 
+        purcharse_orders = PurcharseOrder.objects.filter(project = project)
 
+        if purcharse_orders:# calcula el total en ordenes globalmente
+            for order in purcharse_orders:
+                if order.currency:
+                    total_in_orders += order.total_price / currency.value
+                else:
+                    total_in_orders += order.total_price 
+
+
+        if total_offer_ :
+            if project.currency:
+                total_offer += total_offer_.total_value / currency.value
+            else:
+                total_offer += total_offer_.total_value
+
+        if total_invoices_:
+            if project.currency:
+                total_invoiced += sum(total_invoice.total_price for total_invoice in total_invoices_) / currency.value 
+            else:
+                total_invoiced += sum(total_invoice.total_price for total_invoice in total_invoices_) 
+
+    total_info_folder_customer['total_orders'] = round(total_in_orders,2)
     total_info_folder_customer['total_offer'] = total_offer
     total_info_folder_customer['total_invoiced'] = total_invoiced
     total_info_folder_customer['total_value_remaining'] = total_offer - total_invoiced
@@ -2782,10 +2814,76 @@ def count_comments(tasks, comments, files):
     ]
     return comments_per_task
 
+def calculate_supply_and_order_summary(projects):
+    total_offer = 0
+    total_invoiced = 0
+    total_info = {}
+
+    total_in_orders = 0
+    total_delivered = 0
+    total_invoiced_usd = 0
+
+
+    for project in projects:
+        currency = Trm.objects.filter(currency = "usd" ).first()
+        total_offer_ = GeneratedOffer.objects.filter(measure__icontains="VALOR TOTAL (USD) DÓLAR ESTADOUNIDENSE",project = project).first()
+        total_invoices_ = Invoice.objects.filter(project = project)
+        purcharse_orders = PurcharseOrder.objects.filter(project = project)
+        entrys = OrderEntry.objects.filter(order__in = purcharse_orders)
+        total_invoiced_ = OrderInvoice.objects.filter(order__in = purcharse_orders)
+
+       
+
+        for order in purcharse_orders:
+            if order.currency:
+                if currency.value > 0:
+                    total_in_orders += round(order.total_price / currency.value,2)
+            else:
+                total_in_orders += order.total_price
+
+            for entry in entrys:
+                if order.id == entry.order.id:
+                    if order.currency:
+                        total_delivered += (entry.price/currency.value) * entry.quantity
+                    else:
+                        total_delivered += entry.price * entry.quantity
+            
+        if total_offer_ :
+            if project.currency:
+                total_offer += total_offer_.total_value / currency.value
+            else:
+                total_offer += total_offer_.total_value
+
+        if total_invoices_:
+            if project.currency:
+                total_invoiced += sum(total_invoice.total_price for total_invoice in total_invoices_) / currency.value 
+            else:
+                total_invoiced += sum(total_invoice.total_price for total_invoice in total_invoices_) 
+    
+
+    total_info['total_orders'] = round(total_in_orders,2)
+    total_info['total_invoiced'] = round(total_invoiced_usd,2)
+    total_info['total_remaining_invoiced'] = round(total_in_orders - total_invoiced,2)
+    total_info['total_delivered'] = round(total_delivered,2)
+    total_info['total_remaining_delivered'] = round(total_in_orders - total_delivered,2)
+    total_info['total_offer'] = total_offer
+    total_info['total_invoiced'] = total_invoiced
+    total_info['total_value_remaining'] = total_offer - total_invoiced
+    
+    return total_info
+
+
+
 @permission_required('tsinc.view_folder', login_url='/accessdenied/')
 @login_required
 def overview_folder(request,id):
     folder = Folder.objects.filter(id = id).first()
+     
+
+    projects = get_all_projects(folder)
+
+    total_info = calculate_supply_and_order_summary(projects)
+
 
     if not folder:
         return redirect("/overview/")
@@ -2824,21 +2922,16 @@ def overview_folder(request,id):
         comments = Comment.objects.filter(task__in = tasks)
         task_files = File.objects.filter(task__in = tasks)
     
-
-        total_info_order = get_total_info_order(pending_orders,entrys) # calcular informacion resumen de ofertas y resumen de ordenes
-
         calculate_and_save_percentage_of_tasks(project)
         comments_per_task = count_comments(tasks, comments, task_files)
 
         files = sorted_files(remission_files)
         files += sorted_files(invoice_file)
         files += sorted_files(folder_file)
-        offer_info = calc_offer_info(project)
         
 
     else:
-        total_info_order = {}
-        offer_info = {}
+        
         project = None
         orders = None
         remissions = None
@@ -2852,10 +2945,8 @@ def overview_folder(request,id):
         files = sorted_files(folder_file)
 
     if not folder.project:
-        children = folder.children.all().order_by('date')[:5]
         children = folder.children.all()
-        offer_info = calc_offer_info_all_project(children)
-
+      
     else:
         children = None
 
@@ -2863,7 +2954,6 @@ def overview_folder(request,id):
     folder_tree = folder_tree_func()
 
     context = {
-
         'folders': folder_tree, 
         'folder': folder,
         'projects':projects,
@@ -2872,13 +2962,12 @@ def overview_folder(request,id):
         'orders':orders,
         'children':children,
         'files':files,
-        'offer_info':offer_info,
         'generated_offer':generated_offer,
-        'total_info_order':total_info_order,
         'tasks':tasks,
         'comments':comments,
         'comments_per_task':comments_per_task,
-        'task_files':task_files
+        'task_files':task_files,
+        'total_info':total_info
     }
     
     return render(request,'overview_folder.html',context)
@@ -2943,6 +3032,17 @@ def update_folder(request,id):
         project_id = request.POST.get("project_id")
         color = request.POST.get("color")
         currency = request.POST.get("currency")
+
+        if not project_id == "none":
+            project = Project.objects.filter(id = project_id).first()
+        else:
+            project = None
+
+        if project:
+            if currency == 1:
+                project.currency = True
+                project.save()
+
         folder = Folder.objects.filter(id = id).first()     
         if not project_id == "none":
             folder.project_id = project_id
@@ -3137,28 +3237,34 @@ def calc_offer_info(project):
     products_shipped = ProductSent.objects.filter(remission__in = remissions)
     invoices = Invoice.objects.filter(project= project)
     valor_total = GeneratedOffer.objects.filter(measure__icontains="VALOR TOTAL (USD) DÓLAR ESTADOUNIDENSE",project = project).first()
+    currency = Trm.objects.filter(currency="usd").first()
     total_invoiced_usd = 0
     
 
     offer_info = {
         'total_product':sum(item.quantity  for item in generated_offer),
         'total_delivered':sum(item.quantity for item in products_shipped),
-        'total_invoiced': sum(invoice.total_price  for invoice in invoices),
     }
 
+     
+    for invoice in invoices:
+        if project.currency:
+            total_invoiced_usd += invoice.total_price/currency.value
+        else:
+            total_invoiced_usd += invoice.total_price
 
-    # for invoice in invoices:
-    #     if orderinvoice.order.currency:
-    #         total_invoiced_usd += orderinvoice.value_paid/currency.value
-    #     else:
-    #         total_invoiced_usd += orderinvoice.value_paid
-
+    offer_info['total_invoiced'] = total_invoiced_usd
     offer_info['total_remaining'] = offer_info['total_product'] - offer_info['total_delivered']
-
+    
 
     if valor_total:
-        offer_info['total_offer'] = valor_total.total_value
-        offer_info['total_value_remaining'] = valor_total.total_value - offer_info['total_invoiced']
+        if project.currency:
+            offer_info['total_offer'] = valor_total.total_value / currency.value
+            offer_info['total_value_remaining'] = offer_info['total_offer'] - offer_info['total_invoiced']
+        else:
+            offer_info['total_offer'] = valor_total.total_value
+            offer_info['total_value_remaining'] = valor_total.total_value - offer_info['total_invoiced']
+
     else:
         offer_info['total_offer'] = 0
         offer_info['total_value_remaining'] = 0
@@ -3281,7 +3387,8 @@ def save_offer_item(request):
         valor_descuento = 0
         subtotal_directo_indirecto_valor = 0
         subtotal_modules = 0
-    
+
+        print(data['currency'])    
     
         for item in data['items']:
             offer_item = GeneratedOffer.objects.filter(id=item.get("id")).first()
@@ -3312,6 +3419,14 @@ def save_offer_item(request):
             offer_item.save()
         
         try:
+            print(data['currency'])
+            if data['currency']:
+                project.currency = True
+                project.save()
+            else:
+                project.currency = False
+                project.save()
+
 
             subtotal_item = GeneratedOffer.objects.filter(measure__icontains="SUBTOTAL SUMINISTROS Y DESARROLLO ( USD )",project= project).first()
             if subtotal_item:

@@ -49,6 +49,20 @@
     <div class="row mb-2">
       <div class="col-md-6">
 
+        <label>¿Está en COP?</label>
+          {% if not project.currency %}
+         <input type="radio" id="currency_yes" name="currency" value="True">
+         <label for="currency_yes">Sí</label>
+         <input type="radio" id="currency_no" name="currency" value="False" checked>
+         <label for="currency_no">No</label>
+         {% else %}
+         <input type="radio" id="currency_yes" name="currency" value="True" checked>
+         <label for="currency_yes">Sí</label>
+     
+         <input type="radio" id="currency_no" name="currency" value="False" >
+         <label for="currency_no">No</label>
+         {% endif %}
+
       </div>
       <div class="col-md-6 text-end">
         <a class="btn btn-success" href="{% url 'add_section' project.id %}" > Agregar section</a>
@@ -95,6 +109,9 @@
   const valor_total = document.getElementById('valor_total')
   const subtotals = document.querySelectorAll("#subtotals")
   const sections = document.querySelectorAll("#sections")
+  var isCurrencyTrue = document.getElementById("currency_yes").checked
+
+  
   // const csrfToken = null
 
 
@@ -128,6 +145,14 @@
 
 
 }
+
+
+
+document.querySelectorAll('input[name="currency"]').forEach((radio) => {
+        radio.addEventListener('change', () => {
+            isCurrencyTrue = document.getElementById("currency_yes").checked;
+        });
+    });
    
 
   form_controls.forEach((form)=>{
@@ -266,13 +291,16 @@
         items.push(obj)
     }
 
+    console.log(isCurrencyTrue)
+
     data = {
       items:items,
       descuento:input_descuento.value,
       descuento_admin: descuento_admin.value,
       descuento_imprevistos: descuento_imprevistos.value,
       descuento_utilidades: descuento_utilidades.value,
-      iva_utilidad:iva_utilidad.value
+      iva_utilidad:iva_utilidad.value,
+      currency:isCurrencyTrue
     }
     
    
@@ -291,8 +319,7 @@
 });
   btn_offer_save.addEventListener("click",()=>{
 
-    
-
+  
     sendOffer()
     // location.reload();
 

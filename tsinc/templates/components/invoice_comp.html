@@ -33,25 +33,25 @@
     <tbody>
       <tr>
         <td class="fw-bold">FACTURA NO:</td>
-        <td><input type="0" value="{{invoice.number}}" class="form-control form-control-sm" name="number"></td>
+        <td><input type="text" value="{{invoice.number}}" class="form-control form-control-sm" name="number"></td>
       </tr>
       <tr>
         <td class="fw-bold">PRECION TOTAL:</td>
-        <td><input type="0" value="{{invoice.total_price}}" class="form-control form-control-sm" name="total_price"></td>
+        <td><input type="number" value="{{invoice.total_price|default:0}}" min="0"  class="form-control form-control-sm" name="total_price"></td>
       </tr>
       <tr>
         <td class="fw-bold">IVA:</td>
-        <td><input type="0" value="{{invoice.iva}}" class="form-control form-control-sm" name="iva"></td>
+        <td><input type="number" value="{{invoice.iva|default:0}}" min="0" class="form-control form-control-sm" name="iva"></td>
 
       </tr>
       <tr>
         <td class="fw-bold">RETENCIÓN FUENTE:</td>
-        <td><input type="0" value="{{invoice.source_retention}}" class="form-control form-control-sm" name="source_retention"></td>
+        <td><input type="number" value="{{invoice.source_retention|default:0}}" min="0" class="form-control form-control-sm" name="source_retention"></td>
       </tr>
 
       <tr>
         <td class="fw-bold">RETENCIÓN ICA:</td>
-        <td><input type="0" value="{{invoice.ica_retention}}" class="form-control form-control-sm" name="ica_retention"></td>
+        <td><input type="number" value="{{invoice.ica_retention|default:0}}" min="0" class="form-control form-control-sm" name="ica_retention"></td>
       </tr>
       <tr>
         <td class="fw-bold">FECHA:</td>

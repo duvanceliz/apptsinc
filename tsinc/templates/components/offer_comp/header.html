@@ -4,7 +4,7 @@
     <div class="card">
       <div class="card-body d-flex flex-column text-center">
         <span class="fw-bold" style="font-size: 0.6rem;">Total Oferta</span>
-        <span class="fs-3 fw-light">{{valor_total.total_value|floatformat:2|intcomma}}</span>
+        <span class="fs-3 fw-light">{{offer_info.total_offer|floatformat:2|intcomma}}<span style="font-size: 0.6rem;" class="fw-bold bg-success text-white">USD</span></span>
       </div>
     </div>
   </div>
@@ -12,7 +12,7 @@
     <div class="card">
       <div class="card-body d-flex flex-column text-center">
         <span class="fw-bold" style="font-size: 0.6rem;">Facturado</span>
-        <span class="fs-3 fw-light">{{offer_info.total_invoiced|floatformat:2|intcomma}}</span>
+        <span class="fs-3 fw-light">{{offer_info.total_invoiced|floatformat:2|intcomma}}<span style="font-size: 0.6rem;" class="fw-bold bg-success text-white">USD</span></span>
       </div>
     </div>
   </div>
@@ -20,13 +20,13 @@
   <div class="col-md-2">
     <div class="card">
       <div class="card-body d-flex flex-column text-center">
-        <span class="fw-bold" style="font-size: 0.6rem;">Valor Restante</span>
+        <span class="fw-bold" style="font-size: 0.6rem;">Valor Pendiente</span>
           {% if offer_info.total_value_remaining == 0 %}
-          <span class="fs-3 fw-light text-white bg-success">{{offer_info.total_value_remaining|floatformat:2|intcomma}}</span>
+          <span class="fs-3 fw-light text-white bg-success">{{offer_info.total_value_remaining|floatformat:2|intcomma}}<span style="font-size: 0.6rem;" class="fw-bold bg-success text-white">USD</span></span>
   
           {% else %}
     
-          <span class="fs-3 fw-light text-white bg-danger" >{{offer_info.total_value_remaining|floatformat:2|intcomma}}</span>
+          <span class="fs-3 fw-light text-white bg-danger" >{{offer_info.total_value_remaining|floatformat:2|intcomma}}<span style="font-size: 0.6rem;" class="fw-bold bg-success text-white">USD</span></span>
           {% endif %}
         </div>
       </div>
@@ -54,7 +54,7 @@
   <div class="col-md-2">      
     <div class="card">
       <div class="card-body d-flex flex-column text-center">
-        <span class="fw-bold" style="font-size: 0.6rem;">Total Restantes</span>
+        <span class="fw-bold" style="font-size: 0.6rem;">Total Pendiente</span>
         {% if offer_info.total_remaining == 0 %}
         <span class="fs-3 fw-light bg-success text-white">{{offer_info.total_remaining}}</span>
         {% else %}

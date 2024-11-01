@@ -148,18 +148,19 @@
         
         
         {% if children %}
-        <div class="row mb-4">
-
-            <div class="col-md-4">
-                
-                {% include 'overview_comp/summary_folders.html' with children=children %}
-    
-            </div>
-            
-          
-        </div>
+        
 
         {% include 'workspace_comp/info_total_offer.html' %}
+        <div class="row mb-4">
+
+          <div class="col-md-4">
+              
+              {% include 'overview_comp/summary_folders.html' with children=children %}
+  
+          </div>
+          
+        
+      </div>
 
 
         {% endif %}
@@ -176,7 +177,7 @@
   ],
   datasets: [{
     label: 'Total Facturado vs Restante',
-    data: [{{offer_info.total_invoiced}}, {{offer_info.total_value_remaining}}],
+    data: [{{total_info.total_invoiced}}, {{total_info.total_value_remaining}}],
     backgroundColor: [
       '#1ca568',
       '#d0b514',
@@ -201,7 +202,7 @@ const ctx2 = document.getElementById('myChart2').getContext('2d');
   ],
   datasets: [{
     label: 'Total Facturado vs Restante',
-    data: [{{total_info_order.total_invoiced}}, {{total_info_order.total_remaining_invoiced}}],
+    data: [{{total_info.total_invoiced}}, {{total_info.total_remaining_invoiced}}],
     backgroundColor: [
       '#2e9195',
       '#e04c89',

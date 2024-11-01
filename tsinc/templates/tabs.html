@@ -37,6 +37,18 @@
 
         </div>
       <div class="col-md-9">
+
+      <div class="row">
+
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4 text-end">
+          <a href="{% url 'overview_folder' folder.id %}" class="btn btn-primary btn-sm">Volver</a>
+        </div>
+
+      </div>
         
     <div class="row row-cols-md-4">
 
@@ -49,7 +61,7 @@
               {{tab.tab_name}}
             </span>
             <span>
-              <a class="btn btn-primary btn-sm"  href="/edittab/?id={{tab.id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar parametros del tablero"><i class="bi bi-pencil-square"></i></a>
+              <a class="btn btn-primary btn-sm"  href="{% url 'edit_tab' tab.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar parametros del tablero"><i class="bi bi-pencil-square"></i></a>
               <a class="btn btn-danger btn-sm" href="{% url 'delete_tab' tab.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Borra el tablero" onclick="return verificar()"> <i class="bi bi-trash"></i> </a>
             </span>
           
