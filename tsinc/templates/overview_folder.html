@@ -177,7 +177,7 @@
   ],
   datasets: [{
     label: 'Total Facturado vs Restante',
-    data: [{{total_info.total_invoiced}}, {{total_info.total_value_remaining}}],
+    data: [{{total_info.total_invoiced_in_offers}}, {{total_info.total_remaining_sales_invoices}}],
     backgroundColor: [
       '#1ca568',
       '#d0b514',
@@ -202,7 +202,7 @@ const ctx2 = document.getElementById('myChart2').getContext('2d');
   ],
   datasets: [{
     label: 'Total Facturado vs Restante',
-    data: [{{total_info.total_invoiced}}, {{total_info.total_remaining_invoiced}}],
+    data: [{{total_info.total_in_order_invoices}}, {{total_info.total_remaining_on_order_invoices}}],
     backgroundColor: [
       '#2e9195',
       '#e04c89',

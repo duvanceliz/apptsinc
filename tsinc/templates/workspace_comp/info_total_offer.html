@@ -43,7 +43,7 @@
                 <div class="card">
                     <div class="card-body d-flex flex-column text-center">
                         <span class="fw-bold text-white" style="font-size: 0.6rem; background-color:#1ca568;" >Total Facturado</span>
-                        <span class="fs-3 fw-light">{{total_info.total_invoiced|floatformat:2|intcomma}}<span style="font-size: 0.6rem;" class="fw-bold bg-success text-white">USD</span></span>
+                        <span class="fs-3 fw-light">{{total_info.total_invoiced_in_offers|floatformat:2|intcomma}}<span style="font-size: 0.6rem;" class="fw-bold bg-success text-white">USD</span></span>
                         
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                 <div class="card">
                     <div class="card-body d-flex flex-column text-center">
                         <span class="fw-bold text-white" style="font-size: 0.6rem;background-color:#d0b514;">Total Pendiente</span>
-                        <span class="fs-3 fw-light">{{total_info.total_value_remaining|floatformat:2|intcomma}}<span style="font-size: 0.6rem;" class="fw-bold bg-success text-white">USD</span></span> 
+                        <span class="fs-3 fw-light">{{total_info.total_remaining_sales_invoices|floatformat:2|intcomma}}<span style="font-size: 0.6rem;" class="fw-bold bg-success text-white">USD</span></span> 
                     </div>
                 </div>
             </div>
@@ -125,7 +125,7 @@
                 <div class="card">
                     <div class="card-body d-flex flex-column text-center">
                         <span class="fw-bold text-white" style="font-size: 0.6rem; background-color:#2e9195;" >Total Facturado</span>
-                        <span class="fs-3 fw-light">{{total_info.total_invoiced|floatformat:2|intcomma}}<span style="font-size: 0.6rem;" class="fw-bold bg-success text-white">USD</span></span> 
+                        <span class="fs-3 fw-light">{{total_info.total_in_order_invoices|floatformat:2|intcomma}}<span style="font-size: 0.6rem;" class="fw-bold bg-success text-white">USD</span></span> 
                     </div>
                 </div>
             </div>
@@ -133,7 +133,7 @@
                 <div class="card">
                     <div class="card-body d-flex flex-column text-center">
                         <span class="fw-bold text-white" style="font-size: 0.6rem;background-color:#e04c89;">Total Pendiente</span>
-                        <span class="fs-3 fw-light">{{total_info.total_remaining_invoiced|floatformat:2|intcomma}}<span style="font-size: 0.6rem;" class="fw-bold bg-success text-white">USD</span></span> 
+                        <span class="fs-3 fw-light">{{total_info.total_remaining_on_order_invoices|floatformat:2|intcomma}}<span style="font-size: 0.6rem;" class="fw-bold bg-success text-white">USD</span></span> 
                     </div>
                 </div>
             </div>

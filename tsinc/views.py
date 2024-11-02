@@ -2822,6 +2822,7 @@ def calculate_supply_and_order_summary(projects):
     total_in_orders = 0
     total_delivered = 0
     total_invoiced_usd = 0
+    total_in_order_invoice = 0
 
 
     for project in projects:
@@ -2848,6 +2849,12 @@ def calculate_supply_and_order_summary(projects):
                     else:
                         total_delivered += entry.price * entry.quantity
             
+        for order_invoice in total_invoiced_:
+            if order_invoice.order.currency:
+                total_in_order_invoice += order_invoice.value_paid/currency.value
+            else:
+                total_in_order_invoice += order_invoice.value_paid
+
         if total_offer_ :
             if project.currency:
                 total_offer += total_offer_.total_value / currency.value
@@ -2862,13 +2869,13 @@ def calculate_supply_and_order_summary(projects):
     
 
     total_info['total_orders'] = round(total_in_orders,2)
-    total_info['total_invoiced'] = round(total_invoiced_usd,2)
-    total_info['total_remaining_invoiced'] = round(total_in_orders - total_invoiced,2)
+    total_info['total_in_order_invoices'] = round(total_in_order_invoice,2)
+    total_info['total_remaining_on_order_invoices'] = round(total_in_orders - total_in_order_invoice,2)
     total_info['total_delivered'] = round(total_delivered,2)
     total_info['total_remaining_delivered'] = round(total_in_orders - total_delivered,2)
-    total_info['total_offer'] = total_offer
-    total_info['total_invoiced'] = total_invoiced
-    total_info['total_value_remaining'] = total_offer - total_invoiced
+    total_info['total_offer'] = round(total_offer,2)
+    total_info['total_invoiced_in_offers'] = round(total_invoiced,2)
+    total_info['total_remaining_sales_invoices'] = round(total_offer - total_invoiced,2)
     
     return total_info
 
