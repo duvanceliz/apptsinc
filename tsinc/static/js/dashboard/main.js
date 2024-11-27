@@ -659,14 +659,30 @@ function btnActivate() {
   btnsave.disabled = false;
 }
 
-inp_tag.addEventListener("keydown",e=>{
-if (e.key === 'Enter') {
-  const item = eventState2.target
-  item.setAttribute("tag",inp_tag.value) 
-  inp_tag.blur();  
-}
+// inp_tag.addEventListener("keydown",e=>{
+// if (e.key === 'Enter') {
+//   const item = eventState2.target
+//   item.setAttribute("tag",inp_tag.value) 
+//   inp_tag.blur();  
+// }
 
-})
+// })
+
+
+inp_tag.addEventListener("keyup",e=>{
+   const item = eventState2.target
+
+   if(item){
+
+    item.setAttribute("tag",e.target.value)
+
+   }
+    
+   
+  
+  })
+
+
 
 function updateState(id_code, x, y, width, height, zindex, relationship, tag) {
   proxyState.item = id_code;

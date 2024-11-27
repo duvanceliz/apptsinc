@@ -86,50 +86,6 @@ def print_column(sheet,data,row,start_column,config=None):
         if config.get('fill', False):
             cell.fill = PatternFill(start_color=config.get('fill_color', "FFFFFF"), end_color=config.get('fill_color', "FFFFFF"), fill_type="solid")
 
-def closest_match(input_one,input_two):# elige la combinacion que mas se acerque a los puntos generados en los tableros de control
-
-    def generar_combinaciones(num_ui, num_co, bo, bi, ao):
-        combinaciones = []
-        # Combinaciones de UI (longitud num_ui)
-        for ai_count in range(num_ui + 1):  # 0 to num_ui
-            bi_count = num_ui - ai_count
-            # Combinaciones de CO (longitud num_co)
-            for ao_count in range(num_co + 1):  # 0 to num_co
-                bo_count = num_co - ao_count
-                combinacion = [ai_count, bi_count + bi, ao_count + ao, bo_count + bo]
-                combinaciones.append(combinacion)
-        return combinaciones
-
-
-    # Paso 2: Calcular la distancia entre combinaciones
-    def calcular_distancia(combinacion, entrada):
-        distancia = 0
-        for i in range(len(combinacion)):
-            distancia += abs(combinacion[i] - entrada[i])
-        return distancia
-
-    # Paso 3: Encontrar la combinación más cercana
-    def encontrar_combinacion_mas_cercana(combinaciones, entrada):
-        mejor_combinacion = None
-        menor_distancia = float('inf')
-        for combinacion in combinaciones:
-            distancia = calcular_distancia(combinacion, entrada)
-            if distancia < menor_distancia:
-                menor_distancia = distancia
-                mejor_combinacion = combinacion
-        return mejor_combinacion
-
-
-    # Generar combinaciones desde el arreglo con UI y CO
-    num_ui = input_one[0]  # Total UI
-    num_co = input_one[4]  # Total CO
-    bo = input_one[3]  # Total BO
-    bi = input_one[1]
-    ao = input_one[2]
-
-    combinaciones_posibles = generar_combinaciones(num_ui, num_co,bo,bi,ao)
-
-    return encontrar_combinacion_mas_cercana(combinaciones_posibles, input_two)
 
 def sort_list_point(points):
     point_list = [0]*5
@@ -148,6 +104,70 @@ def sort_list_point(points):
             point_list[4] = int(point[:2]) 
     return point_list 
 
+# def closest_match(input_one,input_two):# elige la combinacion que mas se acerque a los puntos generados en los tableros de control
+
+#     def generar_combinaciones(num_ui, num_co, bo, bi, ao):
+#         combinaciones = []
+#         # Combinaciones de UI (longitud num_ui)
+#         for ai_count in range(num_ui + 1):  # 0 to num_ui
+#             bi_count = num_ui - ai_count
+#             # Combinaciones de CO (longitud num_co)
+#             for ao_count in range(num_co + 1):  # 0 to num_co
+#                 bo_count = num_co - ao_count
+#                 combinacion = [ai_count, bi_count + bi, ao_count + ao, bo_count + bo]
+#                 combinaciones.append(combinacion)
+#         return combinaciones
+
+
+#     # Paso 2: Calcular la distancia entre combinaciones
+#     def calcular_distancia(combinacion, entrada):
+#         distancia = 0
+#         for i in range(len(combinacion)):
+#             distancia += abs(combinacion[i] - entrada[i])
+#         return distancia
+
+#     # Paso 3: Encontrar la combinación más cercana
+#     def encontrar_combinacion_mas_cercana(combinaciones, entrada):
+#         mejor_combinacion = None
+#         menor_distancia = float('inf')
+#         for combinacion in combinaciones:
+#             distancia = calcular_distancia(combinacion, entrada)
+#             if distancia < menor_distancia:
+#                 menor_distancia = distancia
+#                 mejor_combinacion = combinacion
+#         return mejor_combinacion
+
+
+#     # Generar combinaciones desde el arreglo con UI y CO
+#     num_ui = input_one[0]  # Total UI
+#     num_co = input_one[4]  # Total CO
+#     bo = input_one[3]  # Total BO
+#     bi = input_one[1]
+#     ao = input_one[2]
+
+#     combinaciones_posibles = generar_combinaciones(num_ui, num_co,bo,bi,ao)
+
+#     return encontrar_combinacion_mas_cercana(combinaciones_posibles, input_two)
+
+
+def closest_match(input_one, input_two):
+    def generar_combinaciones(num_ui, num_co, bo, bi, ao):
+        combinaciones = []
+        for ai_count in range(num_ui + 1):
+            bi_count = num_ui - ai_count
+            for ao_count in range(num_co + 1):
+                bo_count = num_co - ao_count
+                combinacion = [ai_count, bi_count + bi, ao_count + ao, bo_count + bo]
+                combinaciones.append(combinacion)
+        return combinaciones
+
+    def calcular_distancia(combinacion, entrada):
+        return sum(abs(c - e) for c, e in zip(combinacion, entrada))
+
+    combinaciones = generar_combinaciones(input_one[0], input_one[4], input_one[3], input_one[1], input_one[2])
+    return min(combinaciones, key=lambda x: calcular_distancia(x, input_two))
+
+
 def clean_points(points):
     return [max(point,0) for point in points]
 
@@ -157,32 +177,55 @@ def subtract_points(a, b):
 def add_points(*args):
     return [sum(values) for values in zip(*args)]
 
-def find_expansion(total_points,controller_and_expansions,expansions):
-    def calc_distance(input_one,input_two):
-        distance = 0
-        for i in range(len(input_one)):
-            distance += abs(input_one[i] - input_two[i])
-        return distance
+# def find_expansion(total_points,controller_and_expansions,expansions):
+#     def calc_distance(input_one,input_two):
+#         distance = 0
+#         for i in range(len(input_one)):
+#             distance += abs(input_one[i] - input_two[i])
+#         return distance
     
-    expansion_choice = None
-    shoter_distance = float('inf')
-    points = [ item['points'] for item in controller_and_expansions]# agrega los puntos de todas las expansiones que se van agregando hasta el momento
+#     expansion_choice = None
+#     shoter_distance = float('inf')
+#     points = [ item['points'] for item in controller_and_expansions]# agrega los puntos de todas las expansiones que se van agregando hasta el momento
   
-    add_p = add_points(*points) # suma todos los puntos de los modulos que se han agregado
+#     add_p = add_points(*points) # suma todos los puntos de los modulos que se han agregado
 
-    for expansion in expansions: #Recorremos todas las lista expansiones disponibles que son las expansiones filtradas 
-        cller_exp_point = add_points(expansion['points'],add_p) # va sumando los puntos de las expansiones hasta el momento con cada una de las expansiones disponibles
-        # print(f"{expansion['points']}+{add_p} result:{cller_exp_point}")
-        new_cller_exp_point = closest_match(cller_exp_point,total_points)# de la anterior combinacion hace un close_match para encontrar la combinación mas cercana para convertirlo a los puntos basicos que son [ EA, ED, SA, SD]
-       
-        expansion['ce_basic_points'] = new_cller_exp_point # guarda los puntos basicos en cada expansion
-        distance = calc_distance(new_cller_exp_point, total_points) #calcula la distancia mas cercana con el total de puntos proyectados para elegir la expansion
-        #print(total_points, f"todo:{new_cller_exp_point}{expansion['model']}:{distance}")
-        if distance < shoter_distance:
-            shoter_distance = distance
-            expansion_choice = expansion
-    return expansion_choice # devuelve la expansion elegida
+#     for expansion in expansions: #Recorremos todas las lista expansiones disponibles que son las expansiones filtradas 
+#         cller_exp_point = add_points(expansion['points'],add_p) # va sumando los puntos del controlador y las expansiones hasta el momento con cada una de las expansiones filtradas
         
+#          # print(f"{expansion['points']}+{add_p} result:{cller_exp_point}")
+#         new_cller_exp_point = closest_match(cller_exp_point,total_points)# de la anterior combinacion hace un close_match para encontrar la combinación mas cercana para convertirlo a los puntos basicos que son [ EA, ED, SA, SD]
+      
+#         expansion['ce_basic_points'] = new_cller_exp_point # guarda los puntos basicos en cada expansion
+#         distance = calc_distance(new_cller_exp_point, total_points) #calcula la distancia mas cercana con el total de puntos proyectados para elegir la expansion
+#         #print(total_points, f"todo:{new_cller_exp_point}{expansion['model']}:{distance}")
+#         if distance < shoter_distance:
+#             shoter_distance = distance
+#             expansion_choice = expansion
+#     return expansion_choice # devuelve la expansion elegida
+
+
+def find_expansion(total_points, controller_and_expansions, expansions):
+    def calc_distance(input_one, input_two):
+        return sum(abs(c - e) for c, e in zip(input_one, input_two))
+
+    expansion_choice = None
+    shortest_distance = float('inf')
+    points = [item['points'] for item in controller_and_expansions]
+    add_p = add_points(*points)
+
+    for expansion in expansions:
+        cller_exp_point = add_points(expansion['points'], add_p)
+        new_cller_exp_point = closest_match(cller_exp_point, total_points)
+        expansion['ce_basic_points'] = new_cller_exp_point
+        distance = calc_distance(new_cller_exp_point, total_points)
+        
+        if distance < shortest_distance:
+            shortest_distance = distance
+            expansion_choice = expansion
+    return expansion_choice
+
+
 def calc_controllers(item_points, type_controller):
     
     def iterator_function(total_points,filtered_expansions):#
@@ -190,37 +233,58 @@ def calc_controllers(item_points, type_controller):
         controller_and_expansions.append(expansion)
         new_points = subtract_points(total_points, expansion['ce_basic_points'])# resta los puntos 
         return new_points
+
     
     def filter_expansions(total_points,expansions): # funcion que se encarga de filtrar las expansiones segun los puntos que hagan falta por cubrir
     
         filtered_expansions = []
-        for expansion in expansions:
-        # Condiciones para agregar a la lista filtrada
-            if (
-                (total_points[0] > 0 and expansion["points"][0] != 0) or
-                (total_points[1] > 0 and expansion["points"][0] != 0 and expansion["points"][1] != 0) or
-                (total_points[2] > 0 and expansion["points"][2] != 0 and expansion["points"][3] != 0) or
-                (total_points[3] > 0 and expansion["points"][3] != 0 and expansion["points"][4] != 0)
-            ):
-                filtered_expansions.append(expansion)
+    #     for expansion in expansions:
+    #     # Condiciones para agregar a la lista filtrada
+    #         if (
+    #             (total_points[0] > 0 and expansion["points"][0] != 0) or
+    #             (total_points[1] > 0 and expansion["points"][0] != 0 and expansion["points"][1] != 0) or
+    #             (total_points[2] > 0 and expansion["points"][2] != 0 and expansion["points"][3] != 0) or
+    #             (total_points[3] > 0 and expansion["points"][3] != 0 and expansion["points"][4] != 0)
+    #         ):
+    #             filtered_expansions.append(expansion)
 
         
-        return filtered_expansions
+    #     return filtered_expansions
         
     
-    def add_expansion_js(total_points,expansions): # recibe los punto totales generados de cada tablero y expansiones en diccionario con sus puntos
-        stop=0
-        filtered_expansions = filter_expansions(total_points, expansions) # filtra la expansiones con el total de puntos
-        new_points = iterator_function(total_points,filtered_expansions) # calcula la ditancia del controlador y expansione que se van agregando
-        while any( point > 0 for point in new_points):
-            stop +=1
-            filtered_expansions = filter_expansions(new_points, expansions)
-            new_points = iterator_function(total_points,filtered_expansions)
-            if stop > 20:
+    # def add_expansion_js(total_points,expansions): # recibe los punto totales generados de cada tablero y expansiones en diccionario con sus puntos
+    #     stop=0
+    #     filtered_expansions = filter_expansions(total_points, expansions) # filtra la expansiones con el total de puntos
+    #     new_points = iterator_function(total_points,filtered_expansions) # calcula la ditancia del controlador y expansione que se van agregando
+    #     while any( point > 0 for point in new_points):
+    #         stop +=1
+    #         filtered_expansions = filter_expansions(new_points, expansions)
+    #         new_points = iterator_function(total_points,filtered_expansions)
+    #         if stop > 20:
+    #             break
+
+    def iterator_function(total_points, filtered_expansions):
+        expansion = find_expansion(total_points, controller_and_expansions, filtered_expansions)
+        controller_and_expansions.append(expansion)
+        new_points = subtract_points(total_points, expansion['ce_basic_points'])
+        return new_points
+
+    def filter_expansions(total_points, expansions):
+        return [
+            expansion for expansion in expansions if
+            any(total > 0 and exp > 0 for total, exp in zip(total_points, expansion["points"]))
+        ]
+
+    def add_expansion_js(total_points, expansions):
+        filtered_expansions = filter_expansions(total_points, expansions)
+        new_points = iterator_function(total_points, filtered_expansions)
+        for _ in range(20):  
+            if not any(point > 0 for point in new_points):
                 break
-                
+            filtered_expansions = filter_expansions(new_points, expansions)
+            new_points = iterator_function(total_points, filtered_expansions)
+
      
-            
     def add_expansion_controllers(new_points, expansions):
         for expansion in expansions:
             if expansion['model'] == 'VMQ-02D13':
@@ -243,32 +307,45 @@ def calc_controllers(item_points, type_controller):
             controller_and_expansions.append(expansion)
             sum_bi_ai -= limit
     
-    def find_cllers_exp(cller_type):
+    # def find_cllers_exp(cller_type):
          
+    #     if cller_type == "JCI FACILITY EXPLORER":
+    #         controllers = Product.objects.filter(code__icontains="C-FE")
+    #         expansions = Product.objects.filter(code__icontains='E-FE')
+    #     else:
+    #         controllers = Product.objects.filter(code__icontains="C-M")
+    #         expansions = Product.objects.filter(code__icontains='E-M')
+        
+       
+    #     controllers_js = [{
+    #         'is_controller':True,
+    #         'model':controller.model,
+    #         'points':sort_list_point(controller.point.split("-")) 
+    #     }
+    #     for controller in controllers   
+    #     ]
+    #     expansions_js = [{
+    #         'is_controller':False,
+    #         'model':expansion.model,
+    #         'points':sort_list_point(expansion.point.split("-")),
+    #         'total_points': functools.reduce(lambda x,y: x+y,sort_list_point(expansion.point.split("-"))),
+    #     }
+    #     for expansion in expansions  
+    #     ]   
+    #     return  controllers_js, expansions_js  
+
+    def find_cllers_exp(cller_type):
         if cller_type == "JCI FACILITY EXPLORER":
             controllers = Product.objects.filter(code__icontains="C-FE")
             expansions = Product.objects.filter(code__icontains='E-FE')
         else:
             controllers = Product.objects.filter(code__icontains="C-M")
             expansions = Product.objects.filter(code__icontains='E-M')
+
+        controllers_js = [{'is_controller': True, 'model': controller.model, 'points': sort_list_point(controller.point.split("-"))} for controller in controllers]
+        expansions_js = [{'is_controller': False, 'model': expansion.model, 'points': sort_list_point(expansion.point.split("-")), 'total_points': functools.reduce(lambda x, y: x + y, sort_list_point(expansion.point.split("-")))} for expansion in expansions]
         
-       
-        controllers_js = [{
-            'is_controller':True,
-            'model':controller.model,
-            'points':sort_list_point(controller.point.split("-")) 
-        }
-        for controller in controllers   
-        ]
-        expansions_js = [{
-            'is_controller':False,
-            'model':expansion.model,
-            'points':sort_list_point(expansion.point.split("-")),
-            'total_points': functools.reduce(lambda x,y: x+y,sort_list_point(expansion.point.split("-"))),
-        }
-        for expansion in expansions  
-        ]   
-        return  controllers_js, expansions_js  
+        return controllers_js, expansions_js
 
     controller_and_expansions = []
     if type_controller == 'LG BECON CONTROLLER':
