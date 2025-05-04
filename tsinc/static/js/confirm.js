@@ -1,15 +1,15 @@
 
 
 function verificar() {
-
-    let resultado = window.confirm('Estas seguro de borrar el proyecto?');
-    if (resultado === true) {
-        return true
+    const respuesta = window.prompt('Para confirmar, escribe la palabra "eliminar":');
+    if (respuesta && respuesta.toLowerCase().trim() === 'eliminar') {
+        return true;
     } else {
-        return false
+        alert('Acción cancelada. No escribiste "eliminar".');
+        return false;
     }
-
 }
+
 
 
 function confirm_delete_folder() {

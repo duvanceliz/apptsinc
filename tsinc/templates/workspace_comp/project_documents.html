@@ -1,6 +1,14 @@
 <div class="card">
     <div class="card-header">
-      <h4>DOCUMENTOS</h4>
+      <div class="row">
+        <div class="col-6">
+            <h4>DOCUMENTOS</h4>
+
+        </div>
+        <div class="col-6 text-end">
+            <a href="{% url 'upload_folder_file' folder.id %}"  class="btn btn-success btn-sm"><i class="bi bi-plus-circle-dotted"></i> Cargar</a>
+        </div>
+    </div>
     </div>
     <div class="card-body p-0">
 

@@ -37,7 +37,12 @@ class AuditLogMiddleware(MiddlewareMixin):
                         action='deleted',
                         model=request.path  # Cambiar según el modelo
                     )
-
-               
+            if 'archive' in request.path:
+                Activity.objects.create(
+                        usersession=request.audit_user,
+                        action='archive',
+                        model=request.path  # Cambiar según el modelo
+                    )
+        
         return response 
     

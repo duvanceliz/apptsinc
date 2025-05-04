@@ -140,6 +140,8 @@ urlpatterns = [
     path('comment/dalete/<int:id>', views.delete_comment, name='delete_comment'),
     path('task/archive/<int:id>/<int:opt>', views.archive_task, name='archive_task'),
     path('archived_task_project/', views.archived_task_project, name='archived_task_project'),
+    path('project/archive/<int:id>', views.archive_project, name='archive_project'),
+    path('project/unarchive/<int:id>', views.unarchive_project, name='unarchive_project'),
 
 
 ] 

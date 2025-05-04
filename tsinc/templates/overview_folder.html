@@ -40,7 +40,6 @@
                 <li><a class="dropdown-item" href="{% url 'tabs' folder.project.id %}" >Ver Tableros</a></li>
                 <li><a class="dropdown-item" href="{% url 'edit_project' folder.project.id %}" >Editar Proyecto</a></li>
                 <li><a class="dropdown-item" href="{% url 'upload_folder_file' folder.id %}" >Cargar archivo</a></li>
-                <li><a class="dropdown-item" href="{% url 'delete_obj' folder.project.id %}" onclick="return verificar()">Eliminar</a></li>
               </ul>
             </div>
 
@@ -134,7 +133,7 @@
 
                    
                 
-                        {% include 'workspace_comp/project_documents.html' with files=files %}
+                        {% include 'workspace_comp/project_documents.html' with files=files folder=folder %}
         
                  
                 </div>

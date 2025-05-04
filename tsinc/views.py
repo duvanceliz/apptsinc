@@ -2616,24 +2616,34 @@ def show_all_offers(request,approved):
 
     folders = Folder.objects.filter(project__isnull=False)
 
-    if not approved:
-        offers = Project.objects.filter(approved = False).all()
+
+    deleted_project = False
+
+
+    if approved == 0:
+        offers = Project.objects.filter(approved = False, archive_project = False).all()
     
         search = request.GET.get('search')
 
         if search:
-            offers = Project.objects.filter(Q(code__icontains= search) | Q(name__icontains= search) | Q(company_name__icontains= search), approved=False)
+            offers = Project.objects.filter(Q(code__icontains= search) | Q(name__icontains= search) | Q(company_name__icontains= search), approved=False, archive_project=False)
         
         approved = False
-    else:
+    elif approved == 1:
         
-        offers = Project.objects.filter(approved = True).all()
+        offers = Project.objects.filter(approved = True,  archive_project = False).all()
     
         search = request.GET.get('search')
 
         if search:
-            offers = Project.objects.filter(Q(code__icontains= search) | Q(name__icontains= search) | Q(company_name__icontains= search), approved=True)
+            offers = Project.objects.filter(Q(code__icontains= search) | Q(name__icontains= search) | Q(company_name__icontains= search), approved=True, archive_project=False)
         approved = True
+
+
+    elif approved == 2:
+        deleted_project = True
+        offers = Project.objects.filter(archive_project = True).all()
+    
     
     page_obj = paginator(request,offers,10)
 
@@ -2641,7 +2651,7 @@ def show_all_offers(request,approved):
 
   
                        
-    return render(request,"show_all_offers.html",{'page_obj':page_obj, 'approved':approved, 'folders':folders })
+    return render(request,"show_all_offers.html",{'page_obj':page_obj, 'approved':approved, 'folders':folders, 'deleted_project':deleted_project })
 
 
 
@@ -3039,7 +3049,7 @@ def new_folder(request):
 def update_folder(request,id):
     referer = request.META.get('HTTP_REFERER')
     if request.method == "POST":
-        name = request.POST.get("name")
+        name = request.POST.get("name", "").strip()  
         project_id = request.POST.get("project_id")
         color = request.POST.get("color")
         currency = request.POST.get("currency")
@@ -4116,6 +4126,37 @@ def archived_task_project(request):
     all_archived = any([True if project.archive_tasks else False for project in projects ])
 
     return render(request,"archived_task_project.html", {'tasks_per_project':tasks_per_project, 'all_archived':all_archived})
+
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def archive_project(request,id):  
+    referer = request.META.get('HTTP_REFERER')
+
+ 
+    project = Project.objects.filter(id = id).first()
+    project.archive_project = True
+    project.save()
+    
+    folder = Folder.objects.filter(project = project).first()
+
+    if folder:folder.delete()
+    
+
+    messages.success(request,f"El proyecto ha sido eliminado correctamente")
+    return redirect(referer)
+
+@user_passes_test(staff_required,login_url='/accessdenied/') 
+@login_required
+def unarchive_project(request,id):  
+    referer = request.META.get('HTTP_REFERER')
+
+    project = Project.objects.filter(id = id).first()
+    project.archive_project = False
+    project.save()
+
+    messages.success(request,f"El proyecto ha sido restaurado correctamente")
+    return redirect(referer)
 
 
 class ProductAutocomplete(autocomplete.Select2QuerySetView):
