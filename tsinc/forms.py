@@ -32,7 +32,7 @@ class CreateProject(forms.Form):
         ('Roberto Bravo', 'Roberto Bravo'),
         ('Erwin Serrano', 'Erwin Serrano'),
         ('Angela Ramirez', 'Angela Ramirez'),
-        ('Cataina Pinilla', 'Cataina Pinilla'),
+        ('Catalina Pinilla', 'Catalina Pinilla'),
 
     ]
     asesor = forms.ChoiceField(label="Asesor",
