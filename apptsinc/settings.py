@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-g3=)z0wy@_28znm85%z=tss+c^+!42*wbo@6t$m&j3fq7n4^h@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['201.244.121.90','localhost']
+#ALLOWED_HOSTS = ['201.244.121.90','localhost']
 
 # Application definition
 
@@ -107,7 +107,7 @@ DATABASES = {
 #    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
      'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db2.sqlite3',
     }
 }
 
@@ -168,6 +168,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8080',
     'http://127.0.0.1:8080',
     'http://201.244.121.90:84',
+    'http://127.0.0.1:8000',
+    'http://localhost:8000'
 ]
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

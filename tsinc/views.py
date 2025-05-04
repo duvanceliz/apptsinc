@@ -2614,6 +2614,8 @@ def delete_order_invoice(request,id):
 @login_required
 def show_all_offers(request,approved):
 
+    folders = Folder.objects.filter(project__isnull=False)
+
     if not approved:
         offers = Project.objects.filter(approved = False).all()
     
@@ -2635,9 +2637,11 @@ def show_all_offers(request,approved):
     
     page_obj = paginator(request,offers,10)
 
+
+
   
                        
-    return render(request,"show_all_offers.html",{'page_obj':page_obj, 'approved':approved})
+    return render(request,"show_all_offers.html",{'page_obj':page_obj, 'approved':approved, 'folders':folders })
 
 
 

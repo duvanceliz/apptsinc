@@ -56,10 +56,14 @@
               {% for project in page_obj %}
               <td id="table-columns">{{project.usersession}}</td>
               <td id="table-columns">{{project.code}}</td>
-              <td id="table-columns">{{project.name}}</td>
-  
-              <td id="table-columns">{{project.company_name}}</td>
-  
+              {% for folder in folders %}
+              {% if project.id == folder.project.id %}
+              <td id="table-columns"><a href="{% url 'overview_folder' folder.id %}">{{project.name}}</a></td>
+              {% endif %}
+              {% endfor %}
+              
+              <td id="table-columns" >{{project.company_name}}</td>
+            
               <td id="table-columns">
                 {% if project.approved == False%}
   
